@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOTO KENYA | Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #f1f5f9;
+            color: #0f172a;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem 0;
+            border-bottom: 2px solid #1e293b;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .logo span {
+            color: #2563eb;
+        }
+        .header-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .header-actions a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-logout {
+            background: none;
+            border: none;
+            color: #dc2626;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.35rem;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: #ffffff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0 1rem 0;
+        }
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+        }
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .btn-primary:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+        .btn-success {
+            background: #16a34a;
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background: #15803d;
+        }
+        .btn-danger {
+            background: #f1f5f9;
+            color: #dc2626;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        /* Image Preview */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .preview-grid img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th,
+        td {
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+        .td-img {
+            width: 60px;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #f1f5f9;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            max-width: 400px;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success {
+            background: #16a34a;
+        }
+        .toast.error {
+            background: #dc2626;
+        }
+
+        /* Login */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .login-box {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid #e2e8f0;
+        }
+        .login-box h1 {
+            font-size: 1.6rem;
+            text-align: center;
+            color: #1e293b;
+        }
+        .login-box h1 span {
+            color: #2563eb;
+        }
+        .login-box p {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard */
+        #dashScreen {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h1>MOTO<span>KENYA</span></h1>
+            <p>Admin Control Panel</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" value="michaelnchege453@gmail.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" value="admin1234" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashScreen">
+        <div class="container">
+
+            <!-- Header -->
+            <header>
+                <div class="logo">MOTO<span>KENYA</span></div>
+                <div class="header-actions">
+                    <a href="index.html" target="_blank">View Showroom →</a>
+                    <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                </div>
+            </header>
+
+            <!-- Main Grid -->
+            <div class="grid-2">
+
+                <!-- LEFT COLUMN -->
+                <div>
+
+                    <!-- Upload Form -->
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h2>➕ Add New Vehicle</h2>
+                        <form id="uploadForm">
+
+                            <div class="form-group">
+                                <label for="carMake">Brand</label>
+                                <input type="text" id="carMake" placeholder="e.g. Toyota" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="carModel">Model</label>
+                                <input type="text" id="carModel" placeholder="e.g. Prado" required />
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="carYear">Year</label>
+                                    <input type="number" id="carYear" value="2022" min="1990" max="2026" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="carPrice">Price (KSh)</label>
+                                    <input type="number" id="carPrice" placeholder="3500000" min="1000" required />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="carDescription">Description</label>
+                                <textarea id="carDescription" placeholder="Clean import, leather seats, sunroof..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="carBadges">Badges (comma separated)</label>
+                                <input type="text" id="carBadges" placeholder="Automatic, Diesel, 4WD" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="carImages">Photos (select multiple)</label>
+                                <input type="file" id="carImages" accept="image/*" multiple required />
+                                <div class="preview-grid" id="imagePreview"></div>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="carFeatured" />
+                                <label for="carFeatured">⭐ Featured Vehicle</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Publish Vehicle</button>
+                        </form>
+                    </div>
+
+                    <!-- Create Admin -->
+                    <div class="card" style="border-top: 3px solid #16a34a;">
+                        <h2>👤 Create Admin</h2>
+                        <form id="registerAdminForm">
+                            <div class="form-group">
+                                <label for="newAdminEmail">New Admin Email</label>
+                                <input type="email" id="newAdminEmail" placeholder="admin@example.com" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="newAdminPassword">Password (min 6 chars)</label>
+                                <input type="password" id="newAdminPassword" placeholder="••••••••" required />
+                            </div>
+                            <button type="submit" class="btn btn-success">Create Admin</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Inventory Table -->
+                <div class="card">
+                    <h2>📦 Inventory (<span id="count">0</span>)</h2>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Vehicle</th>
+                                    <th>Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody">
+                                <tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:1.5rem;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- end grid -->
+        </div><!-- end container -->
+    </div>
+
+    <!-- ===== FIREBASE + IMAGEKIT LOGIC ===== -->
+    <script type="module">
+        // ---- IMPORTS ----
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut,
+            getIdTokenResult
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            onSnapshot,
+            doc,
+            deleteDoc,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ---- FIREBASE CONFIG ----
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
+            authDomain: "caradds-227e9.firebaseapp.com",
+            projectId: "caradds-227e9",
+            messagingSenderId: "551966179001",
+            appId: "1:551966179001:web:1ea551d87511e4967c6568",
+            measurementId: "G-RCHG0M7PV7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        isSupported().then((s) => { if (s) getAnalytics(app); });
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const vehiclesRef = collection(db, "vehicles");
+        const adminEmails = ["michaelnchege453@gmail.com"];
+
+        // ---- ENVIRONMENT DETECTION ----
+        // Auto-detect if we're running locally or in production
+        const isLocal = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1' ||
+                        window.location.port === '3000' ||
+                        window.location.hostname.includes('localhost');
+
+        // Use the appropriate auth endpoint
+        const AUTH_URL = isLocal 
+            ? 'http://localhost:3000/imagekit-auth'  // Local development
+            : 'https://us-central1-caradds-227e9.cloudfunctions.net/imagekitAuth'; // Production
+
+        console.log(`🌐 Running in ${isLocal ? 'LOCAL' : 'PRODUCTION'} mode`);
+        console.log(`🔑 Auth URL: ${AUTH_URL}`);
+
+        // ---- DOM REFS ----
+        const loginScreen = document.getElementById('loginScreen');
+        const dashScreen = document.getElementById('dashScreen');
+        const toastEl = document.getElementById('toast');
+
+        // ---- TOAST ----
+        function showToast(msg, type = 'success') {
+            toastEl.textContent = msg;
+            toastEl.className = `toast ${type} show`;
+            clearTimeout(toastEl._timer);
+            toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 4000);
+        }
+
+        // ---- IMAGE PREVIEW ----
+        document.getElementById('carImages').addEventListener('change', (e) => {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            for (const file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ---- AUTH STATE ----
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                loginScreen.style.display = 'none';
+                dashScreen.style.display = 'block';
+                try {
+                    const tokenResult = await getIdTokenResult(user);
+                    const isAdmin = adminEmails.includes(user.email?.toLowerCase() || '');
+                    if (tokenResult.claims.admin === true || isAdmin) {
+                        loadInventory();
+                        showToast('✅ Welcome Admin', 'success');
+                    } else {
+                        showToast('⛔ No admin privileges', 'error');
+                        document.querySelector('.grid-2').innerHTML =
+                            `<div class="card" style="grid-column:1/-1; text-align:center; padding:3rem;">
+                            <h2 style="color:#dc2626;">Access Denied</h2>
+                            <p>You do not have admin privileges.</p>
+                        </div>`;
+                    }
+                } catch (err) {
+                    console.error('Auth check error:', err);
+                    showToast('Error checking admin status', 'error');
+                }
+            } else {
+                loginScreen.style.display = 'flex';
+                dashScreen.style.display = 'none';
+            }
+        });
+
+        // ---- LOGIN ----
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                showToast('✅ Login successful', 'success');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        });
+
+        // ---- LOGOUT ----
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth);
+            showToast('Signed out', 'success');
+        });
+
+        // ---- CREATE ADMIN ----
+        document.getElementById('registerAdminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newAdminEmail').value.trim();
+            const pass = document.getElementById('newAdminPassword').value;
+            if (pass.length < 6) {
+                showToast('Password must be at least 6 characters.', 'error');
+                return;
+            }
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+                showToast(`✅ Admin created: ${email}`, 'success');
+                document.getElementById('registerAdminForm').reset();
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        });
+
+        // ---- INVENTORY TABLE (REAL-TIME) ----
+        let unsubscribe = null;
+
+        function loadInventory() {
+            if (unsubscribe) unsubscribe();
+            const q = query(vehiclesRef, orderBy("createdAt", "desc"));
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const items = [];
+                snapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
+                renderTable(items);
+            });
+        }
+
+        // ================================================================
+        // ===== UPDATED RENDER TABLE WITH IMAGE FALLBACK =====
+        // ================================================================
+
+        function renderTable(items) {
+            const tbody = document.getElementById('adminTableBody');
+            document.getElementById('count').textContent = items.length;
+
+            if (items.length === 0) {
+                tbody.innerHTML =
+                    `<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:1.5rem;">No vehicles yet</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = items.map((car) => {
+                // Get the first image URL
+                let imgSrc = 'https://via.placeholder.com/60x34?text=No+Image';
+                
+                if (car.images && Array.isArray(car.images) && car.images.length > 0) {
+                    imgSrc = car.images[0];
+                } else if (car.images && typeof car.images === 'string') {
+                    imgSrc = car.images;
+                }
+
+                return `
+                    <tr>
+                        <td>
+                            <img class="td-img" 
+                                 src="${imgSrc}" 
+                                 alt="${car.make} ${car.model}"
+                                 onerror="this.src='https://via.placeholder.com/60x34?text=Error'; this.style.border='2px solid #dc2626';"
+                                 loading="lazy" />
+                        </td>
+                        <td>
+                            <strong>${car.make} ${car.model}</strong>
+                            <div style="font-size:0.8rem; color:#64748b;">${car.badges?.join(' | ') || ''}</div>
+                        </td>
+                        <td>KSh ${car.price?.toLocaleString() || 0}</td>
+                        <td>
+                            <button class="btn btn-danger btn-del" data-id="${car.id}">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Delete handlers
+            document.querySelectorAll('.btn-del').forEach((btn) => {
+                btn.addEventListener('click', async () => {
+                    if (!confirm('Delete this vehicle permanently?')) return;
+                    try {
+                        await deleteDoc(doc(db, 'vehicles', btn.dataset.id));
+                        showToast('🗑️ Vehicle deleted', 'success');
+                    } catch (err) {
+                        showToast('❌ ' + err.message, 'error');
+                    }
+                });
+            });
+        }
+
+        // ================================================================
+        // ===== IMAGEKIT UPLOAD – WITH ENVIRONMENT AUTO-DETECTION =====
+        // ================================================================
+
+        async function uploadToImageKit(file) {
+            const user = auth.currentUser;
+            if (!user) throw new Error('You must be logged in.');
+
+            console.log('🔑 Fetching auth from:', AUTH_URL);
+
+            const resp = await fetch(AUTH_URL);
+
+            if (!resp.ok) {
+                let msg = `Server error ${resp.status}`;
+                try {
+                    const errData = await resp.json();
+                    msg = errData.error || errData.details || msg;
+                } catch (_) {}
+                throw new Error('Auth failed: ' + msg);
+            }
+
+            const authData = await resp.json();
+            console.log('✅ Auth response:', authData);
+
+            // Validate
+            const required = ['token', 'expire', 'signature', 'publicKey', 'urlEndpoint'];
+            for (const key of required) {
+                if (!authData[key]) {
+                    throw new Error(`Auth missing "${key}". Got: ${JSON.stringify(authData)}`);
+                }
+            }
+
+            // Build FormData
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('fileName', `${Date.now()}_${file.name}`);
+            fd.append('publicKey', authData.publicKey);
+            fd.append('signature', authData.signature);
+            fd.append('expire', authData.expire);
+            fd.append('token', authData.token);
+            fd.append('folder', '/vehicles');
+
+            console.log('📤 Uploading:', file.name);
+            console.log('🔗 URL Endpoint:', authData.urlEndpoint);
+            console.log('🔑 Public Key:', authData.publicKey.substring(0, 20) + '...');
+
+            const uploadResp = await fetch('https://upload.imagekit.io/api/v1/files/upload', {
+                method: 'POST',
+                body: fd
+            });
+
+            const uploadData = await uploadResp.json();
+
+            if (!uploadResp.ok) {
+                console.error('❌ Upload error:', uploadData);
+                throw new Error(uploadData.message || uploadData.error || 'ImageKit upload failed');
+            }
+
+            console.log('✅ Uploaded:', uploadData.url);
+            return uploadData.url;
+        }
+
+        // ---- FORM SUBMIT ----
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const fileInput = document.getElementById('carImages');
+
+            if (fileInput.files.length === 0) {
+                showToast('Please select at least one photo.', 'error');
+                return;
+            }
+
+            // Check file sizes
+            for (const f of fileInput.files) {
+                if (f.size > 5 * 1024 * 1024) {
+                    showToast(`❌ ${f.name} exceeds 5MB limit.`, 'error');
+                    return;
+                }
+            }
+
+            btn.disabled = true;
+            btn.textContent = `⏳ Uploading ${fileInput.files.length} image(s)...`;
+
+            const make = document.getElementById('carMake').value.trim();
+            const model = document.getElementById('carModel').value.trim();
+            const year = parseInt(document.getElementById('carYear').value);
+            const price = parseFloat(document.getElementById('carPrice').value);
+            const description = document.getElementById('carDescription').value.trim();
+            const featured = document.getElementById('carFeatured').checked;
+            const badges = document.getElementById('carBadges').value
+                .split(',')
+                .map(b => b.trim())
+                .filter(b => b.length > 0);
+
+            const imageUrls = [];
+
+            try {
+                // Upload each image
+                for (const file of fileInput.files) {
+                    const url = await uploadToImageKit(file);
+                    imageUrls.push(url);
+                }
+
+                // Save to Firestore
+                await addDoc(vehiclesRef, {
+                    make,
+                    model,
+                    year,
+                    price,
+                    description,
+                    featured,
+                    badges,
+                    images: imageUrls,
+                    createdAt: Date.now()
+                });
+
+                // Reset form
+                document.getElementById('uploadForm').reset();
+                document.getElementById('imagePreview').innerHTML = '';
+                showToast(`✅ ${imageUrls.length} image(s) uploaded! Vehicle added.`, 'success');
+
+            } catch (err) {
+                console.error('Upload error:', err);
+                showToast('❌ ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Publish Vehicle';
+            }
+        });
+
+        console.log('🚗 MOTO KENYA Admin Panel loaded');
+        console.log('📧 Email: michaelnchege453@gmail.com');
+        console.log('🔑 Password: admin1234');
+        console.log(`🌐 Environment: ${isLocal ? 'LOCAL' : 'PRODUCTION'}`);
+        console.log(`🔗 Auth Endpoint: ${AUTH_URL}`);
+    </script>
+</body>
+</html>

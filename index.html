@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOTO KENYA | Premium Vehicle Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0056b3;
+            --primary-hover: #004085;
+            --accent: #25D366;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #e2e8f0;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+
+        header {
+            background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .logo span { color: var(--dark); }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 600; margin-left: 1.5rem; }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            color: #fff; padding: 5rem 5% 7rem 5%; text-align: center;
+        }
+        .hero h1 { font-size: 2.3rem; margin-bottom: 0.5rem; }
+
+        .search-container {
+            max-width: 900px; margin: -3.5rem auto 3rem auto; background: #fff;
+            padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); position: relative; z-index: 10;
+        }
+        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray); }
+        .form-group input { padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); outline: none; background: var(--light); font-size: 0.9rem; }
+        .search-btn { background: var(--primary); color: #fff; border: none; padding: 0.75rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .search-btn:hover { background: var(--primary-hover); }
+
+        main { max-width: 1200px; margin: 0 auto; padding: 0 5% 4rem 5%; }
+        .no-results { display: none; text-align: center; padding: 3rem; color: var(--gray); font-size: 1.1rem; width: 100%; grid-column: 1 / -1; }
+
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+        .car-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; }
+        
+        .image-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #eee; cursor: pointer; }
+        .image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .featured-tag { position: absolute; top: 10px; left: 10px; background: var(--primary); color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 700; border-radius: 4px; text-transform: uppercase; z-index: 1; }
+        .image-counter {
+            position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff;
+            padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; z-index: 1;
+        }
+
+        .car-info { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .car-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .car-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; }
+        
+        .specs-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .badge { background: var(--light); border: 1px solid var(--border); padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 4px; color: var(--gray); }
+        .car-description { font-size: 0.88rem; color: #4a5568; margin-bottom: 1.25rem; border-left: 3px solid var(--border); padding-left: 0.5rem; font-style: italic; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto; }
+        .btn { padding: 0.6rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; text-align: center; text-decoration: none; border: none; cursor: pointer; }
+        .btn-secondary { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
+        .btn-whatsapp { background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
+
+        /* Premium Theater-View Modal Styles */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; 
+        }
+        .modal-content { 
+            background: #111; max-width: 850px; width: 100%; border-radius: var(--radius); 
+            overflow: hidden; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .modal-close { 
+            position: absolute; top: 15px; right: 15px; font-size: 2rem; color: #fff; cursor: pointer; 
+            z-index: 1010; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; 
+            align-items: center; justify-content: center; border-radius: 50%; border: none; transition: 0.2s;
+        }
+        .modal-close:hover { background: #dc3545; }
+        .main-modal-img { width: 100%; aspect-ratio: 16/9; object-fit: contain; background-color: #000; }
+
+        .thumbnail-row { 
+            display: flex; gap: 0.75rem; padding: 1rem; background: #1a1a1a; overflow-x: auto; 
+            border-top: 1px solid #2d2d2d; scrollbar-width: thin;
+        }
+        .thumb { 
+            width: 90px; aspect-ratio: 16/9; object-fit: cover; cursor: pointer; 
+            border: 2px solid transparent; border-radius: 4px; flex-shrink: 0; opacity: 0.6; transition: 0.2s;
+        }
+        .thumb:hover, .thumb.active { border-color: var(--primary); opacity: 1; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--gray); grid-column: 1 / -1; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 1rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .search-container { margin-top: -2rem; padding: 1rem; }
+            .search-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav><a href="#inventory">Showroom</a></nav>
+    </header>
+
+    <section class="hero">
+        <h1>Find Verified Cars in Kenya</h1>
+        <p>Live inventory direct from our showroom management desk.</p>
+    </section>
+
+    <div class="search-container">
+        <form class="search-form" id="searchForm" onsubmit="event.preventDefault();">
+            <div class="form-group">
+                <label for="filterMake">Type Any Brand</label>
+                <input type="text" id="filterMake" placeholder="e.g. Mercedes, Isuzu, Toyota">
+            </div>
+            <div class="form-group">
+                <label for="filterMaxPrice">Max Price (KSh)</label>
+                <input type="number" id="filterMaxPrice" placeholder="e.g. 3500000">
+            </div>
+            <button type="button" class="search-btn" id="filterBtn">Apply Filters</button>
+        </form>
+    </div>
+
+    <main id="inventory">
+        <div class="inventory-grid" id="gridContainer">
+            <div class="loading" id="loadingMsg">Loading vehicles...</div>
+            <div class="no-results" id="noResultsMsg">No matching vehicles found. Try typing a different brand.</div>
+        </div>
+    </main>
+
+    <div class="modal" id="galleryModal">
+        <button class="modal-close" id="closeBtn">&times;</button>
+        <div class="modal-content">
+            <img src="" id="modalMainImg" class="main-modal-img" alt="Enlarged View">
+            <div class="thumbnail-row" id="modalThumbs"></div>
+        </div>
+    </div>
+
+    <!-- Firebase Integration Modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ---- FIREBASE CONFIG ----
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
+            authDomain: "caradds-227e9.firebaseapp.com",
+            projectId: "caradds-227e9",
+            messagingSenderId: "551966179001",
+            appId: "1:551966179001:web:1ea551d87511e4967c6568",
+            measurementId: "G-RCHG0M7PV7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        let liveInventory = [];
+
+        // ---- ENVIRONMENT DETECTION ----
+        const isLocal = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1' ||
+                        window.location.port === '3000' ||
+                        window.location.hostname.includes('localhost');
+
+        console.log(`🌐 Running in ${isLocal ? 'LOCAL' : 'PRODUCTION'} mode`);
+
+        // Track live items inside cloud database collection
+        const q = query(collection(db, "vehicles"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            liveInventory = [];
+            snapshot.forEach((doc) => {
+                liveInventory.push({ id: doc.id, ...doc.data() });
+            });
+            console.log(`📦 Found ${liveInventory.length} vehicles`);
+            if (liveInventory.length > 0) {
+                console.log('🔍 Sample vehicle:', liveInventory[0]);
+            }
+            filterInventory();
+        }, (error) => {
+            console.error('❌ Firestore error:', error);
+            document.getElementById('loadingMsg').textContent = 'Error loading vehicles. Please refresh.';
+        });
+
+        function renderGrid(data) {
+            const container = document.getElementById('gridContainer');
+            const noResults = document.getElementById('noResultsMsg');
+            
+            // Remove old car cards
+            container.querySelectorAll('.car-card').forEach(card => card.remove());
+
+            if(data.length === 0) {
+                noResults.style.display = 'block';
+                document.getElementById('loadingMsg').style.display = 'none';
+                return;
+            }
+            noResults.style.display = 'none';
+            document.getElementById('loadingMsg').style.display = 'none';
+
+            data.forEach(car => {
+                // Get the first image URL with fallback
+                let primaryImage = 'https://via.placeholder.com/600x400?text=No+Image';
+                
+                if (car.images && Array.isArray(car.images) && car.images.length > 0) {
+                    primaryImage = car.images[0];
+                } else if (car.images && typeof car.images === 'string') {
+                    primaryImage = car.images;
+                }
+                
+                const imageCount = car.images ? (Array.isArray(car.images) ? car.images.length : 1) : 0;
+                
+                const card = document.createElement('article');
+                card.className = 'car-card';
+                card.innerHTML = `
+                    <div class="image-wrapper btn-gallery" data-id="${car.id}">
+                        ${car.featured ? '<span class="featured-tag">Featured</span>' : ''}
+                        <img src="${primaryImage}" 
+                             alt="${car.make} ${car.model}"
+                             onerror="this.src='https://via.placeholder.com/600x400?text=Image+Error'"
+                             loading="lazy">
+                        ${imageCount > 1 ? `<span class="image-counter">📸 ${imageCount}</span>` : ''}
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-title">${car.make} ${car.model} (${car.year})</h3>
+                        <div class="car-price">KSh ${car.price?.toLocaleString() || 0}</div>
+                        <div class="specs-badges">
+                            ${car.badges ? car.badges.map(b => `<span class="badge">${b}</span>`).join('') : ''}
+                        </div>
+                        <p class="car-description">${car.description || ''}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-gallery" data-id="${car.id}">View Photos (${imageCount})</button>
+                            <a href="https://wa.me/254700000000?text=Hi,%20I'am%20interested%20in%20the%20${car.year}%20${car.make.toUpperCase()}%20${car.model}%20KSh%20${car.price?.toLocaleString()}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.querySelectorAll('.btn-gallery').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    openGallery(e.currentTarget.getAttribute('data-id'));
+                });
+            });
+        }
+
+        function filterInventory() {
+            const searchText = document.getElementById('filterMake').value.trim().toLowerCase();
+            const maxPrice = parseFloat(document.getElementById('filterMaxPrice').value);
+
+            const filtered = liveInventory.filter(car => {
+                const matchesMake = !searchText || (car.make && car.make.toLowerCase().includes(searchText));
+                const matchesPrice = !maxPrice || (car.price && car.price <= maxPrice);
+                return matchesMake && matchesPrice;
+            });
+
+            renderGrid(filtered);
+        }
+
+        function openGallery(carId) {
+            const car = liveInventory.find(v => v.id === carId);
+            if (!car || !car.images || car.images.length === 0) return;
+
+            const mainImg = document.getElementById('modalMainImg');
+            const thumbRow = document.getElementById('modalThumbs');
+            
+            // Get the first image
+            const firstImage = Array.isArray(car.images) ? car.images[0] : car.images;
+            mainImg.src = firstImage || 'https://via.placeholder.com/800x450?text=No+Image';
+            thumbRow.innerHTML = '';
+
+            const imagesArray = Array.isArray(car.images) ? car.images : [car.images];
+            
+            imagesArray.forEach((imgUrl, index) => {
+                if (!imgUrl) return;
+                const thumb = document.createElement('img');
+                thumb.src = imgUrl;
+                thumb.className = `thumb ${index === 0 ? 'active' : ''}`;
+                thumb.onerror = () => { thumb.src = 'https://via.placeholder.com/90x50?text=Error'; };
+                
+                thumb.addEventListener('click', () => {
+                    mainImg.src = imgUrl;
+                    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                });
+                
+                thumbRow.appendChild(thumb);
+            });
+
+            document.getElementById('galleryModal').style.display = 'flex';
+        }
+
+        document.getElementById('filterMake').addEventListener('input', filterInventory);
+        document.getElementById('filterMaxPrice').addEventListener('input', filterInventory);
+        document.getElementById('filterBtn').addEventListener('click', filterInventory);
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            document.getElementById('galleryModal').style.display = 'none';
+        });
+
+        // Close modal on background click
+        document.getElementById('galleryModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('galleryModal').style.display = 'none';
+            }
+        });
+
+        console.log('🚗 MOTO KENYA Showroom loaded');
+    </script>
+</body>
+</html>
