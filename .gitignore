@@ -1,39 +1,111 @@
-# Environment variables (DO NOT commit these!)
+# ============================================================
+# ENVIRONMENT VARIABLES (NEVER COMMIT THESE!)
+# ============================================================
 .env
 .env.*
 !.env.example
+*.env
+*.env.*
+secrets.env
 
-# Node modules
+# ============================================================
+# NODE MODULES
+# ============================================================
 node_modules/
 functions/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
 
-# Firebase debug logs
+# ============================================================
+# FIREBASE
+# ============================================================
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+firebase-debug.*.log
+.firebase/
+*.firebase
+firestore.indexes.json
 
-# IDE and OS files
+# ============================================================
+# IDE AND OS FILES
+# ============================================================
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 .DS_Store
 Thumbs.db
+desktop.ini
+*.log
+*.tmp
+*.temp
 
-# Build outputs
+# ============================================================
+# BUILD OUTPUTS
+# ============================================================
 dist/
 build/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+out/
+*.min.js
+*.min.css
 
-# Firebase secrets (never commit!)
+# ============================================================
+# FIREBASE SECRETS (NEVER COMMIT!)
+# ============================================================
 *.secret
 *.secrets
 firebase-debug.*.log
+service-account.json
+*.key
+*.pem
+*.crt
 
-# Temporary files
+# ============================================================
+# CACHE FILES
+# ============================================================
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
+
+# ============================================================
+# SYSTEM FILES
+# ============================================================
+*.bak
+*.orig
+*.rej
+*.old
 *.tmp
 *.temp
-.cache/
+
+# ============================================================
+# GIT
+# ============================================================
+*.patch
+*.diff
+*.merge
+*.orig
+
+# ============================================================
+# MISC
+# ============================================================
+*.tgz
+*.zip
+*.rar
+*.7z
+*.gz
+
+# ============================================================
+# LOCAL DEVELOPMENT
+# ============================================================
+.agents/
+scripts/
+start-*.ps1
+*.local
+*.dev
+*.test

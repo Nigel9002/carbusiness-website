@@ -1,6 +1,7 @@
 {
   "functions": {
-    "source": "functions"
+    "source": "functions",
+    "runtime": "nodejs20"
   },
   "firestore": {
     "rules": "firestore.rules",
@@ -16,7 +17,13 @@
       "*.md",
       "*.log",
       ".env",
-      ".env.*"
+      ".env.*",
+      "*.secret",
+      "*.secrets",
+      "*.key",
+      "*.pem",
+      "*.crt",
+      "service-account.json"
     ],
     "rewrites": [
       {
@@ -24,9 +31,79 @@
         "function": "imagekitAuth"
       },
       {
+        "source": "/admin",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "/admin.html",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "/index.html",
+        "destination": "/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "headers": [
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      },
+      {
+        "source": "**/*.js",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/javascript"
+          }
+        ]
+      },
+      {
+        "source": "**/*.css",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/css"
+          }
+        ]
+      },
+      {
+        "source": "**/*.{png,jpg,jpeg,gif,svg,ico,webp}",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      }
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
   }
 }

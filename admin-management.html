@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOTO KENYA · Admin Management</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://us-central1-caradds-227e9.cloudfunctions.net https://*.cloudfunctions.net;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --input-bg: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --input-bg: #334155;
+            --border-color: #475569;
+            --gray: #94a3b8;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; transition: background 0.3s; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+        .loading-overlay.active { display: flex; opacity: 1; }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+        .loading-overlay .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-overlay .welcome-text {
+            margin-top: 1.5rem;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #2563eb, #f59e0b, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-color); }
+        .logo span { color: var(--primary); }
+        .header-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .header-actions .user-info { font-size: 0.85rem; color: var(--gray); }
+        .btn-back {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-back:hover { background: var(--primary-hover); }
+        .btn-logout {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-logout:hover { background: var(--danger); color: #fff; }
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+            color: var(--text-color);
+        }
+        .theme-toggle:hover { background: var(--border-color); }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            transition: background 0.3s;
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .card .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge-admin { background: var(--primary); color: #fff; }
+        .badge-editor { background: var(--warning); color: #000; }
+        .badge-viewer { background: var(--gray); color: #fff; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray); margin-bottom: 0.35rem; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--primary); background: var(--card-bg); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .helper-text { font-size: 0.75rem; color: var(--gray); margin-top: 0.2rem; }
+        .password-strength {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            overflow: hidden;
+        }
+        .password-strength .bar { height: 100%; width: 0%; transition: width 0.3s; border-radius: 4px; }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:disabled { background: var(--gray); cursor: not-allowed; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { background: #15803d; }
+        .btn-danger {
+            background: var(--light);
+            color: var(--danger);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        .btn-warning:hover { background: #d97706; }
+
+        .admin-list { margin-top: 1rem; }
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+        .admin-item:hover { background: var(--input-bg); }
+        .admin-item .admin-email { font-weight: 500; }
+        .admin-item .admin-role {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .admin-item .admin-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+        .admin-item .admin-actions select {
+            padding: 0.3rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            max-width: 400px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); color: #000; }
+
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background: var(--bg-color);
+        }
+        .login-box {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid var(--border-color);
+        }
+        .login-box h1 { font-size: 1.6rem; text-align: center; color: var(--text-color); }
+        .login-box h1 span { color: var(--primary); }
+        .login-box p { text-align: center; color: var(--gray); margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+        #dashScreen { display: none; }
+        #dashScreen.active { display: block; }
+
+        .session-timer {
+            font-size: 0.75rem;
+            color: var(--gray);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+        }
+        .session-timer.warning { color: var(--warning); border-color: var(--warning); }
+        .session-timer.danger { color: var(--danger); border-color: var(--danger); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .admin-item { flex-direction: column; align-items: flex-start; }
+            .admin-item .admin-actions { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="welcome-text">🌟 Loading Admin Management...</div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="loginScreen">
+        <div class="login-box">
+            <h1>MOTO<span>KENYA</span></h1>
+            <p>Admin Management</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="admin@motokenya.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required />
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashScreen">
+        <div class="container">
+            <header>
+                <div class="logo">MOTO<span>KENYA</span></div>
+                <div class="header-actions">
+                    <span class="user-info" id="userInfo">👤 Loading...</span>
+                    <span class="session-timer" id="sessionTimer">⏱️ 30:00</span>
+                    <a href="admin.html" class="btn-back">← Back to Vehicles</a>
+                    <button class="theme-toggle" id="themeToggle">🌙</button>
+                    <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                </div>
+            </header>
+
+            <div class="card" id="createAdminCard">
+                <h2>👤 Create New Admin <span class="badge badge-admin">Super Admin Only</span></h2>
+                <form id="registerAdminForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newAdminEmail">Email Address</label>
+                            <input type="email" id="newAdminEmail" placeholder="admin@example.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="newAdminPassword">Password</label>
+                            <input type="password" id="newAdminPassword" placeholder="••••••••" required />
+                            <div class="password-strength">
+                                <div class="bar" id="passwordStrengthBar"></div>
+                            </div>
+                            <div class="helper-text" id="passwordHelper">Min 8 chars, 1 uppercase, 1 number, 1 special</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newAdminRole">Admin Role</label>
+                            <select id="newAdminRole">
+                                <option value="super">Super Admin (Full Access)</option>
+                                <option value="editor">Editor (Add/Edit/Delete Vehicles)</option>
+                                <option value="viewer">Viewer (Read Only)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display:flex; align-items:flex-end;">
+                            <button type="submit" class="btn btn-success" id="createAdminBtn">Create Admin</button>
+                        </div>
+                    </div>
+                    <div id="createStatus" style="margin-top:0.5rem; font-size:0.9rem;"></div>
+                </form>
+            </div>
+
+            <div class="card" id="adminListCard">
+                <h2>👥 Admin Users <span class="badge badge-admin">Manage Roles</span></h2>
+                <div id="adminList">
+                    <p style="color:var(--gray);">Loading admins...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import {
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+            onAuthStateChanged, signOut, getIdTokenResult
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            getFirestore, collection, doc, setDoc, updateDoc, deleteDoc,
+            getDocs, query, where
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
+            authDomain: "caradds-227e9.firebaseapp.com",
+            projectId: "caradds-227e9",
+            messagingSenderId: "551966179001",
+            appId: "1:551966179001:web:1ea551d87511e4967c6568",
+            measurementId: "G-RCHG0M7PV7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        isSupported().then((s) => { if (s) getAnalytics(app); });
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const usersRef = collection(db, "users");
+
+        const PERMISSIONS = {
+            super: { label: 'Super Admin', badge: 'badge-admin', canCreateAdmin: true, canEditRole: true, canDeleteAdmin: true },
+            editor: { label: 'Editor', badge: 'badge-editor', canCreateAdmin: false, canEditRole: false, canDeleteAdmin: false },
+            viewer: { label: 'Viewer', badge: 'badge-viewer', canCreateAdmin: false, canEditRole: false, canDeleteAdmin: false }
+        };
+
+        let currentUser = null;
+        let currentUserRole = 'viewer';
+        let currentUserEmail = '';
+
+        const loginScreen = document.getElementById('loginScreen');
+        const dashScreen = document.getElementById('dashScreen');
+        const toastEl = document.getElementById('toast');
+        const userInfo = document.getElementById('userInfo');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        function showToast(msg, type = 'success') {
+            toastEl.textContent = msg;
+            toastEl.className = `toast ${type} show`;
+            clearTimeout(toastEl._timer);
+            toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 5000);
+        }
+
+        function showLoading() {
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('active');
+        }
+        function hideLoading() {
+            loadingOverlay.classList.add('hidden');
+            loadingOverlay.classList.remove('active');
+        }
+        hideLoading();
+
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('admin-theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            if (current === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('admin-theme', 'light');
+                themeToggle.textContent = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('admin-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        document.getElementById('newAdminPassword').addEventListener('input', function() {
+            const val = this.value;
+            let score = 0;
+            if (val.length >= 8) score += 25;
+            if (/[A-Z]/.test(val)) score += 25;
+            if (/[a-z]/.test(val)) score += 25;
+            if (/[0-9]/.test(val)) score += 25;
+            if (/[!@#$%^&*]/.test(val)) score += 25;
+            const bar = document.getElementById('passwordStrengthBar');
+            const helper = document.getElementById('passwordHelper');
+            bar.style.width = Math.min(score, 100) + '%';
+            if (score < 50) { bar.style.background = '#dc2626'; helper.textContent = 'Weak - add more characters and symbols'; }
+            else if (score < 75) { bar.style.background = '#f59e0b'; helper.textContent = 'Fair - add uppercase and numbers'; }
+            else { bar.style.background = '#16a34a'; helper.textContent = '✅ Strong password!'; }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    await user.getIdToken(true);
+                    const tokenResult = await getIdTokenResult(user);
+                    const role = tokenResult.claims.role || 'viewer';
+                    currentUser = user;
+                    currentUserEmail = user.email || '';
+                    currentUserRole = currentUserEmail === 'michaelnchege453@gmail.com' ? 'super' : role;
+                    
+                    userInfo.textContent = `👤 ${currentUserEmail} (${PERMISSIONS[currentUserRole]?.label || 'Viewer'})`;
+                    
+                    document.getElementById('createAdminCard').style.display = 
+                        currentUserRole === 'super' ? 'block' : 'none';
+                    
+                    dashScreen.classList.add('active');
+                    loginScreen.style.display = 'none';
+                    hideLoading();
+                    
+                    loadAllUsers();
+                } catch (err) {
+                    console.error('Auth error:', err);
+                    hideLoading();
+                }
+            } else {
+                hideLoading();
+                loginScreen.style.display = 'flex';
+                dashScreen.classList.remove('active');
+                currentUser = null;
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Signing in...';
+            showLoading();
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                hideLoading();
+                showToast('❌ Invalid credentials', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth);
+            showToast('Signed out', 'success');
+        });
+
+        async function updateAdminRole(email, newRole) {
+            try {
+                const q = query(usersRef, where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const docRef = querySnapshot.docs[0].ref;
+                    await updateDoc(docRef, {
+                        role: newRole,
+                        updatedAt: Date.now()
+                    });
+                    return { success: true, method: 'updated' };
+                } else {
+                    const docId = email.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, 'users', docId), {
+                        email: email,
+                        role: newRole,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    });
+                    return { success: true, method: 'created' };
+                }
+            } catch (error) {
+                console.error('Update role error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function deleteAdmin(email) {
+            try {
+                const q = query(usersRef, where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const docRef = querySnapshot.docs[0].ref;
+                    await deleteDoc(docRef);
+                    return { success: true };
+                } else {
+                    return { success: false, error: 'User not found' };
+                }
+            } catch (error) {
+                console.error('Delete admin error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function loadAllUsers() {
+            try {
+                const adminList = document.getElementById('adminList');
+                adminList.innerHTML = '<p style="color:var(--gray);">Loading users...</p>';
+
+                const usersSnapshot = await getDocs(usersRef);
+                let html = '';
+                
+                html += `
+                    <div class="admin-item" style="background:var(--primary); color:#fff; border-radius:8px; margin-bottom:0.5rem;">
+                        <span class="admin-email" style="color:#fff;">${currentUserEmail}</span>
+                        <span class="admin-role" style="background:#fff; color:var(--primary);">${PERMISSIONS[currentUserRole]?.label || 'Super Admin'}</span>
+                        <span style="font-size:0.8rem; color:rgba(255,255,255,0.8);">(You)</span>
+                    </div>
+                `;
+
+                const userMap = new Map();
+                usersSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.email && data.email !== currentUserEmail) {
+                        if (!userMap.has(data.email)) {
+                            userMap.set(data.email, {
+                                email: data.email,
+                                role: data.role || 'viewer',
+                                docId: doc.id
+                            });
+                        }
+                    }
+                });
+
+                const isSuper = currentUserRole === 'super';
+
+                userMap.forEach((userData) => {
+                    const roleLabel = PERMISSIONS[userData.role]?.label || 'Viewer';
+                    const badgeClass = PERMISSIONS[userData.role]?.badge || 'badge-viewer';
+                    html += `
+                        <div class="admin-item" data-email="${userData.email}">
+                            <span class="admin-email">${userData.email}</span>
+                            <span class="admin-role ${badgeClass}">${roleLabel}</span>
+                            ${isSuper ? `
+                            <div class="admin-actions">
+                                <select class="role-select" data-email="${userData.email}">
+                                    <option value="super" ${userData.role === 'super' ? 'selected' : ''}>Super</option>
+                                    <option value="editor" ${userData.role === 'editor' ? 'selected' : ''}>Editor</option>
+                                    <option value="viewer" ${userData.role === 'viewer' ? 'selected' : ''}>Viewer</option>
+                                </select>
+                                <button class="btn btn-warning update-role-btn" data-email="${userData.email}">Update</button>
+                                <button class="btn btn-danger delete-admin-btn" data-email="${userData.email}">Delete</button>
+                            </div>
+                            ` : `
+                            <span style="font-size:0.75rem; color:var(--gray);">Read Only</span>
+                            `}
+                        </div>
+                    `;
+                });
+
+                if (userMap.size === 0 && !isSuper) {
+                    html += `<p style="color:var(--gray); padding:0.5rem 0;">No other users found.</p>`;
+                }
+
+                adminList.innerHTML = html;
+
+                document.querySelectorAll('.update-role-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const email = this.dataset.email;
+                        const select = this.closest('.admin-item').querySelector('.role-select');
+                        const newRole = select.value;
+                        
+                        if (email === currentUserEmail) {
+                            showToast('❌ You cannot change your own role.', 'error');
+                            return;
+                        }
+
+                        this.disabled = true;
+                        this.textContent = '⏳';
+
+                        const result = await updateAdminRole(email, newRole);
+                        
+                        if (result.success) {
+                            showToast(`✅ ${email} is now a ${PERMISSIONS[newRole]?.label || newRole}`, 'success');
+                            setTimeout(() => loadAllUsers(), 500);
+                        } else {
+                            showToast('❌ Failed to update role: ' + result.error, 'error');
+                        }
+                        
+                        this.disabled = false;
+                        this.textContent = 'Update';
+                    });
+                });
+
+                document.querySelectorAll('.delete-admin-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const email = this.dataset.email;
+                        
+                        if (email === currentUserEmail) {
+                            showToast('❌ You cannot delete yourself.', 'error');
+                            return;
+                        }
+
+                        if (!confirm(`Delete admin: ${email}?`)) return;
+
+                        this.disabled = true;
+                        this.textContent = '⏳';
+
+                        const result = await deleteAdmin(email);
+                        
+                        if (result.success) {
+                            showToast(`✅ ${email} deleted`, 'success');
+                            setTimeout(() => loadAllUsers(), 500);
+                        } else {
+                            showToast('❌ Failed to delete: ' + result.error, 'error');
+                        }
+                        
+                        this.disabled = false;
+                        this.textContent = 'Delete';
+                    });
+                });
+
+            } catch (err) {
+                console.error('Error loading users:', err);
+                document.getElementById('adminList').innerHTML = `
+                    <p style="color:var(--danger);">Error loading users. Make sure you have a 'users' collection in Firestore.</p>
+                    <p style="color:var(--gray); font-size:0.85rem;">${err.message}</p>
+                `;
+            }
+        }
+
+        document.getElementById('registerAdminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (currentUserRole !== 'super') {
+                showToast('⛔ Only Super Admin can create admins.', 'error');
+                return;
+            }
+
+            const email = document.getElementById('newAdminEmail').value.trim();
+            const pass = document.getElementById('newAdminPassword').value;
+            const role = document.getElementById('newAdminRole').value;
+            const statusDiv = document.getElementById('createStatus');
+
+            if (pass.length < 8) {
+                showToast('❌ Password must be at least 8 characters.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('createAdminBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Creating...';
+            statusDiv.innerHTML = '⏳ Creating admin...';
+            statusDiv.style.color = 'var(--gray)';
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const newUser = userCredential.user;
+
+                await setDoc(doc(db, 'users', newUser.uid), {
+                    email: email,
+                    role: role,
+                    createdAt: Date.now(),
+                    uid: newUser.uid
+                });
+
+                const emailDocId = email.replace(/[^a-zA-Z0-9]/g, '_');
+                await setDoc(doc(db, 'users', emailDocId), {
+                    email: email,
+                    role: role,
+                    createdAt: Date.now(),
+                    uid: newUser.uid
+                });
+
+                try {
+                    const token = await currentUser.getIdToken(true);
+                    await fetch('https://us-central1-caradds-227e9.cloudfunctions.net/setAdminRole', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            targetEmail: email,
+                            role: role
+                        })
+                    });
+                } catch (cloudErr) {
+                    console.warn('⚠️ Cloud Function failed:', cloudErr);
+                }
+
+                showToast(`✅ Admin created: ${email} (${PERMISSIONS[role]?.label || role})`, 'success');
+                statusDiv.innerHTML = `✅ Admin created! ${email} must log out and back in for full permissions.`;
+                statusDiv.style.color = 'var(--warning)';
+                statusDiv.style.fontWeight = 'bold';
+                
+                document.getElementById('registerAdminForm').reset();
+                document.getElementById('passwordStrengthBar').style.width = '0%';
+                
+                setTimeout(() => loadAllUsers(), 1000);
+
+            } catch (err) {
+                console.error('Create admin error:', err);
+                let msg = err.message;
+                if (err.code === 'auth/email-already-in-use') {
+                    msg = 'This email is already registered.';
+                } else if (err.code === 'auth/weak-password') {
+                    msg = 'Password is too weak.';
+                }
+                showToast('❌ ' + msg, 'error');
+                statusDiv.innerHTML = '❌ ' + msg;
+                statusDiv.style.color = 'var(--danger)';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Admin';
+                setTimeout(() => { 
+                    if (!statusDiv.innerHTML.includes('✅')) {
+                        statusDiv.innerHTML = ''; 
+                    }
+                }, 8000);
+            }
+        });
+
+        // Session Timer
+        let sessionTimer, sessionCountdown;
+        const SESSION_TIMEOUT = 30 * 60 * 1000;
+
+        function resetSessionTimer() {
+            clearTimeout(sessionTimer);
+            clearInterval(sessionCountdown);
+            startSessionTimer();
+        }
+
+        function startSessionTimer() {
+            const timerEl = document.getElementById('sessionTimer');
+            let timeLeft = SESSION_TIMEOUT / 1000;
+            sessionCountdown = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = Math.floor(timeLeft % 60);
+                timerEl.textContent = `⏱️ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                if (timeLeft < 60) timerEl.className = 'session-timer danger';
+                else if (timeLeft < 300) timerEl.className = 'session-timer warning';
+                else timerEl.className = 'session-timer';
+            }, 1000);
+            sessionTimer = setTimeout(() => {
+                showToast('⏰ Session expired. Please login again.', 'warning');
+                signOut(auth);
+            }, SESSION_TIMEOUT);
+        }
+
+        document.addEventListener('click', resetSessionTimer);
+        document.addEventListener('keydown', resetSessionTimer);
+        document.addEventListener('mousemove', resetSessionTimer);
+        document.addEventListener('scroll', resetSessionTimer);
+
+        console.log('🔒 MOTO KENYA Admin Management loaded');
+        console.log('✅ Only Super Admin can create/update/delete admins');
+    </script>
+</body>
+</html>

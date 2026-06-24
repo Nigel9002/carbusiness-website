@@ -4,6 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOTO KENYA | Premium Vehicle Inventory</title>
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com https://images.unsplash.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://upload.imagekit.io https://us-central1-caradds-227e9.cloudfunctions.net https://*.cloudfunctions.net;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    
+    <!-- ========== PWA SUPPORT ========== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0056b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- ========== SEO & OPEN GRAPH ========== -->
+    <meta name="description" content="Find verified premium cars for sale in Kenya. Browse thousands of vehicles from trusted dealers. Search by brand, model, price, and location. New and used cars available.">
+    <meta name="keywords" content="cars for sale in Kenya, premium cars Kenya, used cars Kenya, new cars Kenya, car dealers Kenya, Toyota, Mercedes, BMW, Nissan, vehicle inventory, MOTO KENYA">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="MOTO KENYA">
+    <link rel="canonical" href="https://nige19002.github.io/carbusiness-website/">
+    
+    <!-- ========== OPEN GRAPH / FACEBOOK ========== -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nige19002.github.io/carbusiness-website/">
+    <meta property="og:title" content="MOTO KENYA | Premium Cars for Sale in Kenya">
+    <meta property="og:description" content="Find verified premium cars for sale in Kenya. Browse thousands of vehicles from trusted dealers.">
+    <meta property="og:image" content="https://nige19002.github.io/carbusiness-website/og-image.jpg">
+    <meta property="og:site_name" content="MOTO KENYA">
+    <meta property="og:locale" content="en_KE">
+    
+    <!-- ========== TWITTER ========== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://nige19002.github.io/carbusiness-website/">
+    <meta name="twitter:title" content="MOTO KENYA | Premium Cars for Sale in Kenya">
+    <meta name="twitter:description" content="Find verified premium cars for sale in Kenya. Browse thousands of vehicles from trusted dealers.">
+    <meta name="twitter:image" content="https://nige19002.github.io/carbusiness-website/og-image.jpg">
+    
+    <!-- ========== STRUCTURED DATA / JSON-LD ========== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AutoDealer",
+      "name": "MOTO KENYA",
+      "description": "Premium car dealership in Kenya offering verified vehicles from trusted dealers.",
+      "url": "https://nige19002.github.io/carbusiness-website/",
+      "telephone": "+254712345678",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "KE"
+      },
+      "openingHours": "Mo-Sa 08:00-18:00",
+      "priceRange": "KSh 500,000 - KSh 20,000,000"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "MOTO KENYA",
+      "url": "https://nige19002.github.io/carbusiness-website/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://nige19002.github.io/carbusiness-website/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0056b3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- ========== FAVICON ========== -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230056b3'/%3E%3Ctext x='50' y='70' text-anchor='middle' font-size='60' fill='white' font-family='sans-serif'%3E🚗%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- ========== GOOGLE ANALYTICS ========== -->
+    <!-- Replace G-XXXXXXXXXX with your actual Google Analytics ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,75 +115,278 @@
             --border: #e2e8f0;
             --radius: 8px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --sold-color: #dc3545;
+            --available-color: #28a745;
+            --pending-color: #ffc107;
+            
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --search-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #f8f9fa;
+            --header-bg: #2d2d2d;
+            --search-bg: #2d2d2d;
+            --border: #444;
+            --light: #333;
+            --gray: #aaa;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s; }
 
         header {
-            background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between;
+            background: var(--header-bg); padding: 1rem 5%; display: flex; justify-content: space-between;
             align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: background 0.3s;
         }
         .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .logo span { color: var(--dark); }
-        nav a { text-decoration: none; color: var(--dark); font-weight: 600; margin-left: 1.5rem; }
+        .logo span { color: var(--text-color); }
+        nav { display: flex; align-items: center; gap: 1.5rem; }
+        nav a { text-decoration: none; color: var(--text-color); font-weight: 600; }
+        
+        .theme-toggle {
+            background: none; border: none; font-size: 1.3rem; cursor: pointer;
+            padding: 0.3rem 0.5rem; border-radius: 50%; transition: background 0.3s;
+        }
+        .theme-toggle:hover { background: var(--border); }
 
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
             color: #fff; padding: 5rem 5% 7rem 5%; text-align: center;
+            position: relative;
         }
-        .hero h1 { font-size: 2.3rem; margin-bottom: 0.5rem; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 0.5rem; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; }
 
         .search-container {
-            max-width: 900px; margin: -3.5rem auto 3rem auto; background: #fff;
-            padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); position: relative; z-index: 10;
+            max-width: 1000px; margin: -3.5rem auto 3rem auto; background: var(--search-bg);
+            padding: 1.5rem 2rem; border-radius: var(--radius); box-shadow: var(--shadow); position: relative; z-index: 10;
+            transition: background 0.3s;
         }
-        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: flex-end; }
+        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; align-items: flex-end; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray); }
-        .form-group input { padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); outline: none; background: var(--light); font-size: 0.9rem; }
-        .search-btn { background: var(--primary); color: #fff; border: none; padding: 0.75rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .form-group label { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select { padding: 0.7rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); outline: none; background: var(--bg-color); color: var(--text-color); font-size: 0.9rem; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: var(--card-bg); }
+        .search-btn { background: var(--primary); color: #fff; border: none; padding: 0.7rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .search-btn:hover { background: var(--primary-hover); }
+        .reset-btn { background: var(--light); color: var(--dark); border: 1px solid var(--border); padding: 0.7rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .reset-btn:hover { background: #e2e8f0; }
+
+        .stats-bar {
+            max-width: 1200px; margin: 0 auto 1.5rem auto; padding: 0 5%;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+        }
+        .stats-bar .count { font-weight: 600; color: var(--gray); }
+        .stats-bar .count span { color: var(--text-color); font-size: 1.2rem; }
+        .stats-bar .status-counts {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+            flex-wrap: wrap;
+        }
+        .stats-bar .status-counts .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.3rem;
+        }
+        .stats-bar .status-counts .dot-available { background: var(--available-color); }
+        .stats-bar .status-counts .dot-pending { background: var(--pending-color); }
+        .stats-bar .status-counts .dot-sold { background: var(--sold-color); }
 
         main { max-width: 1200px; margin: 0 auto; padding: 0 5% 4rem 5%; }
         .no-results { display: none; text-align: center; padding: 3rem; color: var(--gray); font-size: 1.1rem; width: 100%; grid-column: 1 / -1; }
 
-        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
-        .car-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; }
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+        .car-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s, background 0.3s; }
+        .car-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         
-        .image-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #eee; cursor: pointer; }
-        .image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .featured-tag { position: absolute; top: 10px; left: 10px; background: var(--primary); color: #fff; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 700; border-radius: 4px; text-transform: uppercase; z-index: 1; }
+        .image-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #eee; cursor: pointer; overflow: hidden; }
+        .image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .car-card:hover .image-wrapper img { transform: scale(1.03); }
+        
+        .featured-tag { position: absolute; top: 10px; left: 10px; background: var(--primary); color: #fff; padding: 0.25rem 0.75rem; font-size: 0.7rem; font-weight: 700; border-radius: 20px; text-transform: uppercase; z-index: 1; }
+        .status-tag { position: absolute; top: 10px; right: 10px; padding: 0.25rem 0.75rem; font-size: 0.7rem; font-weight: 700; border-radius: 20px; text-transform: uppercase; z-index: 1; }
+        .status-tag.available { background: var(--available-color); color: #fff; }
+        .status-tag.sold { background: var(--sold-color); color: #fff; }
+        .status-tag.pending { background: var(--pending-color); color: #000; }
+        
         .image-counter {
-            position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff;
-            padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; z-index: 1;
+            position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.75); color: #fff;
+            padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.7rem; z-index: 1; backdrop-filter: blur(4px);
         }
 
         .car-info { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .car-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; }
-        .car-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; }
+        .car-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; text-transform: uppercase; }
+        .car-year { font-weight: 400; color: var(--gray); font-size: 0.9rem; }
+        .car-price { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0; }
+        .car-price .old-price { font-size: 0.9rem; color: var(--gray); text-decoration: line-through; font-weight: 400; margin-left: 0.5rem; }
         
-        .specs-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-        .badge { background: var(--light); border: 1px solid var(--border); padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 4px; color: var(--gray); }
-        .car-description { font-size: 0.88rem; color: #4a5568; margin-bottom: 1.25rem; border-left: 3px solid var(--border); padding-left: 0.5rem; font-style: italic; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .specs-section {
+            cursor: pointer;
+            background: #eef4ff;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.4rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        [data-theme="dark"] .specs-section {
+            background: #1a2a4a;
+            border-color: #4a7ab5;
+        }
+        .specs-section:hover {
+            border-color: var(--primary-hover);
+            background: #dce8ff;
+            box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.12);
+        }
+        [data-theme="dark"] .specs-section:hover {
+            background: #2a3a5a;
+        }
+        .specs-section .toggle-hint {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.6rem;
+            color: var(--primary);
+            margin-top: 0.2rem;
+            border-top: 1px dashed var(--primary);
+            padding-top: 0.2rem;
+            font-weight: 600;
+        }
+        .specs-section .toggle-hint .arrow {
+            transition: transform 0.3s ease;
+            display: inline-block;
+            font-size: 0.7rem;
+        }
+        .specs-section .toggle-hint .arrow.rotated {
+            transform: rotate(180deg);
+        }
 
-        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto; }
-        .btn { padding: 0.6rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; text-align: center; text-decoration: none; border: none; cursor: pointer; }
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 0.6rem;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0.9;
+        }
+        .specs-grid.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+        .spec-item .label {
+            font-weight: 600;
+            color: var(--text-color);
+            min-width: 40px;
+            font-size: 0.65rem;
+        }
+        .spec-item .value {
+            color: #4a5568;
+            font-size: 0.65rem;
+        }
+        [data-theme="dark"] .spec-item .value {
+            color: #ccc;
+        }
+        .spec-item .icon {
+            font-size: 0.7rem;
+        }
+
+        .specs-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
+        .badge { background: var(--light); border: 1px solid var(--border); padding: 0.15rem 0.5rem; font-size: 0.65rem; border-radius: 20px; color: var(--gray); font-weight: 500; }
+
+        .description-wrapper {
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--border);
+            padding-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .description-wrapper:hover {
+            border-left-color: var(--primary);
+            background: var(--light);
+            border-radius: 0 4px 4px 0;
+        }
+        [data-theme="dark"] .description-wrapper:hover {
+            background: #2a2a2a;
+        }
+        .car-description {
+            font-size: 0.8rem;
+            color: #4a5568;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+        [data-theme="dark"] .car-description {
+            color: #ccc;
+        }
+        .car-description.expanded {
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+        .description-hint {
+            font-size: 0.6rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 0.15rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .description-hint .arrow {
+            transition: transform 0.3s ease;
+            display: inline-block;
+            font-size: 0.6rem;
+        }
+        .description-hint .arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr 0.3fr; gap: 0.5rem; margin-top: auto; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+        .btn { padding: 0.5rem; border-radius: var(--radius); font-size: 0.8rem; font-weight: 600; text-align: center; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
         .btn-secondary { background: var(--light); color: var(--dark); border: 1px solid var(--border); }
-        .btn-whatsapp { background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-whatsapp { background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.3rem; }
+        .btn-whatsapp:hover { background: #1da851; }
+        .btn-share { 
+            background: #1a1a1a; color: #fff; border: none; border-radius: var(--radius);
+            padding: 0.5rem; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-share:hover { background: #333; }
 
-        /* Premium Theater-View Modal Styles */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; 
         }
         .modal-content { 
-            background: #111; max-width: 850px; width: 100%; border-radius: var(--radius); 
+            background: #111; max-width: 900px; width: 100%; border-radius: var(--radius); 
             overflow: hidden; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .modal-close { 
             position: absolute; top: 15px; right: 15px; font-size: 2rem; color: #fff; cursor: pointer; 
-            z-index: 1010; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; 
+            z-index: 1010; background: rgba(0,0,0,0.5); width: 44px; height: 44px; display: flex; 
             align-items: center; justify-content: center; border-radius: 50%; border: none; transition: 0.2s;
         }
         .modal-close:hover { background: #dc3545; }
@@ -96,53 +398,172 @@
         }
         .thumb { 
             width: 90px; aspect-ratio: 16/9; object-fit: cover; cursor: pointer; 
-            border: 2px solid transparent; border-radius: 4px; flex-shrink: 0; opacity: 0.6; transition: 0.2s;
+            border: 2px solid transparent; border-radius: 4px; flex-shrink: 0; opacity: 0.5; transition: 0.2s;
         }
         .thumb:hover, .thumb.active { border-color: var(--primary); opacity: 1; }
 
         .loading { text-align: center; padding: 3rem; color: var(--gray); grid-column: 1 / -1; }
+        .loading .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .scroll-top {
+            position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: #fff;
+            width: 48px; height: 48px; border-radius: 50%; border: none; font-size: 1.5rem;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.3s;
+            opacity: 0; visibility: hidden; transform: translateY(20px); z-index: 999;
+        }
+        .scroll-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-top:hover { background: var(--primary-hover); transform: scale(1.1); }
+
+        .toast {
+            position: fixed; bottom: 100px; right: 30px; background: #0f172a; color: #fff;
+            padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999; opacity: 0; transform: translateY(20px); transition: all 0.3s; max-width: 350px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: var(--available-color); }
+        .toast.error { background: var(--sold-color); }
+
+        .price-slider-container { padding: 0.5rem 0; }
+        .price-slider-container input[type="range"] { width: 100%; accent-color: var(--primary); }
+
+        .contact-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; padding: 1rem;
+        }
+        .contact-modal-content {
+            background: var(--card-bg); max-width: 500px; width: 100%; border-radius: var(--radius);
+            padding: 2rem; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .contact-modal-content h2 { margin-bottom: 1rem; }
+        .contact-modal-content .form-group { margin-bottom: 1rem; }
+        .contact-modal-content .form-group input,
+        .contact-modal-content .form-group textarea {
+            width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: var(--radius);
+            background: var(--bg-color); color: var(--text-color);
+        }
+        .contact-modal-close {
+            position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; background: none; border: none; color: var(--text-color);
+        }
 
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 1rem; }
-            .hero h1 { font-size: 1.8rem; }
+            .hero h1 { font-size: 2rem; }
             .search-container { margin-top: -2rem; padding: 1rem; }
             .search-form { grid-template-columns: 1fr; }
+            .stats-bar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .inventory-grid { grid-template-columns: 1fr; }
+            .specs-grid { grid-template-columns: 1fr; }
+            .card-actions { grid-template-columns: 1fr 1fr; }
+            .btn-share { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" id="scrollTopBtn">↑</button>
+
+    <!-- CONTACT FORM MODAL -->
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-modal-content">
+            <button class="contact-modal-close" id="contactModalClose">&times;</button>
+            <h2>📧 Contact Us</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="contactName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Email</label>
+                    <input type="email" id="contactEmail" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="contactMessage" rows="4" placeholder="I'm interested in..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="contactSubmitBtn">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HEADER -->
     <header>
         <div class="logo">MOTO<span>KENYA</span></div>
-        <nav><a href="#inventory">Showroom</a></nav>
+        <nav>
+            <a href="#inventory">Showroom</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+            <button class="theme-toggle" id="contactToggle" title="Contact Us">✉️</button>
+        </nav>
     </header>
 
+    <!-- HERO -->
     <section class="hero">
-        <h1>Find Verified Cars in Kenya</h1>
-        <p>Live inventory direct from our showroom management desk.</p>
+        <h1>Find Your Dream Car</h1>
+        <p>Premium vehicles directly from trusted dealers in Kenya</p>
     </section>
 
+    <!-- SEARCH -->
     <div class="search-container">
         <form class="search-form" id="searchForm" onsubmit="event.preventDefault();">
             <div class="form-group">
-                <label for="filterMake">Type Any Brand</label>
-                <input type="text" id="filterMake" placeholder="e.g. Mercedes, Isuzu, Toyota">
+                <label for="filterMake">🔍 Brand</label>
+                <input type="text" id="filterMake" placeholder="e.g. Toyota, Mercedes">
             </div>
             <div class="form-group">
-                <label for="filterMaxPrice">Max Price (KSh)</label>
-                <input type="number" id="filterMaxPrice" placeholder="e.g. 3500000">
+                <label for="filterModel">Model</label>
+                <input type="text" id="filterModel" placeholder="e.g. Prado, C200">
+            </div>
+            <div class="form-group">
+                <label for="filterStatus">Status</label>
+                <select id="filterStatus">
+                    <option value="">All</option>
+                    <option value="available">Available</option>
+                    <option value="sold">Sold</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filterSort">Sort By</label>
+                <select id="filterSort">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: span 1;">
+                <label>Max Price: <span id="priceLabel">10,000,000</span></label>
+                <div class="price-slider-container">
+                    <input type="range" id="priceSlider" min="100000" max="20000000" step="100000" value="10000000">
+                </div>
             </div>
             <button type="button" class="search-btn" id="filterBtn">Apply Filters</button>
+            <button type="button" class="reset-btn" id="resetBtn">Reset</button>
         </form>
     </div>
 
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="count">🚗 <span id="vehicleCount">0</span> vehicles available</div>
+        <div class="status-counts">
+            <span><span class="status-dot dot-available"></span> Available: <span id="availableCount">0</span></span>
+            <span><span class="status-dot dot-pending"></span> Pending: <span id="pendingCount">0</span></span>
+            <span><span class="status-dot dot-sold"></span> Sold: <span id="soldCount">0</span></span>
+        </div>
+    </div>
+
+    <!-- INVENTORY -->
     <main id="inventory">
         <div class="inventory-grid" id="gridContainer">
-            <div class="loading" id="loadingMsg">Loading vehicles...</div>
-            <div class="no-results" id="noResultsMsg">No matching vehicles found. Try typing a different brand.</div>
+            <div class="loading" id="loadingMsg"><div class="spinner"></div><p>Loading vehicles...</p></div>
+            <div class="no-results" id="noResultsMsg">No matching vehicles found. Try adjusting your filters.</div>
         </div>
     </main>
 
+    <!-- GALLERY MODAL -->
     <div class="modal" id="galleryModal">
         <button class="modal-close" id="closeBtn">&times;</button>
         <div class="modal-content">
@@ -151,12 +572,28 @@
         </div>
     </div>
 
-    <!-- Firebase Integration Modules -->
+    <!-- SERVICE WORKER REGISTRATION (PWA) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('✅ Service Worker registered'))
+                .catch(err => console.error('❌ Service Worker registration failed:', err));
+        }
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ---- FIREBASE CONFIG ----
+        // ================================================================
+        // ===== CONSTANTS =====
+        // ================================================================
+        const WHATSAPP_NUMBER = '254712345678';
+        const DEBOUNCE_DELAY = 300;
+
+        // ================================================================
+        // ===== FIREBASE CONFIG =====
+        // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
             authDomain: "caradds-227e9.firebaseapp.com",
@@ -169,8 +606,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         let liveInventory = [];
+        let debounceTimer = null;
 
-        // ---- ENVIRONMENT DETECTION ----
+        // ================================================================
+        // ===== ENVIRONMENT DETECTION =====
+        // ================================================================
         const isLocal = window.location.hostname === 'localhost' || 
                         window.location.hostname === '127.0.0.1' ||
                         window.location.port === '3000' ||
@@ -178,7 +618,9 @@
 
         console.log(`🌐 Running in ${isLocal ? 'LOCAL' : 'PRODUCTION'} mode`);
 
-        // Track live items inside cloud database collection
+        // ================================================================
+        // ===== FIRESTORE QUERY =====
+        // ================================================================
         const q = query(collection(db, "vehicles"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             liveInventory = [];
@@ -186,21 +628,36 @@
                 liveInventory.push({ id: doc.id, ...doc.data() });
             });
             console.log(`📦 Found ${liveInventory.length} vehicles`);
-            if (liveInventory.length > 0) {
-                console.log('🔍 Sample vehicle:', liveInventory[0]);
-            }
-            filterInventory();
+            updateStatusCounts(liveInventory);
+            applyFilters();
         }, (error) => {
             console.error('❌ Firestore error:', error);
-            document.getElementById('loadingMsg').textContent = 'Error loading vehicles. Please refresh.';
+            document.getElementById('loadingMsg').innerHTML = '<p>Error loading vehicles. Please refresh.</p>';
         });
 
+        // ================================================================
+        // ===== UPDATE STATUS COUNTS =====
+        // ================================================================
+        function updateStatusCounts(vehicles) {
+            const available = vehicles.filter(v => v.status === 'available' || !v.status).length;
+            const pending = vehicles.filter(v => v.status === 'pending').length;
+            const sold = vehicles.filter(v => v.status === 'sold').length;
+
+            document.getElementById('availableCount').textContent = available;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('soldCount').textContent = sold;
+        }
+
+        // ================================================================
+        // ===== RENDER GRID =====
+        // ================================================================
         function renderGrid(data) {
             const container = document.getElementById('gridContainer');
             const noResults = document.getElementById('noResultsMsg');
             
-            // Remove old car cards
             container.querySelectorAll('.car-card').forEach(card => card.remove());
+
+            document.getElementById('vehicleCount').textContent = data.length;
 
             if(data.length === 0) {
                 noResults.style.display = 'block';
@@ -211,64 +668,243 @@
             document.getElementById('loadingMsg').style.display = 'none';
 
             data.forEach(car => {
-                // Get the first image URL with fallback
+                const sanitize = (str) => {
+                    if (!str) return '';
+                    return String(str).replace(/[<>]/g, '');
+                };
+
                 let primaryImage = 'https://via.placeholder.com/600x400?text=No+Image';
-                
                 if (car.images && Array.isArray(car.images) && car.images.length > 0) {
                     primaryImage = car.images[0];
                 } else if (car.images && typeof car.images === 'string') {
                     primaryImage = car.images;
                 }
-                
                 const imageCount = car.images ? (Array.isArray(car.images) ? car.images.length : 1) : 0;
                 
+                const status = car.status || 'available';
+                const statusClass = status === 'available' ? 'available' : status === 'sold' ? 'sold' : 'pending';
+                const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+                
+                const specs = [];
+                if (car.engine) specs.push({ icon: '⚙️', label: 'Engine', value: sanitize(car.engine) });
+                if (car.transmission) specs.push({ icon: '🔄', label: 'Transmission', value: sanitize(car.transmission) });
+                if (car.mileage) specs.push({ icon: '📍', label: 'Mileage', value: `${Number(car.mileage).toLocaleString()} km` });
+                if (car.fuelType) specs.push({ icon: '⛽', label: 'Fuel', value: sanitize(car.fuelType) });
+                if (car.driveType) specs.push({ icon: '🚗', label: 'Drive', value: sanitize(car.driveType) });
+                if (car.color) specs.push({ icon: '🎨', label: 'Color', value: sanitize(car.color) });
+                if (car.seats) specs.push({ icon: '💺', label: 'Seats', value: sanitize(car.seats) });
+                if (car.condition) specs.push({ icon: '📋', label: 'Condition', value: sanitize(car.condition) });
+                if (car.bodyType) specs.push({ icon: '🚘', label: 'Body', value: sanitize(car.bodyType) });
+                if (car.warranty) specs.push({ icon: '🛡️', label: 'Warranty', value: sanitize(car.warranty) });
+                
+                const hasSpecs = specs.length > 0;
+                const specsHTML = hasSpecs ? `
+                    <div class="specs-section" data-target="specs-${car.id}">
+                        <div class="specs-grid" id="specs-${car.id}">
+                            ${specs.map(s => `
+                                <div class="spec-item">
+                                    <span class="icon">${s.icon}</span>
+                                    <span class="label">${s.label}:</span>
+                                    <span class="value">${s.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="toggle-hint">
+                            <span>👆 Click to see all details</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                    </div>
+                ` : '';
+
+                const safeDescription = sanitize(car.description || 'No description available.');
+                const safeBadges = car.badges ? car.badges.map(b => sanitize(b)) : [];
+
+                const isLongDescription = safeDescription.length > 100;
+                const shareUrl = window.location.href;
+
                 const card = document.createElement('article');
                 card.className = 'car-card';
                 card.innerHTML = `
                     <div class="image-wrapper btn-gallery" data-id="${car.id}">
-                        ${car.featured ? '<span class="featured-tag">Featured</span>' : ''}
+                        ${car.featured ? '<span class="featured-tag">⭐ Featured</span>' : ''}
+                        <span class="status-tag ${statusClass}">${statusLabel}</span>
                         <img src="${primaryImage}" 
-                             alt="${car.make} ${car.model}"
+                             alt="${sanitize(car.make)} ${sanitize(car.model)}"
                              onerror="this.src='https://via.placeholder.com/600x400?text=Image+Error'"
                              loading="lazy">
                         ${imageCount > 1 ? `<span class="image-counter">📸 ${imageCount}</span>` : ''}
                     </div>
                     <div class="car-info">
-                        <h3 class="car-title">${car.make} ${car.model} (${car.year})</h3>
-                        <div class="car-price">KSh ${car.price?.toLocaleString() || 0}</div>
-                        <div class="specs-badges">
-                            ${car.badges ? car.badges.map(b => `<span class="badge">${b}</span>`).join('') : ''}
+                        <h3 class="car-title">${sanitize(car.make)} ${sanitize(car.model)} <span class="car-year">(${sanitize(car.year)})</span></h3>
+                        <div class="car-price">
+                            KSh ${Number(car.price || 0).toLocaleString()}
+                            ${car.oldPrice ? `<span class="old-price">KSh ${Number(car.oldPrice).toLocaleString()}</span>` : ''}
                         </div>
-                        <p class="car-description">${car.description || ''}</p>
+                        ${specsHTML}
+                        <div class="specs-badges">
+                            ${safeBadges.map(b => `<span class="badge">${b}</span>`).join('')}
+                        </div>
+                        <div class="description-wrapper" data-target="desc-${car.id}">
+                            <p class="car-description" id="desc-${car.id}">${safeDescription}</p>
+                            ${isLongDescription ? `
+                                <div class="description-hint">
+                                    <span>👆 Click to read more</span>
+                                    <span class="arrow">▼</span>
+                                </div>
+                            ` : ''}
+                        </div>
                         <div class="card-actions">
-                            <button class="btn btn-secondary btn-gallery" data-id="${car.id}">View Photos (${imageCount})</button>
-                            <a href="https://wa.me/254700000000?text=Hi,%20I'am%20interested%20in%20the%20${car.year}%20${car.make.toUpperCase()}%20${car.model}%20KSh%20${car.price?.toLocaleString()}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+                            <button class="btn btn-secondary btn-gallery" data-id="${car.id}">📸 ${imageCount} Photos</button>
+                            <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi,%20I'm%20interested%20in%20the%20${sanitize(car.year)}%20${sanitize(car.make).toUpperCase()}%20${sanitize(car.model)}%20at%20KSh%20${Number(car.price || 0).toLocaleString()}" 
+                               target="_blank" class="btn btn-whatsapp">💬 WhatsApp</a>
+                            <button class="btn-share share-btn" data-url="${shareUrl}" data-title="${car.make} ${car.model}">📤</button>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
 
+            // ---- SPECS TOGGLE ----
+            document.querySelectorAll('.specs-section').forEach(section => {
+                section.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const targetId = this.dataset.target;
+                    const specsGrid = document.getElementById(targetId);
+                    const arrow = this.querySelector('.arrow');
+                    const hintSpan = this.querySelector('.toggle-hint span:first-child');
+                    
+                    if (specsGrid) {
+                        specsGrid.classList.toggle('expanded');
+                        if (arrow) arrow.classList.toggle('rotated');
+                        if (hintSpan) {
+                            if (specsGrid.classList.contains('expanded')) {
+                                hintSpan.textContent = '👆 Click to hide details';
+                            } else {
+                                hintSpan.textContent = '👆 Click to see all details';
+                            }
+                        }
+                    }
+                });
+            });
+
+            // ---- DESCRIPTION TOGGLE ----
+            document.querySelectorAll('.description-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const targetId = this.dataset.target;
+                    const desc = document.getElementById(targetId);
+                    const hint = this.querySelector('.description-hint');
+                    
+                    if (desc) {
+                        desc.classList.toggle('expanded');
+                        if (hint) {
+                            const arrow = hint.querySelector('.arrow');
+                            const span = hint.querySelector('span:first-child');
+                            if (desc.classList.contains('expanded')) {
+                                span.textContent = '👆 Click to show less';
+                                if (arrow) arrow.classList.add('rotated');
+                            } else {
+                                span.textContent = '👆 Click to read more';
+                                if (arrow) arrow.classList.remove('rotated');
+                            }
+                        }
+                    }
+                });
+            });
+
+            // ---- GALLERY ----
             document.querySelectorAll('.btn-gallery').forEach(el => {
                 el.addEventListener('click', (e) => {
-                    openGallery(e.currentTarget.getAttribute('data-id'));
+                    const carId = e.currentTarget.getAttribute('data-id');
+                    openGallery(carId);
+                    incrementViewCount(carId);
+                });
+            });
+
+            // ---- SHARE BUTTONS ----
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const url = this.dataset.url;
+                    const title = this.dataset.title;
+                    shareVehicle(url, title);
                 });
             });
         }
 
-        function filterInventory() {
-            const searchText = document.getElementById('filterMake').value.trim().toLowerCase();
-            const maxPrice = parseFloat(document.getElementById('filterMaxPrice').value);
+        // ================================================================
+        // ===== SHARE FUNCTION =====
+        // ================================================================
+        function shareVehicle(url, title) {
+            if (navigator.share) {
+                navigator.share({
+                    title: `Check out this ${title} on MOTO KENYA!`,
+                    text: `I found this amazing vehicle on MOTO KENYA. Check it out!`,
+                    url: url
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('📋 Link copied to clipboard!', 'success');
+                }).catch(() => {
+                    showToast('📋 Share this link: ' + url, 'success');
+                });
+            }
+        }
 
-            const filtered = liveInventory.filter(car => {
-                const matchesMake = !searchText || (car.make && car.make.toLowerCase().includes(searchText));
-                const matchesPrice = !maxPrice || (car.price && car.price <= maxPrice);
-                return matchesMake && matchesPrice;
+        // ================================================================
+        // ===== VIEW COUNTER =====
+        // ================================================================
+        async function incrementViewCount(carId) {
+            try {
+                const carRef = doc(db, "vehicles", carId);
+                await updateDoc(carRef, {
+                    views: increment(1)
+                });
+            } catch (error) {
+                console.log('View count update skipped:', error.message);
+            }
+        }
+
+        // ================================================================
+        // ===== APPLY FILTERS (WITH DEBOUNCING) =====
+        // ================================================================
+        function applyFilters() {
+            const makeFilter = document.getElementById('filterMake').value.trim().toLowerCase();
+            const modelFilter = document.getElementById('filterModel').value.trim().toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const sortOption = document.getElementById('filterSort').value;
+            const maxPrice = parseInt(document.getElementById('priceSlider').value) || 10000000;
+
+            let filtered = liveInventory.filter(car => {
+                const matchesMake = !makeFilter || (car.make && car.make.toLowerCase().includes(makeFilter));
+                const matchesModel = !modelFilter || (car.model && car.model.toLowerCase().includes(modelFilter));
+                const matchesStatus = !statusFilter || (car.status === statusFilter) || (statusFilter === 'available' && !car.status);
+                const matchesPrice = car.price && car.price <= maxPrice;
+                return matchesMake && matchesModel && matchesStatus && matchesPrice;
             });
+
+            switch(sortOption) {
+                case 'price-low':
+                    filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
+                    break;
+                case 'price-high':
+                    filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
+                    break;
+                case 'newest':
+                default:
+                    break;
+            }
 
             renderGrid(filtered);
         }
 
+        function debouncedApplyFilters() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(applyFilters, DEBOUNCE_DELAY);
+        }
+
+        // ================================================================
+        // ===== OPEN GALLERY =====
+        // ================================================================
         function openGallery(carId) {
             const car = liveInventory.find(v => v.id === carId);
             if (!car || !car.images || car.images.length === 0) return;
@@ -276,7 +912,6 @@
             const mainImg = document.getElementById('modalMainImg');
             const thumbRow = document.getElementById('modalThumbs');
             
-            // Get the first image
             const firstImage = Array.isArray(car.images) ? car.images[0] : car.images;
             mainImg.src = firstImage || 'https://via.placeholder.com/800x450?text=No+Image';
             thumbRow.innerHTML = '';
@@ -302,21 +937,145 @@
             document.getElementById('galleryModal').style.display = 'flex';
         }
 
-        document.getElementById('filterMake').addEventListener('input', filterInventory);
-        document.getElementById('filterMaxPrice').addEventListener('input', filterInventory);
-        document.getElementById('filterBtn').addEventListener('click', filterInventory);
+        // ================================================================
+        // ===== DARK MODE =====
+        // ================================================================
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        // ================================================================
+        // ===== CONTACT FORM =====
+        // ================================================================
+        const contactToggle = document.getElementById('contactToggle');
+        const contactModal = document.getElementById('contactModal');
+        const contactModalClose = document.getElementById('contactModalClose');
+        const contactForm = document.getElementById('contactForm');
+
+        contactToggle.addEventListener('click', () => {
+            contactModal.style.display = 'flex';
+        });
+
+        contactModalClose.addEventListener('click', () => {
+            contactModal.style.display = 'none';
+        });
+
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                contactModal.style.display = 'none';
+            }
+        });
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            
+            if (!name || !email || !message) {
+                showToast('Please fill in all fields.', 'error');
+                return;
+            }
+
+            const whatsappMsg = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`, '_blank');
+            
+            contactModal.style.display = 'none';
+            contactForm.reset();
+            showToast('✅ Message sent via WhatsApp!', 'success');
+        });
+
+        // ================================================================
+        // ===== TOAST =====
+        // ================================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ================================================================
+        // ===== EVENT LISTENERS =====
+        // ================================================================
+        document.getElementById('filterMake').addEventListener('input', debouncedApplyFilters);
+        document.getElementById('filterModel').addEventListener('input', debouncedApplyFilters);
+        document.getElementById('filterStatus').addEventListener('change', applyFilters);
+        document.getElementById('filterSort').addEventListener('change', applyFilters);
+        document.getElementById('filterBtn').addEventListener('click', applyFilters);
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            document.getElementById('filterMake').value = '';
+            document.getElementById('filterModel').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterSort').value = 'newest';
+            document.getElementById('priceSlider').value = '10000000';
+            document.getElementById('priceLabel').textContent = '10,000,000';
+            applyFilters();
+        });
+
+        document.getElementById('priceSlider').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            document.getElementById('priceLabel').textContent = val.toLocaleString();
+        });
+        document.getElementById('priceSlider').addEventListener('change', applyFilters);
+
+        // ---- MODAL CONTROLS ----
         document.getElementById('closeBtn').addEventListener('click', () => {
             document.getElementById('galleryModal').style.display = 'none';
         });
 
-        // Close modal on background click
         document.getElementById('galleryModal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) {
                 document.getElementById('galleryModal').style.display = 'none';
             }
         });
 
-        console.log('🚗 MOTO KENYA Showroom loaded');
+        // ---- SCROLL TO TOP ----
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ---- KEYBOARD SHORTCUT ----
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('galleryModal').style.display = 'none';
+                document.getElementById('contactModal').style.display = 'none';
+            }
+        });
+
+        console.log('🚗 MOTO KENYA Showroom loaded (All Features)');
+        console.log('📱 WhatsApp Number:', WHATSAPP_NUMBER);
+        console.log('🌓 Dark mode available');
+        console.log('📤 Share buttons available');
+        console.log('📝 Expandable description available');
+        console.log('📊 Status counts: Available, Pending, Sold');
     </script>
 </body>
 </html>
