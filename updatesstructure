@@ -1,0 +1,66 @@
+carbusiness-website/
+│
+├── 📁 root/
+│   ├── 📄 index.html                    🔴 HIGH - Complete rewrite
+│   ├── 📄 manifest.json                 🟢 LOW - Update config
+│   ├── 📄 sw.js                         🟢 LOW - Update service worker
+│   ├── 📄 package.json                  🟡 MEDIUM - Add security deps
+│   ├── 📄 package-lock.json             🟡 MEDIUM - Run npm install
+│   ├── 📄 .env                          🔴 HIGH - Add all credentials
+│   ├── 📄 .env.example                  🟢 LOW - Update template
+│   ├── 📄 .gitignore                    🔴 HIGH - Add all ignores
+│   ├── 📄 firebase.json                 🟡 MEDIUM - Remove storage config
+│   ├── 📄 firestore.rules               🔴 HIGH - Complete security rules
+│   ├── 📄 firebase-debug.log            🟢 LOW - Delete/ignore
+│   ├── 📄 imagekit-auth-server.js       🔴 HIGH - Complete rewrite
+│   ├── 📄 readme.md                     🟢 LOW - Update docs
+│   ├── 📄 Readme2.md                    🟢 LOW - Delete or merge
+│   ├── 📄 start-imagekit-auth.ps1       🟢 LOW - Update paths
+│   ├── 📄 start-imagekit-server.ps1     🟢 LOW - Update paths
+│   ├── 📄 index2.html                   🟢 LOW - Delete if not needed
+│   └── 📄 projectstructure              🟢 LOW - Delete
+│
+├── 📁 css/
+│   ├── 📄 style.css                     🔴 HIGH - Complete styles
+│   ├── 📄 admin.css                     🔴 HIGH - Complete admin styles
+│   └── 📄 dark-mode.css                 🔴 HIGH - Complete dark mode
+│
+├── 📁 js/
+│   ├── 📄 firebase-config.js            🔴 HIGH - ✅ Already updated
+│   ├── 📄 main.js                       🔴 HIGH - Create complete
+│   ├── 📄 vehicles.js                   🔴 HIGH - Create complete
+│   ├── 📄 admin.js                      🟡 MEDIUM - Create complete
+│   ├── 📄 wishlist.js                   🟢 LOW - Create
+│   └── 📄 compare.js                    🟢 LOW - Create
+│
+├── 📁 pages/
+│   ├── 📄 admin.html                    🔴 HIGH - Complete rewrite
+│   ├── 📄 admin-management.html         🟡 MEDIUM - Complete update
+│   ├── 📄 about.html                    🟡 MEDIUM - Complete update
+│   ├── 📄 blog.html                     🟡 MEDIUM - Complete update
+│   ├── 📄 contact.html                  🟡 MEDIUM - Complete update
+│   ├── 📄 faq.html                      🟡 MEDIUM - Complete update
+│   ├── 📄 finance.html                  🟡 MEDIUM - Complete update
+│   ├── 📄 privacy.html                  🟡 MEDIUM - Complete update
+│   ├── 📄 terms.html                    🟡 MEDIUM - Complete update
+│   ├── 📄 testimonials.html             🟡 MEDIUM - Complete update
+│   └── 📄 trade-in.html                 🟡 MEDIUM - Complete update
+│
+├── 📁 images/
+│   ├── 📁 icons/
+│   │   ├── favicon.ico                  🟢 LOW - Add/update
+│   │   ├── icon-192.png                 🟢 LOW - Add/update
+│   │   └── icon-512.png                 🟢 LOW - Add/update
+│   └── 📁 vehicles/
+│       ├── placeholder.jpg              🟢 LOW - Add
+│       └── no-image.jpg                 🟢 LOW - Add
+│
+├── 📁 functions/
+│   ├── 📄 index.js                      🟡 MEDIUM - Complete update
+│   ├── 📄 package.json                  🟢 LOW - Update deps
+│   └── 📄 package-lock.json             🟢 LOW - Run npm install
+│
+├── 📁 scripts/
+│   └── 📄 sanity-check.js               🟢 LOW - Update paths
+│
+└── 📁 node_modules/                     🟢 LOW - Run npm install

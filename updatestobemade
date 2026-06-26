@@ -1,0 +1,1685 @@
+🗂️ ROOT FILES
+1. index.html 🔴 HIGH
+Remove storageBucket from Firebase config
+
+Add security headers (CSP, XSS, XFO, CT)
+
+Update CSS links to css/style.css, css/dark-mode.css
+
+Update JS links to js/main.js, js/vehicles.js
+
+Add import map for Firebase
+
+Fix image loading in render function
+
+Add all missing features (specs, description, quick reply, similar vehicles)
+
+Fix dark mode toggle visibility
+
+Add input validation on search forms
+
+Sanitize all user inputs
+
+Add CSRF protection
+
+2. manifest.json 🟢 LOW
+Update start_url to /index.html
+
+Update scope to /
+
+Update icons paths
+
+Update theme_color and background_color
+
+3. sw.js 🟢 LOW
+Update cache names
+
+Update cache assets with new paths
+
+Update offline page paths
+
+Add HTTPS enforcement check
+
+Update to include pages/, css/, js/ folders
+
+4. package.json 🟡 MEDIUM
+Add security dependencies (helmet, express-rate-limit)
+
+Update scripts to point to correct files
+
+Update main entry point
+
+Run npm audit and fix vulnerabilities
+
+5. package-lock.json 🟡 MEDIUM
+Run npm install to update after package.json changes
+
+6. .env 🔴 HIGH
+Add ImageKit credentials
+
+Add Firebase config if needed
+
+Add PORT setting
+
+Add JWT secret if used
+
+Never commit to git
+
+7. .env.example 🟢 LOW
+Update with all environment variables
+
+Add comments explaining each variable
+
+Remove actual values
+
+8. .gitignore 🔴 HIGH
+Add node_modules/
+
+Add .env
+
+Add firebase-debug.log
+
+Add *.log
+
+Add .DS_Store
+
+Add dist/ or build/ if any
+
+9. firebase.json 🟡 MEDIUM
+Update hosting public to .
+
+Remove storage config
+
+Update Firestore rules path
+
+Add security headers in hosting config
+
+10. firestore.rules 🔴 HIGH
+Restrict write access to authenticated users only
+
+Validate data types on write
+
+Implement role-based access control
+
+Add rate limiting rules
+
+Validate all fields before writing
+
+11. firebase-debug.log 🟢 LOW
+Delete or ignore (auto-generated)
+
+Add to .gitignore
+
+12. imagekit-auth-server.js 🔴 HIGH
+Add security headers to all responses
+
+Implement rate limiting (express-rate-limit)
+
+Add CORS properly
+
+Add request validation
+
+Sanitize user input
+
+Add request timeout
+
+Add HTTPS enforcement
+
+Add request logging
+
+Support pages/, css/, js/ folder serving
+
+Add health check endpoint
+
+Add CSRF protection
+
+13. readme.md 🟢 LOW
+Update project description
+
+Update installation instructions
+
+Update file structure
+
+Update deployment instructions
+
+Add security notes
+
+14. Readme2.md 🟢 LOW
+Delete if duplicate
+
+Or merge into main readme
+
+15. start-imagekit-auth.ps1 🟢 LOW
+Update path to imagekit-auth-server.js
+
+Update Node version check
+
+16. start-imagekit-server.ps1 🟢 LOW
+Update path to server file
+
+Update port number
+
+17. index2.html 🟢 LOW
+Delete if not needed
+
+Or rename and update
+
+18. projectstructure 🟢 LOW
+Delete (already have structure documented)
+
+📁 CSS FOLDER
+19. css/style.css 🔴 HIGH
+Add all shared styles
+
+Add dark mode variables
+
+Add responsive styles
+
+Add grid system
+
+Add card styles
+
+Add button styles
+
+Add form styles
+
+Add all utility classes
+
+Add print styles
+
+20. css/admin.css 🔴 HIGH
+Add admin panel styles
+
+Add dashboard cards
+
+Add table styles
+
+Add sidebar styles
+
+Add admin forms
+
+Add admin buttons
+
+Add responsive admin styles
+
+21. css/dark-mode.css 🔴 HIGH
+Add dark mode overrides
+
+Add dark mode for all components
+
+Add dark mode for admin panel
+
+Add dark mode for forms and inputs
+
+📁 JS FOLDER
+22. js/firebase-config.js 🔴 HIGH
+✅ Already updated - Removed storageBucket
+
+✅ Added error handling
+
+✅ Added helper functions
+
+✅ Add secure config validation
+
+23. js/main.js 🔴 HIGH
+Create shared JavaScript functions
+
+Add toast notification
+
+Add dark mode toggle
+
+Add scroll to top
+
+Add wishlist functions
+
+Add recent vehicles
+
+Add share function
+
+Add input sanitization function
+
+Add CSRF token handling
+
+24. js/vehicles.js 🔴 HIGH
+Add loadVehicles function
+
+Add getVehicles with filters
+
+Add incrementViewCount
+
+Add renderVehicleCards
+
+Add renderVehicleTable
+
+Add validate vehicle data
+
+Add sanitize input function
+
+25. js/admin.js 🟡 MEDIUM
+Add admin panel logic
+
+Add vehicle CRUD operations
+
+Add user management
+
+Add dashboard stats
+
+Add admin authentication checks
+
+Add input validation
+
+26. js/wishlist.js 🟢 LOW
+Add wishlist functions
+
+Add local storage management
+
+Add secure storage handling
+
+27. js/compare.js 🟢 LOW
+Add comparison functions
+
+Add comparison UI logic
+
+📁 PAGES FOLDER
+28. pages/admin.html 🔴 HIGH
+Remove storageBucket from Firebase config
+
+Add security headers (CSP, XSS, XFO, CT)
+
+Update CSS links to ../css/
+
+Update JS imports to use import map
+
+Fix image upload
+
+Fix image preview
+
+Fix inventory display
+
+Add rate limiting on login
+
+Add CSRF protection
+
+Add session timeout
+
+Add input validation
+
+Add role-based access control
+
+29. pages/admin-management.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS imports to use import map
+
+Update Firebase imports
+
+Fix user management functions
+
+Add access control checks
+
+Add input validation
+
+30. pages/about.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update navigation links
+
+Sanitize any dynamic content
+
+31. pages/blog.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update navigation links
+
+Sanitize blog content
+
+32. pages/contact.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update contact form
+
+Add CSRF protection
+
+Add input validation
+
+Add rate limiting
+
+Add reCAPTCHA
+
+33. pages/faq.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update FAQ content
+
+34. pages/finance.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update finance calculator
+
+Add input validation for numbers
+
+35. pages/privacy.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Update privacy policy content
+
+36. pages/terms.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Update terms content
+
+37. pages/testimonials.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update testimonials content
+
+Sanitize testimonial content
+
+38. pages/trade-in.html 🟡 MEDIUM
+Add security headers
+
+Update CSS links to ../css/
+
+Update JS links to ../js/
+
+Add import map if needed
+
+Update trade-in form
+
+Add input validation
+
+Add CSRF protection
+
+📁 IMAGES FOLDER
+39. images/icons/ 🟢 LOW
+Add/update favicon
+
+Add/update app icons
+
+Add/update social media images
+
+40. images/vehicles/ 🟢 LOW
+Add placeholder images
+
+Organize vehicle images
+
+Add no-image placeholder
+
+📁 FUNCTIONS FOLDER
+41. functions/index.js 🟡 MEDIUM
+Update ImageKit auth function
+
+Update Firebase functions
+
+Update CORS settings
+
+Update environment variables
+
+Add input validation
+
+Add rate limiting
+
+Add security headers
+
+42. functions/package.json 🟢 LOW
+Update dependencies
+
+Update scripts
+
+Update engines
+
+Add security packages
+
+43. functions/package-lock.json 🟢 LOW
+Run npm install to update
+
+📁 SCRIPTS FOLDER
+44. scripts/sanity-check.js 🟢 LOW
+Update paths
+
+Update checks
+
+Update error handling
+
+📁 NODE_MODULES FOLDER
+45. node_modules/ 🟢 LOW
+Run npm install to update dependencies
+
+Verify all required packages are installed
+
+Run npm audit to check vulnerabilities
+
+🔒 SECURITY UPDATES BY CATEGORY
+HTML SECURITY HEADERS (All Pages)
+Add Content-Security-Policy (CSP)
+
+Add X-XSS-Protection
+
+Add X-Content-Type-Options
+
+Add X-Frame-Options
+
+Add Referrer-Policy
+
+Add Strict-Transport-Security (HSTS)
+
+FIREBASE SECURITY
+Restrict write access to authenticated users
+
+Validate data types on write
+
+Implement role-based access control
+
+Add rate limiting rules
+
+Enable email verification
+
+Implement account lockout
+
+API & SERVER SECURITY
+Implement rate limiting (express-rate-limit)
+
+Add request validation
+
+Sanitize user input
+
+Implement CORS properly
+
+Add request timeout
+
+Add HTTPS enforcement
+
+Add request logging
+
+DATABASE SECURITY
+Validate all fields before writing
+
+Restrict field updates
+
+Implement data validation rules
+
+Add audit logging
+
+FILE & UPLOAD SECURITY
+Validate file types (only images)
+
+Validate file size (max 5MB)
+
+Validate file content
+
+Sanitize filenames
+
+USER INPUT SECURITY
+Sanitize all user inputs
+
+Escape special characters
+
+Validate email format
+
+Validate phone numbers
+
+Implement CSRF protection
+
+COOKIE & SESSION SECURITY
+Set Secure flag on cookies
+
+Set HttpOnly flag on cookies
+
+Set SameSite flag on cookies
+
+Implement session timeout
+
+ACCESS CONTROL
+Implement role-based access (Super Admin, Editor, Viewer)
+
+Restrict admin functions based on role
+
+Add admin activity audit log
+
+ENVIRONMENT VARIABLES
+Store all API keys in .env file
+
+Never commit .env to git
+
+Use different keys for development/production
+
+RATE LIMITING
+Rate limiting for login attempts
+
+Rate limiting for API endpoints
+
+Rate limiting for file uploads
+
+Rate limiting for contact forms
+
+📊 Priority Summary Table
+Priority	Category	Count
+🔴 HIGH	Critical Fixes	22
+🟡 MEDIUM	Important Updates	18
+🟢 LOW	Nice to Have	12
+🔒 SECURITY	Security Fixes	40+
+🚀 Update Order
+Phase 1: Critical Fixes (Week 1)
+Security headers on all HTML pages
+
+Remove storageBucket from all Firebase configs
+
+Update firestore.rules with proper security
+
+Add rate limiting to imagekit-auth-server.js
+
+Sanitize all user inputs
+
+Update .gitignore
+
+Phase 2: Core Updates (Week 2)
+Complete js/firebase-config.js
+
+Complete js/main.js
+
+Complete js/vehicles.js
+
+Update index.html with all features
+
+Update pages/admin.html
+
+Phase 3: Remaining Pages (Week 3)
+Update all pages in pages/ folder
+
+Update CSS files
+
+Update manifest.json and sw.js
+
+Phase 4: Security Hardening (Week 4)
+Implement CSRF protection
+
+Add input validation to all forms
+
+Implement role-based access control
+
+Add HTTPS enforcement
+
+Run security audit
+
+🏠 INDEX.HTML - Homepage
+Visual & UI Improvements
+Add hero section with animated CTA button
+
+Add live vehicle count with animation
+
+Add featured vehicles section with badge
+
+Add "New Arrivals" badge on recent vehicles
+
+Add smooth scroll animations on load
+
+Add loading skeleton for vehicles
+
+Add image lazy loading
+
+Add hover zoom effect on vehicle cards
+
+Add price range filter with visual slider
+
+Add quick view modal for vehicles
+
+Search & Filter Improvements
+Add autocomplete suggestions for brand/model
+
+Add price range visual slider with live update
+
+Add search history/saved searches
+
+Add "Clear Filters" button
+
+Add filter count badge
+
+Add sorting options (newest, price, popularity)
+
+Interactive Features
+Add vehicle comparison tool
+
+Add "Recently Viewed" section
+
+Add "Save to Wishlist" with heart animation
+
+Add "Share" button with social media options
+
+Add WhatsApp floating button for quick inquiry
+
+Add call button for mobile users
+
+Add "Request Test Drive" button
+
+Trust Signals
+Add customer ratings/reviews section
+
+Add "100% Inspected" badge
+
+Add warranty badges
+
+Add financing badges
+
+Add trust logos (certified, inspected)
+
+Performance Improvements
+Add service worker for offline support
+
+Add image optimization
+
+Add lazy loading for images
+
+Add preloading for critical resources
+
+Add progress bar for page load
+
+🚗 VEHICLE DETAIL (Coming Soon)
+Features to Add
+High-resolution image gallery with zoom
+
+360° view (if possible)
+
+Vehicle history report
+
+Financing calculator
+
+Trade-in value estimator
+
+Similar vehicles section
+
+Customer reviews for vehicle
+
+Ask a question form
+
+Schedule test drive
+
+Print brochure/download PDF
+
+ℹ️ ABOUT.HTML
+Content Improvements
+Add company mission and vision
+
+Add team member profiles with photos
+
+Add company history timeline
+
+Add awards and recognition
+
+Add partnerships/certifications
+
+Add "Why Choose Us" section with icons
+
+Add stats (years in business, vehicles sold)
+
+Add video introduction
+
+Add location map
+
+Interactive Features
+Add interactive timeline
+
+Add team member carousel
+
+Add stats counter animation
+
+Add contact section with quick form
+
+Add social media links
+
+📝 BLOG.HTML
+Content Improvements
+Add blog categories/tags
+
+Add featured posts section
+
+Add popular posts widget
+
+Add recent posts widget
+
+Add author bio section
+
+Add related posts
+
+Add newsletter signup
+
+Add comment section
+
+Interactive Features
+Add search for blog posts
+
+Add filter by category/tag
+
+Add post sharing buttons
+
+Add reading time indicator
+
+Add table of contents for long posts
+
+Add progress bar for reading
+
+⭐ TESTIMONIALS.HTML
+Content Improvements
+Add star ratings
+
+Add customer photos
+
+Add video testimonials
+
+Add customer location
+
+Add vehicle they purchased
+
+Add date of purchase
+
+Add verified badge
+
+Interactive Features
+Add filter by rating
+
+Add sort by date/rating
+
+Add testimonial submission form
+
+Add "Write a Review" button
+
+Add testimonial carousel on homepage
+
+📞 CONTACT.HTML
+Content Improvements
+Add phone number with click-to-call
+
+Add email with mailto link
+
+Add physical address with map
+
+Add business hours
+
+Add social media links
+
+Add FAQ section
+
+Add response time promise
+
+Interactive Features
+Add contact form with validation
+
+Add WhatsApp button
+
+Add live chat support
+
+Add callback request form
+
+Add showroom location map
+
+Add email subscription
+
+Form Improvements
+Add subject dropdown
+
+Add file attachment option
+
+Add preferred contact method
+
+Add best time to contact
+
+Add captcha/security
+
+Add auto-reply email
+
+💰 FINANCE.HTML
+Content Improvements
+Add financing options explanation
+
+Add interest rates table
+
+Add payment calculator
+
+Add affordability calculator
+
+Add loan pre-approval info
+
+Add insurance options
+
+Add comparison table
+
+Interactive Features
+Add interactive payment calculator
+
+Add "Get Quote" button
+
+Add financing application form
+
+Add document checklist
+
+Add status tracker for applications
+
+Calculator Features
+Monthly payment calculation
+
+Interest calculation
+
+Total cost calculation
+
+Down payment slider
+
+Loan term slider
+
+Printable quote
+
+🔄 TRADE-IN.HTML
+Content Improvements
+Add trade-in benefits list
+
+Add trade-in process steps
+
+Add required documents list
+
+Add trade-in tips
+
+Add success stories
+
+Add current promotions
+
+Interactive Features
+Add trade-in valuation form
+
+Add vehicle details form
+
+Add photo upload for vehicle
+
+Add instant estimate tool
+
+Add appointment scheduler
+
+Add status tracker
+
+❓ FAQ.HTML
+Content Improvements
+Add category/topic grouping
+
+Add search for FAQs
+
+Add most asked questions
+
+Add video answers for common Qs
+
+Add contact option for unanswered Qs
+
+Add feedback on answers
+
+Interactive Features
+Add search bar for FAQs
+
+Add expand/collapse all
+
+Add vote (helpful/not helpful)
+
+Add related questions
+
+Add question submission form
+
+📄 PRIVACY.HTML
+Content Improvements
+Add clear, simple language
+
+Add table of contents
+
+Add summary section
+
+Add contact for privacy questions
+
+Add last updated date
+
+Add cookie policy
+
+Add data protection info
+
+📄 TERMS.HTML
+Content Improvements
+Add clear, simple language
+
+Add table of contents
+
+Add summary section
+
+Add contact for questions
+
+Add last updated date
+
+Add dispute resolution info
+
+Add liability limitation
+
+👥 ADMIN-MANAGEMENT.HTML
+Features to Add
+Add user list with search
+
+Add user role management
+
+Add user activity log
+
+Add bulk actions
+
+Add export data feature
+
+Add user import feature
+
+Add permission matrix
+
+Add audit trail
+
+UI Improvements
+Add dashboard with user stats
+
+Add user activity timeline
+
+Add role-based views
+
+Add responsive tables
+
+🔐 ADMIN.HTML
+Features to Add
+Add dashboard with key metrics
+
+Add revenue chart
+
+Add recent activity feed
+
+Add quick actions buttons
+
+Add notifications
+
+Add user management
+
+Add content management
+
+Add SEO management
+
+Add analytics dashboard
+
+UI Improvements
+Add dark mode toggle
+
+Add collapsible sidebar
+
+Add drag-and-drop upload
+
+Add bulk actions for vehicles
+
+Add export/import features
+
+🎨 GLOBAL IMPROVEMENTS (All Pages)
+Navigation
+Add sticky/header with search
+
+Add mobile hamburger menu
+
+Add breadcrumb navigation
+
+Add user profile dropdown
+
+Add notification bell
+
+Add wishlist count badge
+
+Add cart/compare count
+
+Footer
+Add quick links
+
+Add social media icons
+
+Add newsletter signup
+
+Add contact info
+
+Add business hours
+
+Add payment badges
+
+Add security badges
+
+Add copyright with year
+
+Accessibility
+Add ARIA labels
+
+Add keyboard navigation
+
+Add screen reader support
+
+Add high contrast mode
+
+Add font size controls
+
+Performance
+Add lazy loading for images
+
+Add preconnect for external resources
+
+Add caching headers
+
+Add minified assets
+
+Add CDN for static files
+
+Mobile Experience
+Add responsive design for all pages
+
+Add touch-friendly buttons
+
+Add swipe gestures
+
+Add click-to-call for phone numbers
+
+Add click-to-whatsapp
+
+Add location detection
+
+SEO
+Add meta descriptions
+
+Add proper heading structure (H1, H2, H3)
+
+Add Open Graph tags
+
+Add Twitter Card tags
+
+Add structured data (JSON-LD)
+
+Add canonical URLs
+
+Add sitemap.xml
+
+Add robots.txt
+
+Trust & Security
+Add HTTPS badge
+
+Add security badges
+
+Add payment protection badges
+
+Add customer testimonials
+
+Add trust signals (certified, inspected)
+
+📊 Priority Summary
+Priority	Features	Count
+🔴 HIGH	Visual/UI, Performance, Mobile, SEO, Trust	25
+🟡 MEDIUM	Interactive Features, Forms, Navigation	20
+🟢 LOW	Accessibility, Advanced Features	15
+🚀 Implementation Order
+Phase 1: Critical UX (Week 1-2)
+Mobile responsive design
+
+Navigation improvements
+
+Search and filters
+
+Performance optimization
+
+Security and trust signals
+
+Phase 2: Interactive Features (Week 3-4)
+Wishlist and favorites
+
+Vehicle comparison
+
+Quick contact/WhatsApp
+
+Test drive scheduling
+
+Financing calculator
+
+Phase 3: Content & SEO (Week 5-6)
+Complete all page content
+
+SEO optimization
+
+Social media integration
+
+Newsletter signup
+
+Blog functionality
+
+Phase 4: Advanced Features (Week 7-8)
+Live chat support
+
+User accounts
+
+Vehicle alerts
+
+Advanced analytics
+
+A/B testing
+
+🎯 Key Customer Experience Goals
+Goal	Metric	Target
+Fast loading	Page load time	< 3 seconds
+Easy navigation	Time to find vehicle	< 30 seconds
+Mobile friendly	Mobile bounce rate	< 40%
+High engagement	Pages per session	> 4 pages
+Conversion	Inquiry submission	> 5% of visitors
+ GLOBAL SECURITY UPDATES (All Pages)
+Security Headers
+Add Content-Security-Policy (CSP) to prevent XSS
+
+Add X-Frame-Options (DENY) to prevent clickjacking
+
+Add X-Content-Type-Options (nosniff) to prevent MIME sniffing
+
+Add X-XSS-Protection (1; mode=block) for XSS protection
+
+Add Referrer-Policy (strict-origin-when-cross-origin)
+
+Add Strict-Transport-Security (HSTS) for HTTPS enforcement
+
+Input Security
+Sanitize all user inputs (strip HTML tags)
+
+Validate all form inputs on server side
+
+Escape special characters (sanitize function)
+
+Use parameterized queries (Firestore handles this)
+
+Implement CSRF tokens on all forms
+
+Add rate limiting on form submissions
+
+Add reCAPTCHA on contact forms
+
+Authentication & Authorization
+Implement role-based access control (Super Admin, Editor, Viewer)
+
+Restrict admin functions based on role
+
+Implement session timeout (30 minutes)
+
+Implement account lockout after 5 failed attempts
+
+Enforce strong password policy
+
+Add email verification requirement
+
+Implement 2FA for admins (optional)
+
+Data Security
+Encrypt sensitive data at rest (Firestore handles this)
+
+Never store plaintext passwords (Firebase Auth handles this)
+
+Never expose API keys in client-side code
+
+Store all keys in .env file
+
+Implement data backup strategy
+
+Add data retention policy
+
+Cookie Security
+Set Secure flag on cookies (HTTPS only)
+
+Set HttpOnly flag on cookies (prevent XSS access)
+
+Set SameSite=Strict or Lax on cookies
+
+Implement session invalidation on logout
+
+🏠 INDEX.HTML - Security Updates
+Form Security
+Add CSRF protection to search form
+
+Sanitize search input (strip special characters)
+
+Validate search queries length (max 100 chars)
+
+Add rate limiting for search queries
+
+Sanitize filter inputs
+
+Wishlist Security
+Validate wishlist items are valid vehicle IDs
+
+Sanitize wishlist data
+
+Add CSRF protection for wishlist actions
+
+Implement wishlist size limit (max 50 items)
+
+Validate wishlist IDs
+
+WhatsApp Security
+Validate phone numbers format
+
+Sanitize WhatsApp messages
+
+Encode URL parameters properly
+
+Add link preview protection
+
+🔐 ADMIN.HTML - Security Updates
+Login Security
+Implement rate limiting on login attempts (5 attempts max)
+
+Implement account lockout after failed attempts
+
+Add CSRF protection to login form
+
+Use HTTPS for login credentials
+
+Sanitize email and password inputs
+
+Add session timeout (30 minutes)
+
+Implement "Remember Me" securely
+
+Add password reset with secure tokens
+
+Session Security
+Implement session timeout warning (5 minutes before)
+
+Invalidate session on logout
+
+Regenerate session ID on login
+
+Store session data securely
+
+Implement concurrent session control
+
+Vehicle Upload Security
+Validate file types (only images - jpg, png, webp)
+
+Validate file size (max 5MB)
+
+Validate file content (not just extension)
+
+Sanitize all vehicle data fields
+
+Validate price (positive number, reasonable range)
+
+Validate year (1900-2025)
+
+Validate mileage (positive number)
+
+Implement upload quotas (max 20 images per vehicle)
+
+Scan for malware in uploads (if possible)
+
+Sanitize filenames
+
+Implement CSRF protection for uploads
+
+Inventory Security
+Sanitize vehicle data before display
+
+Escape special characters in vehicle data
+
+Validate vehicle IDs before delete/update
+
+Implement deletion confirmation
+
+Add audit log for deletions
+
+Access Control
+Restrict admin access to authorized users only
+
+Implement role-based permissions:
+
+Super Admin: Full access
+
+Editor: Can add/edit/delete vehicles
+
+Viewer: Read-only access
+
+Hide admin features based on role
+
+Validate permissions on each action
+
+Log all admin activities
+
+Forgot Password Security
+Validate email format
+
+Implement rate limiting (3 attempts per hour)
+
+Send secure reset links
+
+Reset link expiration (1 hour)
+
+Invalidate old reset links
+
+👥 ADMIN-MANAGEMENT.HTML - Security Updates
+User Management
+Restrict access to Super Admin only
+
+Validate user email format
+
+Implement role assignment security
+
+Add confirmation for role changes
+
+Log all user management actions
+
+Validate user data before update
+
+User Creation
+Validate email format
+
+Enforce strong password policy
+
+Implement rate limiting for user creation
+
+Send secure account creation emails
+
+Require email verification
+
+User Deletion
+Require confirmation before deletion
+
+Validate user exists
+
+Implement soft delete (deactivate instead of delete)
+
+Log deletion activities
+
+📞 CONTACT.HTML - Security Updates
+Contact Form Security
+Add CSRF protection
+
+Validate email format
+
+Validate phone number format
+
+Sanitize name, email, message (strip HTML)
+
+Implement rate limiting (3 submissions per minute)
+
+Add reCAPTCHA v3 to prevent spam
+
+Validate input lengths (max 1000 chars for message)
+
+Implement email header injection prevention
+
+Store contact form submissions securely
+
+Add GDPR/privacy notice
+
+WhatsApp Integration
+Validate phone numbers
+
+Sanitize pre-filled messages
+
+Encode URL parameters properly
+
+💰 FINANCE.HTML - Security Updates
+Calculator Security
+Validate numeric inputs
+
+Validate price ranges (positive numbers)
+
+Validate interest rates (reasonable range)
+
+Validate loan terms (12-120 months)
+
+Sanitize all form inputs
+
+Implement rate limiting for calculations
+
+Form Security
+Add CSRF protection
+
+Validate email format
+
+Validate phone number format
+
+Sanitize personal information
+
+Encrypt sensitive financial data
+
+🔄 TRADE-IN.HTML - Security Updates
+Form Security
+Add CSRF protection
+
+Validate vehicle details
+
+Validate mileage (positive number, reasonable range)
+
+Validate VIN format (if collected)
+
+Validate phone number format
+
+Validate email format
+
+Sanitize all inputs
+
+Implement rate limiting (5 submissions per day)
+
+File Upload Security (if images uploaded)
+Validate file types (only images)
+
+Validate file size (max 5MB)
+
+Validate file content
+
+Sanitize filenames
+
+Scan for malware
+
+⭐ TESTIMONIALS.HTML - Security Updates
+Testimonial Submission
+Add CSRF protection
+
+Validate name (max 100 chars)
+
+Validate email format
+
+Validate rating (1-5 stars)
+
+Sanitize testimonial text (strip HTML)
+
+Validate testimonial length (max 1000 chars)
+
+Implement rate limiting (3 submissions per day)
+
+Add reCAPTCHA
+
+Moderate testimonials before publishing
+
+Review Display
+Sanitize all testimonial content before display
+
+Escape special characters
+
+Verify user identity (optional)
+
+📝 BLOG.HTML - Security Updates
+Blog Comments
+Add CSRF protection
+
+Validate comment content (strip HTML)
+
+Validate comment length (max 500 chars)
+
+Validate user info (name, email)
+
+Implement rate limiting (5 comments per minute)
+
+Add reCAPTCHA
+
+Moderate comments before publishing
+
+Sanitize comment display
+
+Blog Search
+Sanitize search queries
+
+Validate search length (max 100 chars)
+
+Implement rate limiting
+
+ℹ️ ABOUT.HTML - Security Updates
+Contact/Inquiry Form (if included)
+Add CSRF protection
+
+Validate email format
+
+Sanitize all inputs
+
+Implement rate limiting
+
+Add reCAPTCHA
+
+❓ FAQ.HTML - Security Updates
+Search Security
+Sanitize search queries
+
+Validate search length (max 100 chars)
+
+Implement rate limiting
+
+Feedback Form (if included)
+Add CSRF protection
+
+Validate email format
+
+Sanitize feedback content
+
+Implement rate limiting
+
+🔐 IMAGEKIT-AUTH-SERVER.JS - Security Updates
+Server Security
+Implement rate limiting (express-rate-limit)
+
+Add request timeout
+
+Sanitize user input
+
+Implement CORS properly (restrict origins)
+
+Add request validation
+
+Implement IP whitelisting (optional)
+
+Add request logging
+
+Implement HTTPS enforcement
+
+Add security headers middleware
+SECURITY PRIORITY SUMMARY
+Priority	Security Items	Count
+🔴 CRITICAL	CSRF, XSS Prevention, Input Sanitization, Rate Limiting	15
+🟡 HIGH	Authentication, Authorization, Session Security	12
+🟢 MEDIUM	File Validation, Email Security, Data Encryption	10
+🔵 LOW	Logging, Backup, 2FA	8
+🚀 IMMEDIATE SECURITY ACTIONS
+Week 1: Critical
+✅ Add security headers to all HTML pages
+
+✅ Remove storageBucket from Firebase configs
+
+✅ Add CSRF protection to all forms
+
+✅ Sanitize all user inputs
+
+✅ Add rate limiting to server
+
+Week 2: High
+✅ Implement role-based access control
+
+✅ Add account lockout for login
+
+✅ Update firestore.rules
+
+✅ Implement session timeout
+
+✅ Add input validation to all forms
+
+Week 3: Medium
+✅ Add reCAPTCHA to contact forms
+
+✅ Validate file uploads
+
+✅ Implement HTTPS
+
+✅ Add audit logging
+
+✅ Secure environment variables
+
+Week 4: Ongoing
+✅ Regular security audits
+
+✅ Update dependencies regularly
+
+✅ Monitor security logs
+
+✅ Regular backups
+
+✅ Penetration testing
+
+🔒 SECURITY CHECKLIST - ALL PAGES
+Page	CSRF	XSS	SQLi	Rate Limit	Auth	Input Validation
+index.html	✅	✅	✅	✅	❌	✅
+admin.html	✅	✅	✅	✅	✅	✅
+admin-management.html	✅	✅	✅	✅	✅	✅
+about.html	✅	✅	✅	✅	❌	✅
+blog.html	✅	✅	✅	✅	❌	✅
+contact.html	✅	✅	✅	✅	❌	✅
+faq.html	✅	✅	✅	✅	❌	✅
+finance.html	✅	✅	✅	✅	❌	✅
+privacy.html	✅	✅	✅	✅	❌	✅
+terms.html	✅	✅	✅	✅	❌	✅
+testimonials.html	✅	✅	✅	✅	❌	✅
+trade-in.html	✅	✅	✅	✅	❌	✅
+Total Security Items: 100+ across all pages!
+
+Would you like me to provide the complete updated code with all security features for any specific page? 🔒
+
+This response is AI-generated, for reference only.

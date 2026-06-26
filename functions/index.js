@@ -120,32 +120,6 @@ function isValidTokenFormat(token) {
 }
 
 // ============================================================
-// ===== HELPER: GET USER ROLE =====
-// ============================================================
-async function getUserRole(uid) {
-    try {
-        const user = await admin.auth().getUser(uid);
-        const role = user.customClaims?.role || 'viewer';
-        return role;
-    } catch (error) {
-        console.error('Error getting user role:', error);
-        return 'viewer';
-    }
-}
-
-// ============================================================
-// ===== HELPER: CHECK ADMIN PERMISSIONS =====
-// ============================================================
-function hasAdminPermission(role, requiredRole) {
-    const roleHierarchy = {
-        'super': 3,
-        'editor': 2,
-        'viewer': 1
-    };
-    return (roleHierarchy[role] || 0) >= (roleHierarchy[requiredRole] || 0);
-}
-
-// ============================================================
 // ===== HELPER: GET PRIVATE KEY =====
 // ============================================================
 async function getPrivateKey() {
@@ -423,6 +397,26 @@ exports.setAdminRole = onRequest({
         // Set custom claims
         await admin.auth().setCustomUserClaims(targetUser.uid, { role: role });
 
+        // Also update Firestore user document
+        try {
+            const db = admin.firestore();
+            await db.collection('users').doc(targetUser.uid).set({
+                email: targetEmail,
+                role: role,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+            
+            // Also save by email as backup
+            const emailDocId = targetEmail.replace(/[^a-zA-Z0-9]/g, '_');
+            await db.collection('users').doc(emailDocId).set({
+                email: targetEmail,
+                role: role,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        } catch (firestoreError) {
+            console.warn('⚠️ Firestore update failed:', firestoreError);
+        }
+
         console.log(`✅ Role set: ${targetEmail} → ${role} (by ${email})`);
 
         res.status(200).json({
@@ -519,6 +513,19 @@ exports.autoAssignRole = onUserCreated({
         await admin.auth().setCustomUserClaims(uid, { role });
         console.log(`✅ Auto-assigned "${role}" role to ${email} (UID: ${uid})`);
         
+        // Also save to Firestore
+        try {
+            const db = admin.firestore();
+            await db.collection('users').doc(uid).set({
+                email: email,
+                role: role,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                uid: uid
+            });
+        } catch (firestoreError) {
+            console.warn('⚠️ Firestore save failed:', firestoreError);
+        }
+        
         return { success: true, email, role };
         
     } catch (error) {
@@ -560,6 +567,10 @@ exports.health = onRequest({
         roles: {
             superAdmin: Array.from(SUPER_ADMIN_EMAILS),
             availableRoles: ['super', 'editor', 'viewer']
+        },
+        project: {
+            name: 'MOTO KENYA',
+            version: '2.0.0'
         }
     });
 });
@@ -576,3 +587,7 @@ setInterval(() => {
         }
     }
 }, RATE_LIMIT_WINDOW * 2);
+
+console.log('🚀 MOTO KENYA Cloud Functions loaded');
+console.log(`📧 Super Admin emails: ${Array.from(SUPER_ADMIN_EMAILS).join(', ')}`);
+console.log('🔒 Security: Rate limiting, CORS validation, Input sanitization enabled');

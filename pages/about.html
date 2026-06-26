@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>About Us | MOTO KENYA</title>
+    <meta name="description" content="Learn about MOTO KENYA - Kenya's trusted dealership for quality pre-owned vehicles. Our story, mission, and commitment to customer satisfaction.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        /* About Grid */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+            align-items: center;
+        }
+        .about-grid.reverse { direction: rtl; }
+        .about-grid.reverse > * { direction: ltr; }
+        .about-image {
+            background: var(--gradient-secondary);
+            border-radius: var(--border-radius);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: #fff;
+        }
+        .about-content h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .about-content p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        .stat-item {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+        }
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item .label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .team-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all var(--transition-base);
+        }
+        .team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .team-card .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            font-weight: 700;
+        }
+        .team-card h4 { font-weight: 700; }
+        .team-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .value-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all var(--transition-base);
+        }
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .value-card .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+        .value-card h4 { font-weight: 700; }
+        .value-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .about-grid.reverse { direction: ltr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>About MOTO KENYA</h1>
+        <p>Your Trusted Partner in Quality Pre-Owned Vehicles</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-content">
+                <h2>Our Story</h2>
+                <p>Founded in 2018, MOTO KENYA has grown to become one of Kenya's most trusted dealerships for quality pre-owned vehicles. With a passion for cars and a commitment to excellence, we've helped thousands of customers find their dream vehicles.</p>
+                <p>Our journey began with a simple mission: to provide Kenyans with access to reliable, high-quality vehicles at fair prices. Today, we're proud to be a leading name in the automotive industry, known for our transparency, integrity, and customer-first approach.</p>
+            </div>
+            <div class="about-image">🚗</div>
+        </div>
+
+        <div class="about-grid reverse">
+            <div class="about-content">
+                <h2>Our Mission</h2>
+                <p>To deliver exceptional value to our customers by providing thoroughly inspected, quality pre-owned vehicles backed by transparent service and unwavering integrity.</p>
+                <p>We believe that everyone deserves to drive a reliable car. That's why we go above and beyond to ensure every vehicle in our inventory meets the highest standards of quality and safety.</p>
+            </div>
+            <div class="about-image">⭐</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="number">500+</div>
+                <div class="label">Happy Customers</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">7+</div>
+                <div class="label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">100%</div>
+                <div class="label">Vehicles Inspected</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">4.9⭐</div>
+                <div class="label">Customer Rating</div>
+            </div>
+        </div>
+
+        <h2 style="font-family: var(--font-display); font-size: 2rem; text-align: center; margin-bottom: 2rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Our Core Values</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="icon">🔍</div>
+                <h4>Transparency</h4>
+                <p>Full disclosure on every vehicle's history and condition</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🤝</div>
+                <h4>Integrity</h4>
+                <p>Honest dealings and fair pricing for all customers</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">⭐</div>
+                <h4>Quality</h4>
+                <p>Only the best vehicles make it to our showroom</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">💚</div>
+                <h4>Customer First</h4>
+                <p>Your satisfaction is our top priority</p>
+            </div>
+        </div>
+
+        <h2 style="font-family: var(--font-display); font-size: 2rem; text-align: center; margin-bottom: 2rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Meet Our Team</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="avatar">MK</div>
+                <h4>Michael Kariuki</h4>
+                <p>Founder & CEO</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar">JW</div>
+                <h4>Jane Wanjiru</h4>
+                <p>Sales Director</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar">PO</div>
+                <h4>Peter Ochieng</h4>
+                <p>Lead Mechanic</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar">SM</div>
+                <h4>Sarah Muthoni</h4>
+                <p>Customer Relations</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+</body>
+</html>

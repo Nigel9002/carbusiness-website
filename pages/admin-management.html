@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>MOTO KENYA · Admin Management</title>
     
+    <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
@@ -21,215 +22,15 @@
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --danger: #dc2626;
-            --success: #16a34a;
-            --warning: #f59e0b;
-            --gray: #64748b;
-            --border: #e2e8f0;
-            --radius: 12px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --input-bg: #f8fafc;
-            --border-color: #e2e8f0;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f1f5f9;
-            --input-bg: #334155;
-            --border-color: #475569;
-            --gray: #94a3b8;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; transition: background 0.3s; }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            transition: opacity 0.5s ease;
-        }
-        .loading-overlay.active { display: flex; opacity: 1; }
-        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-        .loading-overlay .loader {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(255,255,255,0.1);
-            border-top: 5px solid #2563eb;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-overlay .welcome-text {
-            margin-top: 1.5rem;
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #2563eb, #f59e0b, #16a34a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0 2rem 0;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-color); }
-        .logo span { color: var(--primary); }
-        .header-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-        .header-actions .user-info { font-size: 0.85rem; color: var(--gray); }
-        .btn-back {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-back:hover { background: var(--primary-hover); }
-        .btn-logout {
-            background: none;
-            border: none;
-            color: var(--danger);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .btn-logout:hover { background: var(--danger); color: #fff; }
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 0.3rem 0.5rem;
-            border-radius: 50%;
-            transition: background 0.3s;
-            color: var(--text-color);
-        }
-        .theme-toggle:hover { background: var(--border-color); }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-            transition: background 0.3s;
-        }
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .card .badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        .badge-admin { background: var(--primary); color: #fff; }
-        .badge-editor { background: var(--warning); color: #000; }
-        .badge-viewer { background: var(--gray); color: #fff; }
-
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray); margin-bottom: 0.35rem; }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.65rem 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--input-bg);
-            color: var(--text-color);
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus { outline: none; border-color: var(--primary); background: var(--card-bg); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .helper-text { font-size: 0.75rem; color: var(--gray); margin-top: 0.2rem; }
-        .password-strength {
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 4px;
-            margin-top: 0.3rem;
-            overflow: hidden;
-        }
-        .password-strength .bar { height: 100%; width: 0%; transition: width 0.3s; border-radius: 4px; }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-        }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-primary:disabled { background: var(--gray); cursor: not-allowed; }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-success:hover { background: #15803d; }
-        .btn-danger {
-            background: var(--light);
-            color: var(--danger);
-            border: 1px solid var(--border-color);
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-            width: auto;
-        }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
-        .btn-warning {
-            background: var(--warning);
-            color: #000;
-            border: 1px solid var(--border-color);
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-            width: auto;
-        }
-        .btn-warning:hover { background: #d97706; }
-
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
         .admin-list { margin-top: 1rem; }
         .admin-item {
             display: flex;
@@ -258,64 +59,17 @@
             color: var(--text-color);
         }
 
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: #0f172a;
-            color: #fff;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            max-width: 400px;
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .password-strength {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            overflow: hidden;
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.success { background: var(--success); }
-        .toast.error { background: var(--danger); }
-        .toast.warning { background: var(--warning); color: #000; }
-
-        #loginScreen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-            background: var(--bg-color);
-        }
-        .login-box {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 380px;
-            border: 1px solid var(--border-color);
-        }
-        .login-box h1 { font-size: 1.6rem; text-align: center; color: var(--text-color); }
-        .login-box h1 span { color: var(--primary); }
-        .login-box p { text-align: center; color: var(--gray); margin-bottom: 1.5rem; font-size: 0.9rem; }
-
-        #dashScreen { display: none; }
-        #dashScreen.active { display: block; }
-
-        .session-timer {
-            font-size: 0.75rem;
-            color: var(--gray);
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-        }
-        .session-timer.warning { color: var(--warning); border-color: var(--warning); }
-        .session-timer.danger { color: var(--danger); border-color: var(--danger); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        .password-strength .bar { height: 100%; width: 0%; transition: width 0.3s; border-radius: 4px; }
 
         @media (max-width: 768px) {
-            .container { padding: 1rem; }
             .form-row { grid-template-columns: 1fr; }
             .admin-item { flex-direction: column; align-items: flex-start; }
             .admin-item .admin-actions { width: 100%; }
@@ -324,13 +78,16 @@
 </head>
 <body>
 
+    <!-- ===== LOADING OVERLAY ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loader"></div>
         <div class="welcome-text">🌟 Loading Admin Management...</div>
     </div>
 
+    <!-- ===== TOAST ===== -->
     <div id="toast" class="toast"></div>
 
+    <!-- ===== LOGIN SCREEN ===== -->
     <div id="loginScreen">
         <div class="login-box">
             <h1>MOTO<span>KENYA</span></h1>
@@ -349,6 +106,7 @@
         </div>
     </div>
 
+    <!-- ===== DASHBOARD ===== -->
     <div id="dashScreen">
         <div class="container">
             <header>
@@ -356,12 +114,13 @@
                 <div class="header-actions">
                     <span class="user-info" id="userInfo">👤 Loading...</span>
                     <span class="session-timer" id="sessionTimer">⏱️ 30:00</span>
-                    <a href="admin.html" class="btn-back">← Back to Vehicles</a>
-                    <button class="theme-toggle" id="themeToggle">🌙</button>
+                    <a href="../admin.html" class="btn-back">← Back to Vehicles</a>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
                     <button class="btn-logout" id="logoutBtn">Sign Out</button>
                 </div>
             </header>
 
+            <!-- Create Admin Card -->
             <div class="card" id="createAdminCard">
                 <h2>👤 Create New Admin <span class="badge badge-admin">Super Admin Only</span></h2>
                 <form id="registerAdminForm">
@@ -396,6 +155,7 @@
                 </form>
             </div>
 
+            <!-- Admin List Card -->
             <div class="card" id="adminListCard">
                 <h2>👥 Admin Users <span class="badge badge-admin">Manage Roles</span></h2>
                 <div id="adminList">
@@ -404,6 +164,20 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+
+    <!-- ========== FIREBASE LOGIC ========== -->
+    <script type="importmap">
+    {
+        "imports": {
+            "firebase": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+        }
+    }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -417,6 +191,7 @@
             getDocs, query, where
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
             apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
             authDomain: "caradds-227e9.firebaseapp.com",
@@ -433,6 +208,7 @@
         const db = getFirestore(app);
         const usersRef = collection(db, "users");
 
+        // ===== PERMISSIONS =====
         const PERMISSIONS = {
             super: { label: 'Super Admin', badge: 'badge-admin', canCreateAdmin: true, canEditRole: true, canDeleteAdmin: true },
             editor: { label: 'Editor', badge: 'badge-editor', canCreateAdmin: false, canEditRole: false, canDeleteAdmin: false },
@@ -443,12 +219,14 @@
         let currentUserRole = 'viewer';
         let currentUserEmail = '';
 
+        // ===== DOM REFS =====
         const loginScreen = document.getElementById('loginScreen');
         const dashScreen = document.getElementById('dashScreen');
         const toastEl = document.getElementById('toast');
         const userInfo = document.getElementById('userInfo');
         const loadingOverlay = document.getElementById('loadingOverlay');
 
+        // ===== TOAST =====
         function showToast(msg, type = 'success') {
             toastEl.textContent = msg;
             toastEl.className = `toast ${type} show`;
@@ -456,6 +234,7 @@
             toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 5000);
         }
 
+        // ===== LOADING =====
         function showLoading() {
             loadingOverlay.classList.remove('hidden');
             loadingOverlay.classList.add('active');
@@ -466,6 +245,7 @@
         }
         hideLoading();
 
+        // ===== DARK MODE =====
         const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('admin-theme') || 'light';
         if (savedTheme === 'dark') {
@@ -485,6 +265,7 @@
             }
         });
 
+        // ===== PASSWORD STRENGTH =====
         document.getElementById('newAdminPassword').addEventListener('input', function() {
             const val = this.value;
             let score = 0;
@@ -501,6 +282,7 @@
             else { bar.style.background = '#16a34a'; helper.textContent = '✅ Strong password!'; }
         });
 
+        // ===== AUTH STATE =====
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -533,6 +315,7 @@
             }
         });
 
+        // ===== LOGIN =====
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -552,11 +335,13 @@
             }
         });
 
+        // ===== LOGOUT =====
         document.getElementById('logoutBtn').addEventListener('click', () => {
             signOut(auth);
             showToast('Signed out', 'success');
         });
 
+        // ===== UPDATE ADMIN ROLE =====
         async function updateAdminRole(email, newRole) {
             try {
                 const q = query(usersRef, where("email", "==", email));
@@ -585,6 +370,7 @@
             }
         }
 
+        // ===== DELETE ADMIN =====
         async function deleteAdmin(email) {
             try {
                 const q = query(usersRef, where("email", "==", email));
@@ -603,6 +389,7 @@
             }
         }
 
+        // ===== LOAD ALL USERS =====
         async function loadAllUsers() {
             try {
                 const adminList = document.getElementById('adminList');
@@ -665,6 +452,7 @@
 
                 adminList.innerHTML = html;
 
+                // ===== UPDATE ROLE BUTTONS =====
                 document.querySelectorAll('.update-role-btn').forEach(btn => {
                     btn.addEventListener('click', async function() {
                         const email = this.dataset.email;
@@ -693,6 +481,7 @@
                     });
                 });
 
+                // ===== DELETE ADMIN BUTTONS =====
                 document.querySelectorAll('.delete-admin-btn').forEach(btn => {
                     btn.addEventListener('click', async function() {
                         const email = this.dataset.email;
@@ -730,6 +519,7 @@
             }
         }
 
+        // ===== CREATE ADMIN =====
         document.getElementById('registerAdminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -822,7 +612,7 @@
             }
         });
 
-        // Session Timer
+        // ===== SESSION TIMER =====
         let sessionTimer, sessionCountdown;
         const SESSION_TIMEOUT = 30 * 60 * 1000;
 

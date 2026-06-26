@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Trade-In | MOTO KENYA</title>
+    <meta name="description" content="Get a free valuation for your current vehicle and trade it in for a quality pre-owned car at MOTO KENYA.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .trade-in-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem 0;
+            align-items: start;
+        }
+        .trade-in-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+        .trade-in-form h2 {
+            font-family: var(--font-display);
+            margin-bottom: 1.5rem;
+        }
+        .trade-in-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .trade-in-form .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .trade-in-form .form-group input,
+        .trade-in-form .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            font-family: var(--font-primary);
+        }
+        .trade-in-form .form-group input:focus,
+        .trade-in-form .form-group select:focus {
+            border-color: var(--brand-teal);
+            outline: none;
+        }
+        .trade-in-form button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .trade-in-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,180,216,0.3);
+        }
+
+        .trade-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .trade-info .info-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+        }
+        .trade-info .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .trade-info .info-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .trade-info .info-card h4 {
+            font-weight: 700;
+        }
+        .trade-info .info-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .benefit-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            transition: all var(--transition-base);
+        }
+        .benefit-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .benefit-item .icon { font-size: 2.5rem; }
+        .benefit-item h4 { font-weight: 700; }
+        .benefit-item p { color: var(--text-muted); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .trade-in-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html" class="active">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>Trade-In Your Vehicle</h1>
+        <p>Get a free, no-obligation valuation for your current car</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="trade-in-grid">
+            <div class="trade-in-form">
+                <h2>Get Your Free Valuation</h2>
+                <form id="tradeInForm">
+                    <div class="form-group">
+                        <label for="tradeMake">Make</label>
+                        <input type="text" id="tradeMake" placeholder="e.g. Toyota" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeModel">Model</label>
+                        <input type="text" id="tradeModel" placeholder="e.g. Prado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeYear">Year</label>
+                        <input type="number" id="tradeYear" placeholder="e.g. 2018" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeMileage">Mileage (km)</label>
+                        <input type="number" id="tradeMileage" placeholder="e.g. 50000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeCondition">Condition</label>
+                        <select id="tradeCondition" required>
+                            <option value="">Select condition</option>
+                            <option value="excellent">Excellent - Like new</option>
+                            <option value="verygood">Very Good - Well maintained</option>
+                            <option value="good">Good - Some wear and tear</option>
+                            <option value="fair">Fair - Needs some work</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeTransmission">Transmission</label>
+                        <select id="tradeTransmission">
+                            <option value="">Select</option>
+                            <option value="automatic">Automatic</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeFuel">Fuel Type</label>
+                        <select id="tradeFuel">
+                            <option value="">Select</option>
+                            <option value="petrol">Petrol</option>
+                            <option value="diesel">Diesel</option>
+                        </select>
+                    </div>
+                    <button type="submit">Get Estimate</button>
+                </form>
+            </div>
+
+            <div class="trade-info">
+                <div class="info-card">
+                    <div class="icon">💎</div>
+                    <h4>Free Valuation</h4>
+                    <p>Get a fair market value estimate for your vehicle at no cost.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🤝</div>
+                    <h4>Transparent Process</h4>
+                    <p>We'll walk you through the valuation and offer a competitive price.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">💰</div>
+                    <h4>Instant Cash Offer</h4>
+                    <p>Receive an offer on the spot when you visit our showroom.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🚗</div>
+                    <h4>Trade-In & Upgrade</h4>
+                    <p>Use your trade-in value as a down payment on your next vehicle.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="icon">✅</div>
+                <h4>No Obligation</h4>
+                <p>You're not obligated to sell. Get a free quote today.</p>
+            </div>
+            <div class="benefit-item">
+                <div class="icon">📋</div>
+                <h4>Quick Process</h4>
+                <p>Get your valuation in minutes, not days.</p>
+            </div>
+            <div class="benefit-item">
+                <div class="icon">🏆</div>
+                <h4>Best Price</h4>
+                <p>We offer competitive prices based on current market trends.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+
+    <script>
+        document.getElementById('tradeInForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const make = document.getElementById('tradeMake').value.trim();
+            const model = document.getElementById('tradeModel').value.trim();
+            const year = document.getElementById('tradeYear').value.trim();
+            const mileage = document.getElementById('tradeMileage').value.trim();
+            const condition = document.getElementById('tradeCondition').value;
+            const transmission = document.getElementById('tradeTransmission').value;
+            const fuel = document.getElementById('tradeFuel').value;
+
+            const msg = `Trade-In Request%0AMake: ${make}%0AModel: ${model}%0AYear: ${year}%0AMileage: ${mileage} km%0ACondition: ${condition}%0ATransmission: ${transmission}%0AFuel: ${fuel}`;
+            window.open(`https://wa.me/254712345678?text=${msg}`, '_blank');
+            alert('✅ Your trade-in request has been sent! We\'ll get back to you shortly.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

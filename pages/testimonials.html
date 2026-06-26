@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Testimonials | MOTO KENYA</title>
+    <meta name="description" content="Read what our satisfied customers say about their experience buying pre-owned vehicles from MOTO KENYA. Real reviews from real customers.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .testimonial-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+        }
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .testimonial-card .stars {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        .testimonial-card .quote {
+            font-style: italic;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .testimonial-card .author .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .testimonial-card .author .name {
+            font-weight: 700;
+        }
+        .testimonial-card .author .role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .testimonial-card .author .verified {
+            display: inline-block;
+            background: var(--success, #10b981);
+            color: #fff;
+            padding: 0.1rem 0.5rem;
+            border-radius: 30px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-top: 0.2rem;
+        }
+
+        .rating-summary {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        .rating-summary .big-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .rating-summary .stars-big {
+            color: #ffd700;
+            font-size: 2rem;
+        }
+        .rating-summary .count {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .testimonials-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html" class="active">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>What Our Customers Say</h1>
+        <p>Real reviews from real customers who found their dream car</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="rating-summary">
+            <div class="big-number">4.9</div>
+            <div class="stars-big">⭐⭐⭐⭐⭐</div>
+            <div class="count">Based on 500+ customer reviews</div>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"Excellent service! The car was exactly as described. The team was professional and made the whole process smooth. I highly recommend MOTO KENYA to anyone looking for a quality pre-owned vehicle."</p>
+                <div class="author">
+                    <div class="avatar">JM</div>
+                    <div>
+                        <div class="name">John Mwangi</div>
+                        <div class="role">Nairobi, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"Got my dream car at a great price. The financing options made it affordable. The team was very helpful and answered all my questions. Highly recommend MOTO KENYA!"</p>
+                <div class="author">
+                    <div class="avatar">SK</div>
+                    <div>
+                        <div class="name">Sarah Kariuki</div>
+                        <div class="role">Mombasa, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"Very professional team. They helped me with everything from selection to delivery. I love my new car and the entire experience was hassle-free. Thank you MOTO KENYA!"</p>
+                <div class="author">
+                    <div class="avatar">DO</div>
+                    <div>
+                        <div class="name">David Ochieng</div>
+                        <div class="role">Kisumu, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"I was nervous about buying a used car, but the team at MOTO KENYA made me feel confident. The inspection report was thorough and the car has been running perfectly."</p>
+                <div class="author">
+                    <div class="avatar">FM</div>
+                    <div>
+                        <div class="name">Faith Muthoni</div>
+                        <div class="role">Nakuru, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"Best car buying experience in Kenya! Transparent pricing, no hidden fees, and excellent customer service. I've already recommended MOTO KENYA to my friends."</p>
+                <div class="author">
+                    <div class="avatar">RK</div>
+                    <div>
+                        <div class="name">Robert Kiprop</div>
+                        <div class="role">Eldoret, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="quote">"The team went above and beyond to find the perfect car for me. They even delivered it to my home. Amazing service from start to finish!"</p>
+                <div class="author">
+                    <div class="avatar">LW</div>
+                    <div>
+                        <div class="name">Lucy Wanjiru</div>
+                        <div class="role">Thika, Kenya</div>
+                        <div class="verified">✅ Verified Purchase</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+</body>
+</html>

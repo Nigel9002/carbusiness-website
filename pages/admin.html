@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOTO KENYA · Admin Panel</title>
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://upload.imagekit.io https://us-central1-caradds-227e9.cloudfunctions.net https://*.cloudfunctions.net;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== EXTERNAL CSS ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
+    <style>
+        /* ===== ADMIN PAGE SPECIFIC OVERRIDES ===== */
+        
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
+        
+        /* Image Preview */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .preview-item { position: relative; aspect-ratio: 16/9; }
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+        }
+        .preview-item .remove-img {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        .preview-item .remove-img:hover { transform: scale(1.2); }
+        
+        /* Table */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); text-align: left; vertical-align: middle; color: var(--text-color); }
+        th { background: var(--input-bg); font-weight: 600; color: var(--gray); }
+        .td-img { width: 60px; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; background: var(--input-bg); }
+        
+        /* Login Screen */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background: var(--bg-color);
+        }
+        .login-box {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid var(--border-color);
+        }
+        .login-box h1 { font-size: 1.6rem; text-align: center; color: var(--text-color); }
+        .login-box h1 span { color: var(--brand-blue); }
+        .login-box p { text-align: center; color: var(--gray); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .login-box .login-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+        
+        /* Forgot Password */
+        .forgot-password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+        .forgot-password-modal.active { display: flex; }
+        .forgot-password-modal .modal-content {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .forgot-password-modal .modal-content h2 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text-color); }
+        .forgot-password-modal .modal-content p { color: var(--gray); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .forgot-password-modal .modal-close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.2s;
+        }
+        .forgot-password-modal .modal-close-btn:hover { color: var(--danger); }
+        
+        /* Dashboard */
+        #dashScreen { display: none; }
+        #dashScreen.active { display: block; }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            max-width: 400px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); color: #000; }
+        
+        /* Scroll Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 999;
+        }
+        .scroll-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-top:hover { background: var(--primary-hover); transform: scale(1.1); }
+        
+        /* Session Timer */
+        .session-timer {
+            font-size: 0.75rem;
+            color: var(--gray);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+        }
+        .session-timer.warning { color: var(--warning); border-color: var(--warning); }
+        .session-timer.danger { color: var(--danger); border-color: var(--danger); animation: pulse 1s infinite; }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+        .loading-overlay.active { display: flex; opacity: 1; }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+        .loading-overlay .loader {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(255,255,255,0.1);
+            border-top: 6px solid #2563eb;
+            border-right: 6px solid #f59e0b;
+            border-bottom: 6px solid #16a34a;
+            border-left: 6px solid #dc2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-overlay .welcome-text {
+            margin-top: 2rem;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #2563eb, #f59e0b, #16a34a, #dc2626, #8b5cf6);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 2s ease infinite;
+            letter-spacing: 4px;
+        }
+        .loading-overlay .sub-text { color: rgba(255,255,255,0.6); font-size: 1.1rem; margin-top: 0.75rem; font-weight: 300; animation: pulse 1.5s ease-in-out infinite; }
+        .loading-overlay .loader-text { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 2rem; letter-spacing: 2px; }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        
+        /* Header Actions */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--text-color); }
+        .logo span { color: var(--primary); }
+        .header-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .header-actions .user-info { font-size: 0.85rem; color: var(--gray); }
+        .btn-admin-mgmt {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-admin-mgmt:hover { background: #15803d; }
+        .btn-logout {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-logout:hover { background: var(--danger); color: #fff; }
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+            color: var(--text-color);
+        }
+        .theme-toggle:hover { background: var(--border-color); }
+        
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .card .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge-admin { background: var(--primary); color: #fff; }
+        .badge-editor { background: var(--warning); color: #000; }
+        .badge-viewer { background: var(--gray); color: #fff; }
+        
+        /* Form */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray); margin-bottom: 0.35rem; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card-bg);
+        }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0 1rem 0; }
+        .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .checkbox-group label { margin: 0; font-weight: 500; color: var(--text-color); }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            width: 100%;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:disabled { background: var(--gray); cursor: not-allowed; }
+        .btn-danger {
+            background: var(--light);
+            color: var(--danger);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.5rem;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .btn-link:hover { color: var(--primary-hover); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        .btn-outline:hover { background: var(--border-color); }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .container { padding: 1rem; }
+            header { flex-direction: column; align-items: flex-start; }
+            .header-actions { width: 100%; justify-content: flex-start; }
+            .form-row { grid-template-columns: 1fr; }
+            .loading-overlay .welcome-text { font-size: 1.8rem; }
+            .login-box .login-actions { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="welcome-text">🌟 Welcome Admin!</div>
+        <div class="sub-text">Authenticating your account...</div>
+        <div class="loader-text">MOTO KENYA · Vehicle Management</div>
+    </div>
+
+    <!-- ===== FORGOT PASSWORD MODAL ===== -->
+    <div class="forgot-password-modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="forgotPasswordClose">&times;</button>
+            <h2>🔑 Forgot Password</h2>
+            <p>Enter your email address and we'll send you a link to reset your password.</p>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="resetEmail">Email Address</label>
+                    <input type="email" id="resetEmail" placeholder="admin@motokenya.com" required />
+                </div>
+                <button type="submit" class="btn btn-primary" id="resetPasswordBtn">Send Reset Link</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ===== SCROLL TO TOP ===== -->
+    <button class="scroll-top" id="scrollTopBtn">↑</button>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h1>MOTO<span>KENYA</span></h1>
+            <p>Vehicle Management</p>
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="admin@motokenya.com" required autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+                <div class="login-actions">
+                    <button type="button" class="btn-link" id="forgotPasswordBtn">Forgot Password?</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashScreen">
+        <div class="container">
+
+            <!-- Header -->
+            <header>
+                <div class="logo">MOTO<span>KENYA</span></div>
+                <div class="header-actions">
+                    <span class="user-info" id="userInfo">👤 Loading...</span>
+                    <span class="session-timer" id="sessionTimer">⏱️ 30:00</span>
+                    <a href="../pages/admin-management.html" class="btn-admin-mgmt">👥 Manage Admins</a>
+                    <a href="../index.html" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">View Showroom →</a>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+                    <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                </div>
+            </header>
+
+            <!-- Permission Notice -->
+            <div id="permissionNotice" style="display:none; padding:0.75rem 1rem; background:var(--warning); color:#000; border-radius:8px; margin-bottom:1.5rem; font-weight:600;">
+                ⚠️ You are in <span id="userRoleDisplay">Viewer</span> mode. You can only view vehicles.
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid-2">
+
+                <!-- LEFT COLUMN -->
+                <div>
+                    <!-- Upload Form -->
+                    <div class="card" style="margin-bottom: 2rem;" id="uploadCard">
+                        <h2>📸 Add New Vehicle <span class="badge badge-editor" id="uploadBadge">Editor</span></h2>
+                        <form id="uploadForm">
+                            <div class="form-group">
+                                <label for="carMake">Brand *</label>
+                                <input type="text" id="carMake" placeholder="e.g. Toyota" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="carModel">Model *</label>
+                                <input type="text" id="carModel" placeholder="e.g. Prado" required />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="carYear">Year *</label>
+                                    <input type="number" id="carYear" value="2022" min="1990" max="2026" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="carPrice">Price (KSh) *</label>
+                                    <input type="number" id="carPrice" placeholder="3500000" min="1000" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="carDescription">Description *</label>
+                                <textarea id="carDescription" placeholder="Clean import, leather seats, sunroof..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="carBadges">Badges (comma separated)</label>
+                                <input type="text" id="carBadges" placeholder="Automatic, Diesel, 4WD" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="carEngine">Engine</label>
+                                    <input type="text" id="carEngine" placeholder="e.g. 1800CC Petrol Turbo" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="carTransmission">Transmission</label>
+                                    <select id="carTransmission">
+                                        <option value="">Select...</option>
+                                        <option value="Automatic">Automatic</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="CVT">CVT</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="carFuelType">Fuel Type</label>
+                                    <select id="carFuelType">
+                                        <option value="">Select...</option>
+                                        <option value="Petrol">Petrol</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="Electric">Electric</option>
+                                        <option value="Hybrid">Hybrid</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="carColor">Color</label>
+                                    <input type="text" id="carColor" placeholder="e.g. Black, White, Silver" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="carMileage">Mileage (km)</label>
+                                    <input type="number" id="carMileage" placeholder="e.g. 50000" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="carStatus">Status</label>
+                                    <select id="carStatus">
+                                        <option value="available">Available</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="sold">Sold</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="carImages">Photos (select multiple) *</label>
+                                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                    <input type="file" id="carImages" accept="image/*" multiple style="flex:1; min-width:150px;" />
+                                    <button type="button" class="btn btn-outline" id="cancelImagesBtn" style="width:auto;">✖ Cancel</button>
+                                </div>
+                                <div class="preview-grid" id="imagePreview"></div>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="carFeatured" />
+                                <label for="carFeatured">⭐ Featured Vehicle</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Publish Vehicle</button>
+                        </form>
+                    </div>
+
+                    <!-- Admin Management Redirect -->
+                    <div class="card" style="border-top: 3px solid var(--primary); background: var(--input-bg);">
+                        <h2>👥 Admin Management <span class="badge badge-admin">Super Admin</span></h2>
+                        <p style="color: var(--gray); margin-bottom: 1rem;">
+                            Create new admins, update roles, and manage admin users on the dedicated page.
+                        </p>
+                        <a href="../pages/admin-management.html" class="btn btn-primary" style="text-align: center; text-decoration: none; display: block;">
+                            👥 Go to Admin Management
+                        </a>
+                        <p style="font-size: 0.75rem; color: var(--gray); margin-top: 0.5rem; text-align: center;">
+                            Only Super Admins can access this feature
+                        </p>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div>
+                    <!-- Inventory Table -->
+                    <div class="card">
+                        <h2>📦 Inventory (<span id="count">0</span>)</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Vehicle</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminTableBody">
+                                    <tr><td colspan="5" style="text-align:center; color:var(--gray); padding:1.5rem;">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- end grid -->
+        </div><!-- end container -->
+    </div>
+
+    <!-- ========== FIREBASE IMPORT MAP ========== -->
+    <!-- IMPORTANT: This MUST be before any module scripts -->
+    <script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        }
+    }
+    </script>
+
+    <!-- ========== ADMIN JAVASCRIPT ========== -->
+    <script type="module">
+        console.log('🚀 Admin page loaded - testing import map...');
+        
+        // Test import map by trying to import Firebase
+        try {
+            console.log('📦 Testing Firebase imports...');
+            const { initializeApp } = await import('firebase/app');
+            console.log('✅ firebase/app imported successfully');
+            
+            const { getAnalytics, isSupported } = await import('firebase/analytics');
+            console.log('✅ firebase/analytics imported successfully');
+            
+            const { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, getIdTokenResult, sendPasswordResetEmail } = await import('firebase/auth');
+            console.log('✅ firebase/auth imported successfully');
+            
+            const { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, query, orderBy } = await import('firebase/firestore');
+            console.log('✅ firebase/firestore imported successfully');
+            
+            console.log('🎉 All Firebase modules loaded successfully!');
+            
+            // ============================================================
+            // FIREBASE CONFIG
+            // ============================================================
+            const firebaseConfig = {
+                apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
+                authDomain: "caradds-227e9.firebaseapp.com",
+                projectId: "caradds-227e9",
+                storageBucket: "caradds-227e9.appspot.com",
+                messagingSenderId: "551966179001",
+                appId: "1:551966179001:web:1ea551d87511e4967c6568",
+                measurementId: "G-RCHG0M7PV7"
+            };
+
+            console.log('🔧 Firebase config loaded');
+
+            // ============================================================
+            // INITIALIZE FIREBASE
+            // ============================================================
+            const app = initializeApp(firebaseConfig);
+            console.log('✅ Firebase initialized successfully');
+            
+            isSupported().then((supported) => {
+                if (supported) {
+                    const analytics = getAnalytics(app);
+                    console.log('📊 Analytics enabled');
+                }
+            });
+
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const vehiclesRef = collection(db, "vehicles");
+
+            console.log(`🔐 Auth ready: ${!!auth}`);
+            console.log(`📁 Firestore ready: ${!!db}`);
+
+            // ============================================================
+            // PERMISSIONS
+            // ============================================================
+            const PERMISSIONS = {
+                super: { label: 'Super Admin', badge: 'badge-admin', canAddVehicle: true, canDeleteVehicle: true },
+                editor: { label: 'Editor', badge: 'badge-editor', canAddVehicle: true, canDeleteVehicle: true },
+                viewer: { label: 'Viewer', badge: 'badge-viewer', canAddVehicle: false, canDeleteVehicle: false }
+            };
+
+            // ============================================================
+            // SESSION TIMER
+            // ============================================================
+            let sessionTimer, sessionCountdown;
+            const SESSION_TIMEOUT = 30 * 60 * 1000;
+
+            function resetSessionTimer() {
+                clearTimeout(sessionTimer);
+                clearInterval(sessionCountdown);
+                startSessionTimer();
+            }
+
+            function startSessionTimer() {
+                const timerEl = document.getElementById('sessionTimer');
+                if (!timerEl) return;
+                let timeLeft = SESSION_TIMEOUT / 1000;
+                sessionCountdown = setInterval(() => {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = Math.floor(timeLeft % 60);
+                    timerEl.textContent = `⏱️ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    if (timeLeft < 60) timerEl.className = 'session-timer danger';
+                    else if (timeLeft < 300) timerEl.className = 'session-timer warning';
+                    else timerEl.className = 'session-timer';
+                }, 1000);
+                sessionTimer = setTimeout(() => {
+                    showToast('⏰ Session expired. Please login again.', 'warning');
+                    signOut(auth);
+                }, SESSION_TIMEOUT);
+            }
+
+            document.addEventListener('click', resetSessionTimer);
+            document.addEventListener('keydown', resetSessionTimer);
+            document.addEventListener('mousemove', resetSessionTimer);
+            document.addEventListener('scroll', resetSessionTimer);
+
+            // ============================================================
+            // BRUTE FORCE PROTECTION
+            // ============================================================
+            let loginAttempts = {};
+            const MAX_ATTEMPTS = 5;
+            const LOCKOUT_TIME = 15 * 60 * 1000;
+
+            let currentUser = null;
+            let currentUserRole = 'viewer';
+            let currentUserEmail = '';
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const loginScreen = document.getElementById('loginScreen');
+            const dashScreen = document.getElementById('dashScreen');
+            const toastEl = document.getElementById('toast');
+            const userInfo = document.getElementById('userInfo');
+            const permissionNotice = document.getElementById('permissionNotice');
+            const userRoleDisplay = document.getElementById('userRoleDisplay');
+            const uploadCard = document.getElementById('uploadCard');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+
+            console.log('📄 DOM elements loaded');
+
+            // ============================================================
+            // TOAST
+            // ============================================================
+            function showToast(msg, type = 'success') {
+                if (!toastEl) return;
+                toastEl.textContent = msg;
+                toastEl.className = `toast ${type} show`;
+                clearTimeout(toastEl._timer);
+                toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 5000);
+                console.log(`📢 Toast: ${msg} (${type})`);
+            }
+
+            // ============================================================
+            // LOADING
+            // ============================================================
+            function showLoading() {
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('hidden');
+                    loadingOverlay.classList.add('active');
+                    console.log('⏳ Loading overlay shown');
+                }
+            }
+            function hideLoading() {
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('hidden');
+                    loadingOverlay.classList.remove('active');
+                    console.log('✅ Loading overlay hidden');
+                }
+            }
+            hideLoading();
+
+            // ============================================================
+            // DARK MODE
+            // ============================================================
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                const savedTheme = localStorage.getItem('admin-theme') || 'light';
+                if (savedTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                }
+                themeToggle.addEventListener('click', () => {
+                    const current = document.documentElement.getAttribute('data-theme');
+                    if (current === 'dark') {
+                        document.documentElement.removeAttribute('data-theme');
+                        localStorage.setItem('admin-theme', 'light');
+                        themeToggle.textContent = '🌙';
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('admin-theme', 'dark');
+                        themeToggle.textContent = '☀️';
+                    }
+                });
+            }
+
+            // ============================================================
+            // IMAGE PREVIEW
+            // ============================================================
+            let selectedFiles = [];
+
+            const carImagesInput = document.getElementById('carImages');
+            if (carImagesInput) {
+                carImagesInput.addEventListener('change', (e) => {
+                    const files = Array.from(e.target.files);
+                    selectedFiles = selectedFiles.concat(files);
+                    renderImagePreview();
+                });
+            }
+
+            function renderImagePreview() {
+                const preview = document.getElementById('imagePreview');
+                if (!preview) return;
+                preview.innerHTML = '';
+                selectedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const container = document.createElement('div');
+                        container.className = 'preview-item';
+                        const img = document.createElement('img');
+                        img.src = ev.target.result;
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-img';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.title = 'Remove this photo';
+                        removeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectedFiles.splice(index, 1);
+                            renderImagePreview();
+                            updateFileInput();
+                        });
+                        container.appendChild(img);
+                        container.appendChild(removeBtn);
+                        preview.appendChild(container);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function updateFileInput() {
+                const fileInput = document.getElementById('carImages');
+                if (!fileInput) return;
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => dt.items.add(file));
+                fileInput.files = dt.files;
+            }
+
+            const cancelImagesBtn = document.getElementById('cancelImagesBtn');
+            if (cancelImagesBtn) {
+                cancelImagesBtn.addEventListener('click', () => {
+                    selectedFiles = [];
+                    renderImagePreview();
+                    const fileInput = document.getElementById('carImages');
+                    if (fileInput) fileInput.value = '';
+                });
+            }
+
+            // ============================================================
+            // UPDATE UI PERMISSIONS
+            // ============================================================
+            function updateUIPermissions(role) {
+                const isSuperAdmin = currentUserEmail === 'michaelnchege453@gmail.com';
+                const effectiveRole = isSuperAdmin ? 'super' : role;
+                const perms = PERMISSIONS[effectiveRole] || PERMISSIONS.viewer;
+                
+                console.log(`👤 Updating permissions: ${effectiveRole} (${perms.label})`);
+                
+                if (userInfo) {
+                    userInfo.textContent = `👤 ${currentUserEmail} (${perms.label})`;
+                }
+                if (userRoleDisplay) {
+                    userRoleDisplay.textContent = perms.label;
+                }
+
+                if (permissionNotice) {
+                    permissionNotice.style.display = effectiveRole === 'viewer' ? 'block' : 'none';
+                }
+
+                if (uploadCard) {
+                    uploadCard.style.display = perms.canAddVehicle ? 'block' : 'none';
+                }
+                
+                const uploadBadge = document.getElementById('uploadBadge');
+                if (uploadBadge) {
+                    uploadBadge.textContent = perms.label;
+                }
+
+                document.querySelectorAll('.btn-del').forEach(btn => {
+                    btn.style.display = perms.canDeleteVehicle ? 'inline-block' : 'none';
+                });
+            }
+
+            // ============================================================
+            // AUTH STATE
+            // ============================================================
+            console.log('👤 Setting up auth state listener...');
+            onAuthStateChanged(auth, async (user) => {
+                console.log(`🔄 Auth state changed: ${user ? 'User logged in' : 'No user'}`);
+                console.log(`📧 User email: ${user?.email || 'none'}`);
+                
+                if (user) {
+                    try {
+                        await user.getIdToken(true);
+                        const tokenResult = await getIdTokenResult(user);
+                        const role = tokenResult.claims.role || 'viewer';
+                        
+                        currentUser = user;
+                        currentUserEmail = user.email || '';
+                        
+                        const isSuperAdmin = currentUserEmail === 'michaelnchege453@gmail.com';
+                        currentUserRole = isSuperAdmin ? 'super' : role;
+
+                        console.log(`👤 User: ${currentUserEmail}, Role: ${currentUserRole}`);
+                        console.log(`🔑 Token claims:`, tokenResult.claims);
+
+                        if (userInfo) {
+                            userInfo.textContent = `👤 ${currentUserEmail} (${PERMISSIONS[currentUserRole]?.label || 'Viewer'})`;
+                        }
+                        updateUIPermissions(currentUserRole);
+
+                        loadInventory();
+                        
+                        startSessionTimer();
+                        hideLoading();
+                        
+                        if (dashScreen) {
+                            dashScreen.classList.add('active');
+                            console.log('📊 Dashboard shown');
+                        }
+                        if (loginScreen) {
+                            loginScreen.style.display = 'none';
+                            console.log('🔒 Login screen hidden');
+                        }
+                        
+                        showToast(`🌟 Welcome ${PERMISSIONS[currentUserRole]?.label || 'Viewer'}!`, 'success');
+                    } catch (err) {
+                        console.error('Auth error:', err);
+                        hideLoading();
+                        showToast('Error checking admin status', 'error');
+                    }
+                } else {
+                    console.log('👤 No user logged in');
+                    hideLoading();
+                    if (loginScreen) {
+                        loginScreen.style.display = 'flex';
+                        console.log('🔓 Login screen shown');
+                    }
+                    if (dashScreen) {
+                        dashScreen.classList.remove('active');
+                        console.log('📊 Dashboard hidden');
+                    }
+                    currentUser = null;
+                    clearTimeout(sessionTimer);
+                    clearInterval(sessionCountdown);
+                }
+            });
+
+            // ============================================================
+            // LOGIN
+            // ============================================================
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value.trim();
+                    const pass = document.getElementById('loginPassword').value;
+
+                    console.log(`🔑 Attempting login for: ${email}`);
+
+                    if (loginAttempts[email] && loginAttempts[email].locked) {
+                        const remaining = Math.ceil((loginAttempts[email].lockoutTime - Date.now()) / 60000);
+                        if (remaining > 0) {
+                            showToast(`🔒 Too many attempts. Try again in ${remaining} minutes.`, 'error');
+                            return;
+                        } else {
+                            delete loginAttempts[email];
+                        }
+                    }
+
+                    const btn = document.getElementById('loginBtn');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = '⏳ Signing in...';
+                    }
+                    showLoading();
+
+                    try {
+                        console.log('🔐 Calling signInWithEmailAndPassword...');
+                        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                        console.log(`✅ Login successful: ${userCredential.user.email}`);
+                        delete loginAttempts[email];
+                    } catch (err) {
+                        console.error(`❌ Login error: ${err.code} - ${err.message}`);
+                        hideLoading();
+                        if (!loginAttempts[email]) loginAttempts[email] = { attempts: 0 };
+                        loginAttempts[email].attempts++;
+                        const remaining = MAX_ATTEMPTS - loginAttempts[email].attempts;
+                        if (remaining <= 0) {
+                            loginAttempts[email].locked = true;
+                            loginAttempts[email].lockoutTime = Date.now() + LOCKOUT_TIME;
+                            showToast('🔒 Too many failed attempts. Account locked for 15 minutes.', 'error');
+                        } else {
+                            let errorMsg = '❌ Invalid credentials.';
+                            if (err.code === 'auth/user-not-found') {
+                                errorMsg = '❌ No account found with this email.';
+                            } else if (err.code === 'auth/wrong-password') {
+                                errorMsg = '❌ Incorrect password.';
+                            } else if (err.code === 'auth/invalid-email') {
+                                errorMsg = '❌ Invalid email format.';
+                            } else if (err.code === 'auth/too-many-requests') {
+                                errorMsg = '❌ Too many requests. Please try again later.';
+                            }
+                            showToast(`${errorMsg} ${remaining} attempts remaining.`, 'error');
+                        }
+                    } finally {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.textContent = 'Sign In';
+                        }
+                    }
+                });
+            }
+
+            // ============================================================
+            // FORGOT PASSWORD
+            // ============================================================
+            const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+            if (forgotPasswordBtn) {
+                forgotPasswordBtn.addEventListener('click', () => {
+                    if (forgotPasswordModal) {
+                        forgotPasswordModal.classList.add('active');
+                    }
+                });
+            }
+
+            const forgotPasswordClose = document.getElementById('forgotPasswordClose');
+            if (forgotPasswordClose) {
+                forgotPasswordClose.addEventListener('click', () => {
+                    if (forgotPasswordModal) {
+                        forgotPasswordModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (forgotPasswordModal) {
+                forgotPasswordModal.addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        forgotPasswordModal.classList.remove('active');
+                    }
+                });
+            }
+
+            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+            if (forgotPasswordForm) {
+                forgotPasswordForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('resetEmail').value.trim();
+                    const btn = document.getElementById('resetPasswordBtn');
+                    if (!email) {
+                        showToast('Please enter your email address.', 'error');
+                        return;
+                    }
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = '⏳ Sending...';
+                    }
+                    try {
+                        await sendPasswordResetEmail(auth, email, {
+                            url: window.location.origin + '/pages/admin.html',
+                            handleCodeInApp: false
+                        });
+                        showToast(`✅ Password reset link sent to ${email}. Check your inbox.`, 'success');
+                        if (forgotPasswordModal) {
+                            forgotPasswordModal.classList.remove('active');
+                        }
+                        document.getElementById('resetEmail').value = '';
+                    } catch (err) {
+                        console.error('Password reset error:', err);
+                        if (err.code === 'auth/user-not-found') {
+                            showToast('❌ No account found with this email address.', 'error');
+                        } else if (err.code === 'auth/invalid-email') {
+                            showToast('❌ Please enter a valid email address.', 'error');
+                        } else {
+                            showToast('❌ Failed to send reset link. Please try again.', 'error');
+                        }
+                    } finally {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.textContent = 'Send Reset Link';
+                        }
+                    }
+                });
+            }
+
+            // ============================================================
+            // LOGOUT
+            // ============================================================
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    signOut(auth);
+                    showToast('Signed out', 'success');
+                    clearTimeout(sessionTimer);
+                    clearInterval(sessionCountdown);
+                });
+            }
+
+            // ============================================================
+            // INVENTORY
+            // ============================================================
+            let unsubscribe = null;
+
+            function loadInventory() {
+                if (unsubscribe) unsubscribe();
+                console.log('📦 Loading inventory...');
+                const q = query(vehiclesRef, orderBy("createdAt", "desc"));
+                unsubscribe = onSnapshot(q, (snapshot) => {
+                    const items = [];
+                    snapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
+                    console.log(`📦 Loaded ${items.length} vehicles`);
+                    renderTable(items);
+                }, (error) => {
+                    console.error('❌ Firestore error:', error);
+                    showToast('Error loading inventory', 'error');
+                });
+            }
+
+            function sanitize(str) {
+                if (!str) return '';
+                return String(str).replace(/[<>]/g, '');
+            }
+
+            function renderTable(items) {
+                const tbody = document.getElementById('adminTableBody');
+                const countEl = document.getElementById('count');
+                if (!tbody) return;
+                
+                if (countEl) {
+                    countEl.textContent = items.length;
+                }
+
+                if (items.length === 0) {
+                    tbody.innerHTML =
+                        `<tr><td colspan="5" style="text-align:center; color:var(--gray); padding:1.5rem;">No vehicles yet</td></tr>`;
+                    return;
+                }
+
+                const canDelete = PERMISSIONS[currentUserRole]?.canDeleteVehicle || false;
+
+                tbody.innerHTML = items.map((car) => {
+                    let imgSrc = 'https://via.placeholder.com/60x34?text=No+Image';
+                    if (car.images && Array.isArray(car.images) && car.images.length > 0) {
+                        imgSrc = car.images[0];
+                    } else if (car.images && typeof car.images === 'string') {
+                        imgSrc = car.images;
+                    }
+
+                    const status = car.status || 'available';
+                    const statusColors = {
+                        available: '🟢',
+                        pending: '🟡',
+                        sold: '🔴'
+                    };
+
+                    return `
+                        <tr>
+                            <td>
+                                <img class="td-img" 
+                                     src="${imgSrc}" 
+                                     alt="${sanitize(car.make)} ${sanitize(car.model)}"
+                                     onerror="this.src='https://via.placeholder.com/60x34?text=Error'; this.style.border='2px solid #dc2626';"
+                                     loading="lazy" />
+                            </td>
+                            <td>
+                                <strong>${sanitize(car.make)} ${sanitize(car.model)}</strong>
+                                <div style="font-size:0.8rem; color:var(--gray);">${car.badges?.join(' | ') || ''}</div>
+                                ${car.engine ? `<div style="font-size:0.7rem; color:var(--gray);">⚙️ ${sanitize(car.engine)}</div>` : ''}
+                            </td>
+                            <td>KSh ${car.price?.toLocaleString() || 0}</td>
+                            <td>${statusColors[status] || '🟢'} ${status.charAt(0).toUpperCase() + status.slice(1)}</td>
+                            <td>
+                                ${canDelete ? `<button class="btn btn-danger btn-del" data-id="${car.id}">Delete</button>` : '<span style="color:var(--gray); font-size:0.8rem;">Read Only</span>'}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.btn-del').forEach((btn) => {
+                    btn.addEventListener('click', async () => {
+                        if (!confirm('Delete this vehicle permanently?')) return;
+                        try {
+                            await deleteDoc(doc(db, 'vehicles', btn.dataset.id));
+                            showToast('🗑️ Vehicle deleted', 'success');
+                        } catch (err) {
+                            showToast('❌ ' + err.message, 'error');
+                        }
+                    });
+                });
+            }
+
+            // ============================================================
+            // IMAGEKIT UPLOAD
+            // ============================================================
+            async function uploadToImageKit(file) {
+                const user = auth.currentUser;
+                if (!user) throw new Error('You must be logged in.');
+
+                console.log(`📤 Uploading file: ${file.name} (${file.size} bytes)`);
+
+                const isLocal = window.location.hostname === 'localhost' || 
+                                window.location.hostname === '127.0.0.1' ||
+                                window.location.port === '3000' ||
+                                window.location.hostname.includes('localhost');
+
+                const AUTH_URL = isLocal 
+                    ? '/imagekit-auth'
+                    : 'https://us-central1-caradds-227e9.cloudfunctions.net/imagekitAuth';
+
+                console.log(`📍 ImageKit Auth URL: ${AUTH_URL}`);
+
+                const resp = await fetch(AUTH_URL);
+                if (!resp.ok) {
+                    let msg = `Server error ${resp.status}`;
+                    try {
+                        const errData = await resp.json();
+                        msg = errData.error || errData.details || msg;
+                    } catch (_) {}
+                    throw new Error('Auth failed: ' + msg);
+                }
+
+                const authData = await resp.json();
+                const required = ['token', 'expire', 'signature', 'publicKey', 'urlEndpoint'];
+                for (const key of required) {
+                    if (!authData[key]) {
+                        throw new Error(`Auth missing "${key}". Got: ${JSON.stringify(authData)}`);
+                    }
+                }
+
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('fileName', `${Date.now()}_${file.name}`);
+                fd.append('publicKey', authData.publicKey);
+                fd.append('signature', authData.signature);
+                fd.append('expire', authData.expire);
+                fd.append('token', authData.token);
+                fd.append('folder', '/vehicles');
+
+                const uploadResp = await fetch('https://upload.imagekit.io/api/v1/files/upload', {
+                    method: 'POST',
+                    body: fd
+                });
+
+                const uploadData = await uploadResp.json();
+                if (!uploadResp.ok) {
+                    console.error('Upload error:', uploadData);
+                    throw new Error(uploadData.message || uploadData.error || 'ImageKit upload failed');
+                }
+
+                return uploadData.url;
+            }
+
+            // ============================================================
+            // FORM SUBMIT
+            // ============================================================
+            const uploadForm = document.getElementById('uploadForm');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    if (!PERMISSIONS[currentUserRole]?.canAddVehicle) {
+                        showToast('⛔ You do not have permission to add vehicles.', 'error');
+                        return;
+                    }
+
+                    const btn = document.getElementById('submitBtn');
+
+                    if (selectedFiles.length === 0) {
+                        showToast('Please select at least one photo.', 'error');
+                        return;
+                    }
+
+                    for (const f of selectedFiles) {
+                        if (f.size > 5 * 1024 * 1024) {
+                            showToast(`❌ ${f.name} exceeds 5MB limit.`, 'error');
+                            return;
+                        }
+                    }
+
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = `⏳ Uploading ${selectedFiles.length} image(s)...`;
+                    }
+
+                    const make = document.getElementById('carMake').value.trim();
+                    const model = document.getElementById('carModel').value.trim();
+                    const year = parseInt(document.getElementById('carYear').value);
+                    const price = parseFloat(document.getElementById('carPrice').value);
+                    const description = document.getElementById('carDescription').value.trim();
+                    const featured = document.getElementById('carFeatured').checked;
+                    const badges = document.getElementById('carBadges').value
+                        .split(',')
+                        .map(b => b.trim())
+                        .filter(b => b.length > 0);
+
+                    const engine = document.getElementById('carEngine').value.trim();
+                    const transmission = document.getElementById('carTransmission').value;
+                    const fuelType = document.getElementById('carFuelType').value;
+                    const color = document.getElementById('carColor').value.trim();
+                    const mileage = parseInt(document.getElementById('carMileage').value) || 0;
+                    const status = document.getElementById('carStatus').value;
+
+                    const imageUrls = [];
+
+                    try {
+                        for (const file of selectedFiles) {
+                            const url = await uploadToImageKit(file);
+                            imageUrls.push(url);
+                        }
+
+                        await addDoc(vehiclesRef, {
+                            make,
+                            model,
+                            year,
+                            price,
+                            description,
+                            featured,
+                            badges,
+                            engine,
+                            transmission,
+                            fuelType,
+                            color,
+                            mileage,
+                            status,
+                            images: imageUrls,
+                            createdAt: Date.now()
+                        });
+
+                        if (uploadForm) {
+                            uploadForm.reset();
+                        }
+                        selectedFiles = [];
+                        renderImagePreview();
+                        const fileInput = document.getElementById('carImages');
+                        if (fileInput) fileInput.value = '';
+                        showToast(`✅ ${imageUrls.length} image(s) uploaded! Vehicle added.`, 'success');
+
+                    } catch (err) {
+                        console.error('Upload error:', err);
+                        showToast('❌ ' + err.message, 'error');
+                    } finally {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.textContent = 'Publish Vehicle';
+                        }
+                    }
+                });
+            }
+
+            // ============================================================
+            // SCROLL TO TOP
+            // ============================================================
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            if (scrollBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 500) {
+                        scrollBtn.classList.add('visible');
+                    } else {
+                        scrollBtn.classList.remove('visible');
+                    }
+                });
+                scrollBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            console.log('🔒 MOTO KENYA Vehicle Management loaded');
+            console.log('📌 Admin Management at: pages/admin-management.html');
+            console.log('✅ All systems ready!');
+
+            // ============================================================
+            // EXPOSE FOR DEBUGGING
+            // ============================================================
+            window.__debug = {
+                auth,
+                db,
+                currentUser,
+                currentUserRole,
+                PERMISSIONS,
+                showToast,
+                loadInventory
+            };
+
+        } catch (error) {
+            console.error('💥 Critical error loading Firebase:', error);
+            document.body.innerHTML = `
+                <div style="padding: 20px; background: #ff0000; color: white; font-family: monospace;">
+                    <h1>💥 Firebase Import Error</h1>
+                    <p>${error.message}</p>
+                    <p style="font-size: 14px;">The import map may not be configured correctly.</p>
+                    <pre style="background: #333; padding: 10px; color: #0f0; overflow: auto; max-height: 400px;">${error.stack}</pre>
+                    <button onclick="location.reload()" style="padding: 10px 20px; margin-top: 10px; cursor: pointer;">Reload Page</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

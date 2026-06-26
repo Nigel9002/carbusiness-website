@@ -1,0 +1,50 @@
+carbusiness website/
+├── functions/
+│   ├── node_modules/
+│   ├── index.js
+│   ├── package-lock.json
+│   └── package.json
+├── scripts/
+│   └── sanity-check.js
+├── css/
+│   ├── style.css           # Shared styles for all pages
+│   ├── admin.css           # Admin panel styles
+│   └── dark-mode.css       # Dark mode styles
+├── js/
+│   ├── main.js             # Shared JavaScript
+│   ├── firebase-config.js  # Firebase configuration
+│   ├── vehicles.js         # Vehicle functions
+│   ├── wishlist.js         # Wishlist functionality
+│   ├── compare.js          # Comparison functionality
+│   └── admin.js            # Admin panel functions
+├── pages/                  # All HTML pages
+│   ├── about.html
+│   ├── admin-management.html
+│   ├── admin.html
+│   ├── blog.html
+│   ├── contact.html
+│   ├── faq.html
+│   ├── finance.html
+│   ├── privacy.html
+│   ├── terms.html
+│   ├── testimonials.html
+│   └── trade-in.html
+├── images/
+│   ├── icons/
+│   └── vehicles/
+├── .env
+├── .env.example
+├── .gitignore
+├── firebase-debug.log
+├── firebase.json
+├── firestore.rules
+├── imagekit-auth-server.js
+├── index.html              # Main page (keep at root)
+├── manifest.json
+├── package-lock.json
+├── package.json
+├── readme.md
+├── Readme2.md
+├── start-imagekit-auth.ps1
+├── start-imagekit-server.ps1
+└── sw.js

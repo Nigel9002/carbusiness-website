@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Financing | MOTO KENYA</title>
+    <meta name="description" content="Explore flexible financing options for pre-owned vehicles at MOTO KENYA. Get competitive rates and easy approval.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .finance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .finance-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+            text-align: center;
+        }
+        .finance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .finance-card .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .finance-card h3 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .finance-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .finance-card .badge {
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--brand-blue-light);
+            color: var(--brand-blue);
+        }
+
+        .steps-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+        .steps-section h2 {
+            text-align: center;
+            font-family: var(--font-display);
+            margin-bottom: 2rem;
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        .step {
+            text-align: center;
+        }
+        .step .number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 0.5rem;
+        }
+        .step h4 { font-weight: 700; }
+        .step p { color: var(--text-muted); font-size: 0.85rem; }
+
+        .calculator-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+        .calculator-section h2 {
+            font-family: var(--font-display);
+            margin-bottom: 1rem;
+        }
+        .calculator-form { display: flex; flex-direction: column; gap: 1rem; }
+        .calculator-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .calculator-form .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .calculator-form .form-group input,
+        .calculator-form .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        .calculator-form .form-group input:focus {
+            border-color: var(--brand-teal);
+            outline: none;
+        }
+        .calculator-form button {
+            padding: 0.8rem;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .calculator-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,180,216,0.3);
+        }
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-box .amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            .finance-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr 1fr; }
+            .calculator-form .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .steps-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html" class="active">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>Vehicle Financing</h1>
+        <p>Flexible payment plans to help you drive home today</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="finance-grid">
+            <div class="finance-card">
+                <div class="icon">🏦</div>
+                <h3>Bank Financing</h3>
+                <p>Competitive rates from leading banks in Kenya. Low interest rates and flexible repayment terms.</p>
+                <span class="badge">From 10% APR</span>
+            </div>
+            <div class="finance-card">
+                <div class="icon">💳</div>
+                <h3>Dealer Financing</h3>
+                <p>In-house financing with quick approval and minimal paperwork. Get pre-approved in minutes.</p>
+                <span class="badge">Quick Approval</span>
+            </div>
+            <div class="finance-card">
+                <div class="icon">🔄</div>
+                <h3>Trade-In Financing</h3>
+                <p>Use your current vehicle as a down payment. Combine trade-in value with financing for your new car.</p>
+                <span class="badge">Best Value</span>
+            </div>
+            <div class="finance-card">
+                <div class="icon">🤝</div>
+                <h3>Flexible Payment Plans</h3>
+                <p>Choose from 12 to 60 months repayment. Customize your plan to fit your budget.</p>
+                <span class="badge">Customizable</span>
+            </div>
+        </div>
+
+        <div class="steps-section">
+            <h2>How It Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="number">1</div>
+                    <h4>Choose Your Vehicle</h4>
+                    <p>Browse our inventory and select your dream car</p>
+                </div>
+                <div class="step">
+                    <div class="number">2</div>
+                    <h4>Get Pre-Approved</h4>
+                    <p>Apply for financing and get approved quickly</p>
+                </div>
+                <div class="step">
+                    <div class="number">3</div>
+                    <h4>Drive Away</h4>
+                    <p>Complete paperwork and take your car home</p>
+                </div>
+                <div class="step">
+                    <div class="number">4</div>
+                    <h4>Make Payments</h4>
+                    <p>Convenient monthly payment options available</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <h2>💰 Financing Calculator</h2>
+            <form class="calculator-form" id="financeCalcForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calcPrice">Vehicle Price (KSh)</label>
+                        <input type="number" id="calcPrice" placeholder="3,500,000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calcDown">Down Payment (KSh)</label>
+                        <input type="number" id="calcDown" placeholder="500,000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calcRate">Interest Rate (%)</label>
+                        <input type="number" id="calcRate" value="12" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="calcTerm">Loan Term (months)</label>
+                        <select id="calcTerm">
+                            <option value="12">12 months</option>
+                            <option value="24">24 months</option>
+                            <option value="36" selected>36 months</option>
+                            <option value="48">48 months</option>
+                            <option value="60">60 months</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit">Calculate Monthly Payment</button>
+            </form>
+            <div class="result-box" id="calcResult">
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Estimated Monthly Payment:</p>
+                <div class="amount" id="calcMonthly">KSh 0</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Total Payment: <span id="calcTotal">KSh 0</span></p>
+                <button onclick="window.open('https://wa.me/254712345678?text=Hi,%20I%27m%20interested%20in%20financing%20a%20vehicle.%20Can%20you%20help%20me%20with%20more%20information%3F', '_blank')" style="margin-top: 1rem; width: 100%; padding: 0.8rem; background: #25D366; color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">💬 Get Financing Quote on WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+
+    <script>
+        document.getElementById('financeCalcForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const price = parseFloat(document.getElementById('calcPrice').value) || 0;
+            const down = parseFloat(document.getElementById('calcDown').value) || 0;
+            const rate = parseFloat(document.getElementById('calcRate').value) || 12;
+            const term = parseInt(document.getElementById('calcTerm').value) || 36;
+
+            const loan = price - down;
+            const monthlyRate = rate / 100 / 12;
+            const payment = loan * monthlyRate * Math.pow(1 + monthlyRate, term) / (Math.pow(1 + monthlyRate, term) - 1);
+
+            const result = document.getElementById('calcResult');
+            result.classList.add('show');
+            document.getElementById('calcMonthly').textContent = `KSh ${payment.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('calcTotal').textContent = `KSh ${(payment * term).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+        });
+    </script>
+</body>
+</html>

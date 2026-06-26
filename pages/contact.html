@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Contact Us | MOTO KENYA</title>
+    <meta name="description" content="Get in touch with MOTO KENYA. Contact us for inquiries about vehicles, financing, test drives, or any other questions.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .contact-info .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            transition: all var(--transition-base);
+        }
+        .contact-info .info-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+        .contact-info .info-item .icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        .contact-info .info-item .text h4 {
+            font-weight: 700;
+        }
+        .contact-info .info-item .text p {
+            color: var(--text-muted);
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+        .contact-form h2 {
+            font-family: var(--font-display);
+            margin-bottom: 1.5rem;
+        }
+        .contact-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .contact-form .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+        .contact-form .form-group input,
+        .contact-form .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            font-family: var(--font-primary);
+            transition: border-color var(--transition-base);
+        }
+        .contact-form .form-group input:focus,
+        .contact-form .form-group textarea:focus {
+            border-color: var(--brand-teal);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0,180,216,0.1);
+        }
+        .contact-form .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .contact-form button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,180,216,0.3);
+        }
+
+        .map-container {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html" class="active">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>Contact Us</h1>
+        <p>We're here to help you find your dream car</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="info-item">
+                    <div class="icon">📍</div>
+                    <div class="text">
+                        <h4>Visit Our Showroom</h4>
+                        <p>Moi Avenue, Nairobi, Kenya<br>Opposite Kencom House</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">📞</div>
+                    <div class="text">
+                        <h4>Call Us</h4>
+                        <p>+254 712 345 678<br>+254 700 000 000</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">📧</div>
+                    <div class="text">
+                        <h4>Email Us</h4>
+                        <p>info@motokenya.com<br>sales@motokenya.com</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">🕐</div>
+                    <div class="text">
+                        <h4>Opening Hours</h4>
+                        <p>Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">💬</div>
+                    <div class="text">
+                        <h4>WhatsApp</h4>
+                        <p>+254 712 345 678<br>Available 24/7</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address</label>
+                        <input type="email" id="contactEmail" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Phone Number</label>
+                        <input type="tel" id="contactPhone" placeholder="+254 700 000 000">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject</label>
+                        <input type="text" id="contactSubject" placeholder="I'm interested in...">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" placeholder="Tell us about your vehicle needs..." required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255282.89789457332!2d36.68219875!3d-1.3028611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2s!4v1700000000000" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const whatsappMsg = `Name: ${name}%0AEmail: ${email}%0APhone: ${phone}%0ASubject: ${subject}%0AMessage: ${message}`;
+            window.open(`https://wa.me/254712345678?text=${whatsappMsg}`, '_blank');
+            alert('✅ Message sent via WhatsApp!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

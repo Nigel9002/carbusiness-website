@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>FAQ | MOTO KENYA</title>
+    <meta name="description" content="Frequently asked questions about buying pre-owned vehicles at MOTO KENYA. Get answers about inspections, financing, warranties, and more.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .faq-question {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: background var(--transition-base);
+            color: var(--text-color);
+        }
+        .faq-question:hover {
+            background: var(--brand-blue-light);
+        }
+        [data-theme="dark"] .faq-question:hover {
+            background: rgba(0,86,179,0.15);
+        }
+        .faq-question .icon {
+            font-size: 1.5rem;
+            transition: transform var(--transition-base);
+        }
+        .faq-question.active .icon {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            color: var(--text-muted);
+        }
+        .faq-answer.open {
+            padding: 0 1.5rem 1.2rem;
+            max-height: 500px;
+        }
+
+        .faq-categories {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .faq-category {
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-base);
+            color: var(--text-color);
+        }
+        .faq-category:hover,
+        .faq-category.active {
+            background: var(--gradient-primary);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .faq-question { font-size: 0.95rem; padding: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .faq-categories { gap: 0.5rem; }
+            .faq-category { padding: 0.3rem 1rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html" class="active">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about buying pre-owned vehicles</p>
+    </div>
+
+    <!-- FAQ CONTENT -->
+    <div class="container">
+        <div class="faq-categories">
+            <button class="faq-category active" data-category="all">All</button>
+            <button class="faq-category" data-category="buying">Buying</button>
+            <button class="faq-category" data-category="finance">Financing</button>
+            <button class="faq-category" data-category="inspection">Inspection</button>
+            <button class="faq-category" data-category="warranty">Warranty</button>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item" data-category="buying">
+                <div class="faq-question">
+                    How do I schedule a test drive?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">You can schedule a test drive by clicking the "Test Drive" button on any vehicle page, or by contacting us directly via phone or WhatsApp. We'll arrange a convenient time for you to come in and experience the vehicle firsthand.</div>
+            </div>
+
+            <div class="faq-item" data-category="buying">
+                <div class="faq-question">
+                    What documents do I need to purchase a vehicle?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">You'll need a valid Kenyan ID or Passport, a KRA PIN certificate, and proof of income (for financing). For cash purchases, only ID and KRA PIN are required. We'll guide you through the entire process.</div>
+            </div>
+
+            <div class="faq-item" data-category="inspection">
+                <div class="faq-question">
+                    Are all vehicles inspected before sale?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">Yes! Every vehicle in our inventory undergoes a comprehensive 150+ point inspection by our certified mechanics. We check everything from the engine and transmission to the suspension and electrical systems. You'll receive a full inspection report with every purchase.</div>
+            </div>
+
+            <div class="faq-item" data-category="finance">
+                <div class="faq-question">
+                    Do you offer financing options?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">Yes, we partner with leading financial institutions to offer competitive financing options. You can use our online financing calculator to estimate your monthly payments, or speak with our finance team for personalized assistance.</div>
+            </div>
+
+            <div class="faq-item" data-category="warranty">
+                <div class="faq-question">
+                    What warranty options are available?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">We offer several warranty options ranging from 3-month to 12-month coverage. Our warranties cover engine, transmission, and major electrical components. You can choose the plan that best fits your needs and budget.</div>
+            </div>
+
+            <div class="faq-item" data-category="buying">
+                <div class="faq-question">
+                    Can I trade in my current vehicle?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">Absolutely! We offer competitive trade-in values for your current vehicle. Simply visit our Trade-In page or contact us for a free valuation. The trade-in value can be used as a down payment for your new vehicle.</div>
+            </div>
+
+            <div class="faq-item" data-category="inspection">
+                <div class="faq-question">
+                    Do you provide vehicle history reports?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">Yes, every vehicle comes with a comprehensive history report including service records, accident history, and ownership details. We believe in full transparency so you can make an informed decision.</div>
+            </div>
+
+            <div class="faq-item" data-category="finance">
+                <div class="faq-question">
+                    What is the minimum down payment required?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">The minimum down payment typically ranges from 10-20% of the vehicle price, depending on the financing institution and your credit profile. Our finance team will help you find the best options for your situation.</div>
+            </div>
+
+            <div class="faq-item" data-category="warranty">
+                <div class="faq-question">
+                    Are warranty claims easy to process?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">Yes, we have a streamlined warranty claims process. Simply contact our service department, and we'll arrange for an inspection and repairs at our partnered garages. We're committed to making the process as hassle-free as possible.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isOpen = answer.classList.contains('open');
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+                document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                
+                if (!isOpen) {
+                    answer.classList.add('open');
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // FAQ Categories
+        document.querySelectorAll('.faq-category').forEach(category => {
+            category.addEventListener('click', function() {
+                document.querySelectorAll('.faq-category').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                const categoryName = this.dataset.category;
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (categoryName === 'all' || item.dataset.category === categoryName) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

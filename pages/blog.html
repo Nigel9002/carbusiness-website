@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Blog | MOTO KENYA</title>
+    <meta name="description" content="Car buying tips, maintenance advice, and automotive news from MOTO KENYA. Stay informed about the latest in the Kenyan automotive industry.">
+    
+    <!-- ========== SECURITY HEADERS ========== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src https://fonts.gstatic.com;
+        img-src * data: https://ik.imagekit.io https://via.placeholder.com;
+        connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;
+        frame-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ========== GOOGLE FONTS ========== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ========== SHARED STYLES ========== -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== PAGE-SPECIFIC STYLES ===== */
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .blog-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+        }
+        .blog-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .blog-card .image {
+            height: 200px;
+            background: var(--gradient-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+        }
+        .blog-card .content {
+            padding: 1.5rem;
+        }
+        .blog-card .tag {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--brand-blue-light);
+            color: var(--brand-blue);
+            margin-bottom: 0.5rem;
+        }
+        [data-theme="dark"] .blog-card .tag {
+            background: rgba(0,86,179,0.2);
+            color: var(--brand-teal);
+        }
+        .blog-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .blog-card h3 a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        .blog-card h3 a:hover { color: var(--brand-blue); }
+        .blog-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .blog-card .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .blog-card .meta .read-more {
+            color: var(--brand-blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .blog-card .meta .read-more:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">MOTO<span>KENYA</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html" class="active">Blog</a>
+            <a href="testimonials.html">Reviews</a>
+            <a href="contact.html">Contact</a>
+            <a href="finance.html">Finance</a>
+            <a href="trade-in.html">Trade-In</a>
+            <a href="faq.html">FAQ</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+        </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1>MOTO KENYA Blog</h1>
+        <p>Car buying tips, maintenance advice, and automotive news</p>
+    </div>
+
+    <!-- BLOG CONTENT -->
+    <div class="container">
+        <div class="blog-grid">
+            <article class="blog-card">
+                <div class="image">🚗</div>
+                <div class="content">
+                    <span class="tag">Buying Tips</span>
+                    <h3><a href="#">Top 10 Things to Check When Buying a Used Car in Kenya</a></h3>
+                    <p>Before you make that purchase, learn the essential checks every buyer should perform to avoid costly mistakes.</p>
+                    <div class="meta">
+                        <span>📅 Dec 15, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="image">🔧</div>
+                <div class="content">
+                    <span class="tag">Maintenance</span>
+                    <h3><a href="#">Essential Car Maintenance Tips for Kenyan Roads</a></h3>
+                    <p>Keep your vehicle running smoothly with these simple maintenance tips tailored for Kenyan driving conditions.</p>
+                    <div class="meta">
+                        <span>📅 Dec 10, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="image">💰</div>
+                <div class="content">
+                    <span class="tag">Financing</span>
+                    <h3><a href="#">How to Finance Your Dream Car in Kenya</a></h3>
+                    <p>Explore the various financing options available and learn how to get the best deal on your vehicle loan.</p>
+                    <div class="meta">
+                        <span>📅 Dec 5, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="image">🛡️</div>
+                <div class="content">
+                    <span class="tag">Warranty</span>
+                    <h3><a href="#">Understanding Vehicle Warranties: What's Covered?</a></h3>
+                    <p>Don't get caught off guard. Learn what your warranty covers and how to make the most of your coverage.</p>
+                    <div class="meta">
+                        <span>📅 Nov 28, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="image">🔍</div>
+                <div class="content">
+                    <span class="tag">Inspection</span>
+                    <h3><a href="#">The Importance of Pre-Purchase Vehicle Inspections</a></h3>
+                    <p>Discover why a professional inspection can save you thousands of shillings and give you peace of mind.</p>
+                    <div class="meta">
+                        <span>📅 Nov 20, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="image">🌍</div>
+                <div class="content">
+                    <span class="tag">Market Trends</span>
+                    <h3><a href="#">2024 Used Car Market Trends in Kenya</a></h3>
+                    <p>Stay informed about the latest trends in Kenya's used car market, including pricing, demand, and popular models.</p>
+                    <div class="meta">
+                        <span>📅 Nov 15, 2024</span>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4>MOTO KENYA</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="testimonials.html">Testimonials</a>
+            </div>
+            <div>
+                <h4>Vehicles</h4>
+                <a href="../index.html">Browse Inventory</a>
+                <a href="finance.html">Financing</a>
+                <a href="trade-in.html">Trade-In</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                <a href="#">📍 Nairobi, Kenya</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+    </footer>
+
+    <!-- ========== SHARED JAVASCRIPT ========== -->
+    <script src="../js/main.js"></script>
+</body>
+</html>
