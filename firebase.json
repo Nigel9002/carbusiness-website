@@ -1,11 +1,27 @@
 {
   "functions": {
     "source": "functions",
-    "runtime": "nodejs20"
+    "runtime": "nodejs20",
+    "timeout": 60,
+    "memory": "256MiB",
+    "maxInstances": 10,
+    "minInstances": 0,
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log"
+    ]
   },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
   },
   "hosting": {
     "public": ".",
@@ -14,6 +30,7 @@
       "**/.*",
       "**/node_modules/**",
       "functions/**",
+      "scripts/**",
       "*.md",
       "*.log",
       ".env",
@@ -23,7 +40,16 @@
       "*.key",
       "*.pem",
       "*.crt",
-      "service-account.json"
+      "service-account.json",
+      "*.ps1",
+      "*.bat",
+      "*.sh",
+      "firebase-debug.log",
+      "firestore.indexes.json",
+      "**/__pycache__/**",
+      "**/*.pyc",
+      "*.lock",
+      ".firebase"
     ],
     "rewrites": [
       {
@@ -31,16 +57,76 @@
         "function": "imagekitAuth"
       },
       {
+        "source": "/setAdminRole",
+        "function": "setAdminRole"
+      },
+      {
+        "source": "/getUserRole",
+        "function": "getUserRole"
+      },
+      {
+        "source": "/health",
+        "function": "health"
+      },
+      {
+        "source": "/admin-management",
+        "destination": "/pages/admin-management.html"
+      },
+      {
         "source": "/admin",
         "destination": "/admin.html"
       },
       {
-        "source": "/admin.html",
-        "destination": "/admin.html"
+        "source": "/about",
+        "destination": "/pages/about.html"
       },
       {
-        "source": "/index.html",
-        "destination": "/index.html"
+        "source": "/blog",
+        "destination": "/pages/blog.html"
+      },
+      {
+        "source": "/contact",
+        "destination": "/pages/contact.html"
+      },
+      {
+        "source": "/faq",
+        "destination": "/pages/faq.html"
+      },
+      {
+        "source": "/finance",
+        "destination": "/pages/finance.html"
+      },
+      {
+        "source": "/privacy",
+        "destination": "/pages/privacy.html"
+      },
+      {
+        "source": "/terms",
+        "destination": "/pages/terms.html"
+      },
+      {
+        "source": "/testimonials",
+        "destination": "/pages/testimonials.html"
+      },
+      {
+        "source": "/trade-in",
+        "destination": "/pages/trade-in.html"
+      },
+      {
+        "source": "/vehicle-detail",
+        "destination": "/pages/vehicle-detail.html"
+      },
+      {
+        "source": "/wishlist",
+        "destination": "/pages/wishlist.html"
+      },
+      {
+        "source": "/compare",
+        "destination": "/pages/compare.html"
+      },
+      {
+        "source": "/pages/**",
+        "destination": "/pages/:page"
       },
       {
         "source": "**",
@@ -66,15 +152,35 @@
           {
             "key": "Referrer-Policy",
             "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "geolocation=(), microphone=(), camera=()"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data: https://ik.imagekit.io https://via.placeholder.com https://images.unsplash.com; connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://upload.imagekit.io https://us-central1-caradds-227e9.cloudfunctions.net; frame-src 'self'; object-src 'none'; base-uri 'self'"
           }
         ]
       },
       {
-        "source": "**/*.js",
+        "source": "**/*.{js,mjs}",
         "headers": [
           {
             "key": "Content-Type",
             "value": "application/javascript"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
           }
         ]
       },
@@ -84,26 +190,179 @@
           {
             "key": "Content-Type",
             "value": "text/css"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
           }
         ]
       },
       {
-        "source": "**/*.{png,jpg,jpeg,gif,svg,ico,webp}",
+        "source": "**/*.{png,jpg,jpeg,gif,svg,ico,webp,avif}",
         "headers": [
           {
             "key": "Cache-Control",
             "value": "public, max-age=31536000, immutable"
+          },
+          {
+            "key": "Content-Type",
+            "value": "image/*"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
+      {
+        "source": "**/*.{woff,woff2,ttf,eot}",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
+      {
+        "source": "/manifest.json",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
+      {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/javascript"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Service-Worker-Allowed",
+            "value": "/"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
+      {
+        "source": "/imagekit-auth",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Authorization, Content-Type"
+          }
+        ]
+      },
+      {
+        "source": "/api/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, POST, PUT, DELETE, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Authorization, Content-Type"
+          }
+        ]
+      },
+      {
+        "source": "/.well-known/security.txt",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400"
+          }
+        ]
+      },
+      {
+        "source": "/robots.txt",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400"
           }
         ]
       }
     ],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "appAssociation": "AUTO",
+    "rewritesToMainPage": true
   },
-  "storage": {
-    "rules": "storage.rules"
-  },
-  "remoteconfig": {
-    "template": "remoteconfig.template.json"
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }

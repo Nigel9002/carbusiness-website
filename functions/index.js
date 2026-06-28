@@ -8,10 +8,31 @@ const { defineSecret } = require('firebase-functions/params');
 admin.initializeApp();
 
 // ============================================================
-// ===== CONFIGURATION =====
+// ===== CONFIGURATION - ALL FROM ENVIRONMENT =====
 // ============================================================
-const IMAGEKIT_PUBLIC_KEY = 'public_xn/PCZ7Vsv4rV/vkfR9hzYs0Ywo=';
-const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/n1ihogbpq';
+
+// ImageKit configuration - MUST come from environment
+const IMAGEKIT_PUBLIC_KEY = process.env.IMAGEKIT_PUBLIC_KEY || '';
+const IMAGEKIT_URL_ENDPOINT = process.env.IMAGEKIT_URL_ENDPOINT || '';
+
+// Validate ImageKit config on startup
+if (!IMAGEKIT_PUBLIC_KEY || IMAGEKIT_PUBLIC_KEY.includes('your_public_key') || IMAGEKIT_PUBLIC_KEY.length < 10) {
+    console.error('❌ ERROR: IMAGEKIT_PUBLIC_KEY is not set or invalid in environment');
+    console.error('   Set IMAGEKIT_PUBLIC_KEY in Firebase Secrets or .env');
+}
+
+if (!IMAGEKIT_URL_ENDPOINT || IMAGEKIT_URL_ENDPOINT.includes('your_imagekit_id') || !IMAGEKIT_URL_ENDPOINT.startsWith('https://ik.imagekit.io/')) {
+    console.error('❌ ERROR: IMAGEKIT_URL_ENDPOINT is not set or invalid in environment');
+    console.error('   Set IMAGEKIT_URL_ENDPOINT in Firebase Secrets or .env');
+}
+
+// Super Admin emails - from environment (comma separated)
+const SUPER_ADMIN_EMAILS = new Set(
+    (process.env.SUPER_ADMIN_EMAILS || '')
+        .split(',')
+        .map(e => e.trim().toLowerCase())
+        .filter(e => e.length > 0)
+);
 
 // Admin roles configuration
 const ADMIN_ROLES = {
@@ -20,27 +41,28 @@ const ADMIN_ROLES = {
     VIEWER: 'viewer'
 };
 
-// Super Admin emails (hardcoded for fallback)
-const SUPER_ADMIN_EMAILS = new Set(['michaelnchege453@gmail.com']);
-
 // ============================================================
 // ===== SECURITY: RATE LIMITING =====
 // ============================================================
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 30;
+const ADMIN_RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_ADMIN_REQUESTS_PER_WINDOW = 10; // Stricter for admin endpoints
 const requestCounts = new Map();
 
 // ============================================================
 // ===== SECURITY: ALLOWED ORIGINS (CORS) =====
 // ============================================================
-const ALLOWED_ORIGINS = [
-    'https://nige19002.github.io',
-    'http://localhost:3000',
-    'http://127.0.0.1:5500',
-    'https://caradds-227e9.web.app',
-    'https://caradds-227e9.firebaseapp.com',
-    'https://caradds-227e9.web.app'
-];
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+    : [
+        'https://nige19002.github.io',
+        'http://localhost:3000',
+        'http://127.0.0.1:5500',
+        'http://localhost:5500',
+        'https://caradds-227e9.web.app',
+        'https://caradds-227e9.firebaseapp.com'
+    ];
 
 // The ImageKit private key is stored as a function secret
 const imageKitPrivateKey = defineSecret('IMAGEKIT_PRIVATE_KEY');
@@ -55,20 +77,41 @@ function setCors(res, origin) {
     res.set('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
     res.set('Access-Control-Max-Age', '86400');
     
-    // Security headers
+    // ============================================================
+    // SECURITY HEADERS - FIXED TO ALLOW IMAGEKIT SDK
+    // ============================================================
     res.set('X-Content-Type-Options', 'nosniff');
     res.set('X-Frame-Options', 'DENY');
     res.set('X-XSS-Protection', '1; mode=block');
     res.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    
+    // ============================================================
+    // CSP HEADERS - ALLOW IMAGEKIT SDK
+    // ============================================================
+    res.set('Content-Security-Policy', 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://sdk.imagekit.io https://cdnjs.cloudflare.com https://ik.imagekit.io; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+        "font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+        "img-src * data: https://ik.imagekit.io https://via.placeholder.com; " +
+        "connect-src * https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://upload.imagekit.io https://ik.imagekit.io https://sdk.imagekit.io; " +
+        "frame-src 'self'; " +
+        "object-src 'none'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'"
+    );
 }
 
 // ============================================================
 // ===== SECURITY: RATE LIMITING FUNCTION =====
 // ============================================================
-function checkRateLimit(ip) {
+function checkRateLimit(ip, maxRequests = MAX_REQUESTS_PER_WINDOW, windowMs = RATE_LIMIT_WINDOW) {
     const now = Date.now();
-    const windowStart = now - RATE_LIMIT_WINDOW;
+    const windowStart = now - windowMs;
     
+    // Clean up old entries
     for (const [key, data] of requestCounts) {
         if (data.timestamp < windowStart) {
             requestCounts.delete(key);
@@ -86,7 +129,7 @@ function checkRateLimit(ip) {
         return true;
     }
     
-    if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    if (record.count >= maxRequests) {
         return false;
     }
     
@@ -152,7 +195,7 @@ async function getPrivateKey() {
 }
 
 // ============================================================
-// ===== MAIN AUTH FUNCTION =====
+// ===== MAIN AUTH FUNCTION - SECURE VERSION =====
 // ============================================================
 exports.imagekitAuth = onRequest({ 
     secrets: [imageKitPrivateKey],
@@ -258,7 +301,19 @@ exports.imagekitAuth = onRequest({
             return;
         }
 
-        // Check if user is Super Admin (via custom claim or hardcoded)
+        // ============================================================
+        // SECURITY: CHECK EMAIL VERIFICATION
+        // ============================================================
+        if (!decodedToken.email_verified) {
+            console.warn(`⛔ Email not verified: ${email} (UID: ${uid})`);
+            return res.status(403).json({ 
+                error: 'Please verify your email address before accessing admin features.',
+                details: 'Check your inbox for the verification link.',
+                code: 'EMAIL_NOT_VERIFIED'
+            });
+        }
+
+        // Check if user is Super Admin (via custom claim or from environment)
         const role = decodedToken.role || 'viewer';
         const isSuperAdmin = role === 'super' || SUPER_ADMIN_EMAILS.has(email);
         const isEditor = role === 'editor' || isSuperAdmin;
@@ -318,7 +373,7 @@ exports.imagekitAuth = onRequest({
 });
 
 // ============================================================
-// ===== SET ADMIN ROLE FUNCTION =====
+// ===== SET ADMIN ROLE FUNCTION - SECURE VERSION =====
 // ============================================================
 exports.setAdminRole = onRequest({
     secrets: [imageKitPrivateKey],
@@ -339,6 +394,19 @@ exports.setAdminRole = onRequest({
         return;
     }
 
+    // ============================================================
+    // RATE LIMITING FOR ADMIN ENDPOINTS (Stricter)
+    // ============================================================
+    const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+    if (!checkRateLimit(clientIp, MAX_ADMIN_REQUESTS_PER_WINDOW, ADMIN_RATE_LIMIT_WINDOW)) {
+        console.warn(`⚠️ Rate limit exceeded for admin endpoint from IP: ${clientIp}`);
+        res.status(429).json({ 
+            error: 'Too many admin requests. Please try again later.',
+            retryAfter: 60
+        });
+        return;
+    }
+
     // Verify authentication
     const authHeader = req.get('Authorization') || '';
     const idToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
@@ -353,9 +421,21 @@ exports.setAdminRole = onRequest({
         const uid = decodedToken.uid;
         const email = decodedToken.email || '';
         
+        // ============================================================
+        // SECURITY: CHECK EMAIL VERIFICATION
+        // ============================================================
+        if (!decodedToken.email_verified) {
+            console.warn(`⛔ Email not verified for admin role change: ${email}`);
+            return res.status(403).json({ 
+                error: 'Please verify your email address before managing admin roles.',
+                code: 'EMAIL_NOT_VERIFIED'
+            });
+        }
+        
         // Check if requester is Super Admin
         const requesterRole = decodedToken.role || 'viewer';
         if (requesterRole !== 'super' && !SUPER_ADMIN_EMAILS.has(email.toLowerCase())) {
+            console.warn(`⛔ Non-super admin attempted to set role: ${email} (Role: ${requesterRole})`);
             res.status(403).json({ 
                 error: 'Only Super Admins can set admin roles.',
                 role: requesterRole
@@ -502,7 +582,7 @@ exports.autoAssignRole = onUserCreated({
     
     console.log(`👤 New user created: ${email} (UID: ${uid})`);
     
-    // Check if user is a Super Admin (hardcoded)
+    // Check if user is a Super Admin (from environment)
     const isSuperAdmin = SUPER_ADMIN_EMAILS.has(email);
     
     // Determine role: Super Admin if in list, otherwise Viewer
@@ -550,10 +630,14 @@ exports.health = onRequest({
         status: 'OK',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'production',
-        publicKey: IMAGEKIT_PUBLIC_KEY ? 'Configured' : 'Missing',
-        urlEndpoint: IMAGEKIT_URL_ENDPOINT ? 'Configured' : 'Missing',
+        publicKey: IMAGEKIT_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
+        urlEndpoint: IMAGEKIT_URL_ENDPOINT ? '✅ Configured' : '❌ Missing',
         privateKeyConfigured: privateKeyStatus ? '✅ Yes' : '❌ No',
-        rateLimiting: `Max ${MAX_REQUESTS_PER_WINDOW} requests per minute`,
+        emailVerification: '✅ Required',
+        rateLimiting: {
+            standard: `Max ${MAX_REQUESTS_PER_WINDOW} requests per minute`,
+            admin: `Max ${MAX_ADMIN_REQUESTS_PER_WINDOW} requests per minute`
+        },
         cors: {
             allowedOrigins: ALLOWED_ORIGINS,
             currentOrigin: origin
@@ -562,7 +646,9 @@ exports.health = onRequest({
             hsts: 'Enabled',
             xssProtection: 'Enabled',
             frameOptions: 'DENY',
-            contentTypeOptions: 'nosniff'
+            contentTypeOptions: 'nosniff',
+            emailVerification: 'Required',
+            csp: '✅ Enabled'
         },
         roles: {
             superAdmin: Array.from(SUPER_ADMIN_EMAILS),
@@ -570,7 +656,7 @@ exports.health = onRequest({
         },
         project: {
             name: 'MOTO KENYA',
-            version: '2.0.0'
+            version: '3.0.0'
         }
     });
 });
@@ -580,14 +666,19 @@ exports.health = onRequest({
 // ============================================================
 setInterval(() => {
     const now = Date.now();
-    const windowStart = now - RATE_LIMIT_WINDOW;
+    const windowStart = now - Math.max(RATE_LIMIT_WINDOW, ADMIN_RATE_LIMIT_WINDOW);
     for (const [key, data] of requestCounts) {
         if (data.timestamp < windowStart) {
             requestCounts.delete(key);
         }
     }
-}, RATE_LIMIT_WINDOW * 2);
+}, Math.max(RATE_LIMIT_WINDOW, ADMIN_RATE_LIMIT_WINDOW) * 2);
 
-console.log('🚀 MOTO KENYA Cloud Functions loaded');
+console.log('🚀 MOTO KENYA Cloud Functions loaded (SECURE VERSION)');
 console.log(`📧 Super Admin emails: ${Array.from(SUPER_ADMIN_EMAILS).join(', ')}`);
-console.log('🔒 Security: Rate limiting, CORS validation, Input sanitization enabled');
+console.log('🔒 Security: Rate limiting, CORS validation, Input sanitization, Email verification');
+console.log('🛡️ CSP: Enabled for ImageKit SDK');
+console.log('🔑 ImageKit config:', {
+    publicKey: IMAGEKIT_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
+    urlEndpoint: IMAGEKIT_URL_ENDPOINT ? '✅ Configured' : '❌ Missing'
+});

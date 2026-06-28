@@ -1,5 +1,5 @@
 // ================================================================
-// MOTO KENYA - ImageKit Authentication Server (FIXED)
+// MOTO KENYA - ImageKit Authentication Server (FIXED - CSP ENABLED)
 // ================================================================
 
 const express = require('express');
@@ -21,23 +21,35 @@ const PORT = process.env.PORT || 3000;
 // ===== CONFIGURATION =====
 // ================================================================
 
-// ImageKit credentials (prefer .env, fallback to hardcoded)
-const HARDCODED_PUBLIC_KEY = process.env.IMAGEKIT_PUBLIC_KEY || 'public_xn/PCZ7Vsv4rV/vkfR9hzYs0Ywo=';
-const HARDCODED_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY || 'private_YcNs8U+l3/zHeenoUu5UGbF1HzU=';
-const HARDCODED_URL_ENDPOINT = process.env.IMAGEKIT_URL_ENDPOINT || 'https://ik.imagekit.io/n1ihogbpq';
+// ImageKit credentials - MUST come from .env ONLY
+const IMAGEKIT_PUBLIC_KEY = process.env.IMAGEKIT_PUBLIC_KEY;
+const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
+const IMAGEKIT_URL_ENDPOINT = process.env.IMAGEKIT_URL_ENDPOINT;
 
 // Validate required keys
-if (!HARDCODED_PUBLIC_KEY || HARDCODED_PUBLIC_KEY.includes('your_public_key')) {
-    console.warn('⚠️  WARNING: IMAGEKIT_PUBLIC_KEY is not set or using placeholder!');
+if (!IMAGEKIT_PUBLIC_KEY || IMAGEKIT_PUBLIC_KEY.includes('your_public_key') || IMAGEKIT_PUBLIC_KEY.length < 10) {
+    console.error('❌ ERROR: IMAGEKIT_PUBLIC_KEY is not set or invalid in .env');
+    console.error('   Please check your .env file and ensure IMAGEKIT_PUBLIC_KEY is correctly set.');
+    process.exit(1);
 }
-if (!HARDCODED_PRIVATE_KEY || HARDCODED_PRIVATE_KEY.includes('your_private_key')) {
-    console.warn('⚠️  WARNING: IMAGEKIT_PRIVATE_KEY is not set or using placeholder!');
+
+if (!IMAGEKIT_PRIVATE_KEY || IMAGEKIT_PRIVATE_KEY.includes('your_private_key') || IMAGEKIT_PRIVATE_KEY.length < 10) {
+    console.error('❌ ERROR: IMAGEKIT_PRIVATE_KEY is not set or invalid in .env');
+    console.error('   Please check your .env file and ensure IMAGEKIT_PRIVATE_KEY is correctly set.');
+    process.exit(1);
+}
+
+if (!IMAGEKIT_URL_ENDPOINT || IMAGEKIT_URL_ENDPOINT.includes('your_imagekit_id') || !IMAGEKIT_URL_ENDPOINT.startsWith('https://ik.imagekit.io/')) {
+    console.error('❌ ERROR: IMAGEKIT_URL_ENDPOINT is not set or invalid in .env');
+    console.error('   Please check your .env file and ensure IMAGEKIT_URL_ENDPOINT is correctly set.');
+    process.exit(1);
 }
 
 // CORS allowed origins
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS 
     ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
     : [
+        'https://nige19002.github.io',
         'https://nige19002.github.io',
         'http://localhost:3000',
         'http://127.0.0.1:5500',
@@ -50,25 +62,89 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
 const RATE_LIMIT_WINDOW = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000;
 const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 30;
 
+// Admin rate limiting (stricter)
+const ADMIN_RATE_LIMIT_WINDOW = parseInt(process.env.ADMIN_RATE_LIMIT_WINDOW_MS) || 60000;
+const ADMIN_RATE_LIMIT_MAX = parseInt(process.env.ADMIN_RATE_LIMIT_MAX_REQUESTS) || 10;
+
 // ================================================================
-// ===== SECURITY MIDDLEWARE =====
+// ===== SECURITY MIDDLEWARE - CSP FULLY CONFIGURED =====
 // ================================================================
 
-// Helmet for security headers
+// Helmet with properly configured CSP to allow ImageKit SDK
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://www.gstatic.com", "https://*.firebaseio.com", "https://*.googleapis.com", "https://*.firebaseapp.com"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            fontSrc: ["https://fonts.gstatic.com"],
-            imgSrc: ["*", "data:", "https://ik.imagekit.io", "https://via.placeholder.com", "https://images.unsplash.com"],
-            connectSrc: ["*", "https://*.firebaseio.com", "https://*.googleapis.com", "https://*.firebaseapp.com", "https://upload.imagekit.io", "https://us-central1-caradds-227e9.cloudfunctions.net"],
+            scriptSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "'unsafe-eval'",
+                "'unsafe-hashes'",
+                "https://www.gstatic.com", 
+                "https://*.firebaseio.com", 
+                "https://*.googleapis.com", 
+                "https://*.firebaseapp.com",
+                "https://sdk.imagekit.io",
+                "https://cdnjs.cloudflare.com",
+                "https://ik.imagekit.io",
+                "https://www.googletagmanager.com",
+                "https://unpkg.com"
+            ],
+            scriptSrcElem: [
+                "'self'", 
+                "'unsafe-inline'",
+                "'unsafe-hashes'",
+                "https://www.gstatic.com", 
+                "https://*.firebaseio.com", 
+                "https://*.googleapis.com", 
+                "https://*.firebaseapp.com",
+                "https://sdk.imagekit.io",
+                "https://cdnjs.cloudflare.com",
+                "https://ik.imagekit.io",
+                "https://www.googletagmanager.com",
+                "https://unpkg.com"
+            ],
+            scriptSrcAttr: [
+                "'unsafe-inline'"
+            ],
+            styleSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "https://fonts.googleapis.com", 
+                "https://cdnjs.cloudflare.com"
+            ],
+            fontSrc: [
+                "https://fonts.gstatic.com", 
+                "https://cdnjs.cloudflare.com"
+            ],
+            imgSrc: [
+                "*", 
+                "data:", 
+                "blob:",
+                "https://ik.imagekit.io",
+                "https://*.ik.imagekit.io",
+                "https://ik.imagekit.io/*",
+                "https://via.placeholder.com", 
+                "https://images.unsplash.com"
+            ],
+            connectSrc: [
+                "*", 
+                "https://*.firebaseio.com", 
+                "https://*.googleapis.com", 
+                "https://*.firebaseapp.com", 
+                "https://upload.imagekit.io", 
+                "https://us-central1-caradds-227e9.cloudfunctions.net",
+                "https://ik.imagekit.io",
+                "https://*.ik.imagekit.io",
+                "https://sdk.imagekit.io",
+                "https://cdnjs.cloudflare.com"
+            ],
             frameSrc: ["'self'"],
             objectSrc: ["'none'"],
             baseUri: ["'self'"],
             formAction: ["'self'"]
-        }
+        },
+        reportOnly: false
     },
     hsts: {
         maxAge: 31536000,
@@ -77,16 +153,22 @@ app.use(helmet({
     },
     xFrameOptions: 'DENY',
     xssFilter: true,
-    noSniff: true
+    noSniff: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    permissionsPolicy: {
+        directives: {
+            geolocation: ["'self'"],
+            microphone: ["'none'"],
+            camera: ["'none'"],
+            payment: ["'none'"]
+        }
+    }
 }));
 
 // CORS with origin validation
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl)
         if (!origin) return callback(null, true);
-        
-        // Check if origin is allowed
         if (ALLOWED_ORIGINS.includes(origin)) {
             callback(null, true);
         } else {
@@ -112,6 +194,19 @@ const limiter = rateLimit({
 app.use('/imagekit-auth', limiter);
 app.use('/api/', limiter);
 
+// Stricter rate limiting for admin endpoints
+const adminLimiter = rateLimit({
+    windowMs: ADMIN_RATE_LIMIT_WINDOW,
+    max: ADMIN_RATE_LIMIT_MAX,
+    message: {
+        error: 'Too many admin requests. Please try again later.',
+        retryAfter: Math.ceil(ADMIN_RATE_LIMIT_WINDOW / 1000)
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+app.use('/api/admin', adminLimiter);
+
 // JSON and URL encoded parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -130,10 +225,8 @@ app.use((req, res, next) => {
 // ===== SERVE STATIC FILES =====
 // ================================================================
 
-// Root directory
 app.use(express.static(__dirname));
 
-// Pages directory
 app.use('/pages', express.static(path.join(__dirname, 'pages'), {
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.html')) {
@@ -144,24 +237,19 @@ app.use('/pages', express.static(path.join(__dirname, 'pages'), {
     }
 }));
 
-// CSS directory
 app.use('/css', express.static(path.join(__dirname, 'css'), {
     setHeaders: (res) => {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
 }));
 
-// JS directory
 app.use('/js', express.static(path.join(__dirname, 'js'), {
     setHeaders: (res) => {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
 }));
 
-// Images directory
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
-// Node modules (if needed)
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 // ================================================================
@@ -174,7 +262,7 @@ app.get('/', (req, res) => {
     } else {
         res.json({
             name: 'MOTO KENYA - Vehicle Management API',
-            version: '2.0.0',
+            version: '3.0.0',
             status: 'running',
             endpoints: {
                 admin: '/admin.html',
@@ -195,7 +283,8 @@ app.get('/', (req, res) => {
             security: {
                 cors: ALLOWED_ORIGINS,
                 rateLimit: `${RATE_LIMIT_MAX} requests per ${RATE_LIMIT_WINDOW/1000} seconds`,
-                helmet: '✅ Enabled'
+                adminRateLimit: `${ADMIN_RATE_LIMIT_MAX} requests per ${ADMIN_RATE_LIMIT_WINDOW/1000} seconds`,
+                helmet: '✅ Enabled (CSP fixed for ImageKit)'
             }
         });
     }
@@ -205,7 +294,6 @@ app.get('/', (req, res) => {
 // ===== SERVE HTML FILES WITH NO CACHE =====
 // ================================================================
 
-// Helper to serve HTML with no cache
 function serveHtml(filePath, res, pageName) {
     if (!fs.existsSync(filePath)) {
         console.error(`❌ ${pageName} not found!`);
@@ -231,7 +319,6 @@ function serveHtml(filePath, res, pageName) {
 }
 
 app.get('/admin.html', (req, res) => {
-    // Check both root and pages folder
     let filePath = path.join(__dirname, 'admin.html');
     if (!fs.existsSync(filePath)) {
         filePath = path.join(__dirname, 'pages', 'admin.html');
@@ -249,7 +336,6 @@ app.get('/index.html', (req, res) => {
     serveHtml(filePath, res, 'index.html');
 });
 
-// Serve any page from pages folder
 app.get('/pages/:page', (req, res) => {
     const page = req.params.page;
     if (!page.endsWith('.html')) {
@@ -259,63 +345,38 @@ app.get('/pages/:page', (req, res) => {
     serveHtml(filePath, res, `pages/${page}`);
 });
 
-// ================================================================
-// ===== FIXED: SERVE PAGES WITH NEXT PARAMETER =====
-// ================================================================
-// Also serve pages without /pages/ prefix (clean URLs)
-app.get('/:page', (req, res, next) => {  // ✅ Added 'next' parameter here
+app.get('/:page', (req, res, next) => {
     const page = req.params.page;
-    // Skip if it's a known route
     if (['imagekit-auth', 'health', 'api', 'test-structure', 'admin', 'index'].includes(page)) {
-        return next();  // ✅ Now 'next' is defined
+        return next();
     }
     if (!page.endsWith('.html')) {
-        // Try to serve as HTML page
         const filePath = path.join(__dirname, 'pages', `${page}.html`);
         if (fs.existsSync(filePath)) {
             return serveHtml(filePath, res, `${page}.html`);
         }
-        // Try root
         const rootPath = path.join(__dirname, `${page}.html`);
         if (fs.existsSync(rootPath)) {
             return serveHtml(rootPath, res, `${page}.html`);
         }
     }
-    // Pass to 404 handler
     next();
 });
 
 // ================================================================
 // ===== IMAGEKIT AUTH ENDPOINT =====
 // ================================================================
-app.get('/imagekit-auth', (req, res) => {  // ✅ No 'next' needed here unless you call it
+app.get('/imagekit-auth', (req, res) => {
     console.log('🔑 ImageKit auth requested');
     
-    const privateKey = HARDCODED_PRIVATE_KEY;
-    const publicKey = HARDCODED_PUBLIC_KEY;
-    const urlEndpoint = HARDCODED_URL_ENDPOINT;
-
-    // Validate keys
-    if (!privateKey || privateKey.length < 10 || privateKey.includes('your_private_key')) {
-        console.error('❌ Private key is invalid or using placeholder');
-        return res.status(500).json({ 
-            error: 'Private key is invalid',
-            hint: 'Check your .env file or hardcoded key'
-        });
-    }
-
-    if (!publicKey || publicKey.length < 10 || publicKey.includes('your_public_key')) {
-        console.error('❌ Public key is invalid or using placeholder');
-        return res.status(500).json({ 
-            error: 'Public key is invalid',
-            hint: 'Check your .env file or hardcoded key'
-        });
-    }
+    // Keys are already validated at startup - use them directly
+    const privateKey = IMAGEKIT_PRIVATE_KEY;
+    const publicKey = IMAGEKIT_PUBLIC_KEY;
+    const urlEndpoint = IMAGEKIT_URL_ENDPOINT;
 
     try {
-        // Generate authentication parameters
         const token = crypto.randomUUID();
-        const expire = Math.floor(Date.now() / 1000) + 10 * 60; // 10 minutes
+        const expire = Math.floor(Date.now() / 1000) + 10 * 60;
         const signature = crypto
             .createHmac('sha1', privateKey)
             .update(token + expire)
@@ -333,7 +394,6 @@ app.get('/imagekit-auth', (req, res) => {  // ✅ No 'next' needed here unless y
         console.log(`   🔑 Token: ${token.substring(0, 8)}...`);
         console.log(`   ⏱️  Expire: ${new Date(expire * 1000).toLocaleString()}`);
         console.log(`   📝 Signature: ${signature.substring(0, 8)}...`);
-        console.log(`   🔗 URL Endpoint: ${urlEndpoint}`);
 
         res.json(response);
 
@@ -357,18 +417,19 @@ app.get('/health', (req, res) => {
         environment: process.env.NODE_ENV || 'development',
         server: {
             name: 'MOTO KENYA - ImageKit Auth Server',
-            version: '2.0.0',
+            version: '3.0.0',
             port: PORT
         },
         keys: {
-            publicKey: HARDCODED_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
-            privateKey: HARDCODED_PRIVATE_KEY ? '✅ Configured' : '❌ Missing',
-            urlEndpoint: HARDCODED_URL_ENDPOINT ? '✅ Configured' : '❌ Missing'
+            publicKey: IMAGEKIT_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
+            privateKey: IMAGEKIT_PRIVATE_KEY ? '✅ Configured' : '❌ Missing',
+            urlEndpoint: IMAGEKIT_URL_ENDPOINT ? '✅ Configured' : '❌ Missing'
         },
         security: {
             cors: ALLOWED_ORIGINS,
             rateLimit: `${RATE_LIMIT_MAX} requests per ${RATE_LIMIT_WINDOW/1000} seconds`,
-            helmet: '✅ Enabled'
+            adminRateLimit: `${ADMIN_RATE_LIMIT_MAX} requests per ${ADMIN_RATE_LIMIT_WINDOW/1000} seconds`,
+            helmet: '✅ Enabled (CSP fixed)'
         },
         projectStructure: {
             root: __dirname,
@@ -393,9 +454,9 @@ app.get('/api/health', (req, res) => {
         uptime: Math.floor(process.uptime()),
         server: 'ImageKit Auth Server',
         port: PORT,
-        publicKey: HARDCODED_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
-        urlEndpoint: HARDCODED_URL_ENDPOINT ? '✅ Configured' : '❌ Missing',
-        privateKey: HARDCODED_PRIVATE_KEY ? '✅ Configured' : '❌ Missing'
+        publicKey: IMAGEKIT_PUBLIC_KEY ? '✅ Configured' : '❌ Missing',
+        urlEndpoint: IMAGEKIT_URL_ENDPOINT ? '✅ Configured' : '❌ Missing',
+        privateKey: IMAGEKIT_PRIVATE_KEY ? '✅ Configured' : '❌ Missing'
     });
 });
 
@@ -476,7 +537,7 @@ app.use((err, req, res, next) => {
 // ================================================================
 const server = app.listen(PORT, () => {
     console.log('\n' + '='.repeat(70));
-    console.log('🚀 MOTO KENYA - ImageKit Auth Server Started!');
+    console.log('🚀 MOTO KENYA - ImageKit Auth Server Started (SECURE VERSION)');
     console.log('='.repeat(70));
     console.log(`📍 Server URL: http://localhost:${PORT}`);
     console.log(`📁 Root: ${__dirname}`);
@@ -492,25 +553,23 @@ const server = app.listen(PORT, () => {
     console.log(`   🔍 Test Structure: http://localhost:${PORT}/test-structure`);
     console.log('='.repeat(70));
     console.log('🔑 ImageKit Configuration:');
-    console.log(`   🔗 URL Endpoint: ${HARDCODED_URL_ENDPOINT}`);
-    console.log(`   🔑 Public Key: ${HARDCODED_PUBLIC_KEY.substring(0, 15)}...`);
-    console.log(`   🔒 Private Key: ${HARDCODED_PRIVATE_KEY.substring(0, 15)}... (${HARDCODED_PRIVATE_KEY.length} chars)`);
+    console.log(`   🔗 URL Endpoint: ${IMAGEKIT_URL_ENDPOINT}`);
+    console.log(`   🔑 Public Key: ${IMAGEKIT_PUBLIC_KEY ? '✅ Configured' : '❌ Missing'}`);
+    console.log(`   🔒 Private Key: ${IMAGEKIT_PRIVATE_KEY ? '✅ Configured' : '❌ Missing'}`);
     console.log('='.repeat(70));
     console.log('🛡️ Security Configuration:');
     console.log(`   🌐 CORS Allowed Origins: ${ALLOWED_ORIGINS.length} origins`);
     console.log(`   ⏱️ Rate Limit: ${RATE_LIMIT_MAX} requests per ${RATE_LIMIT_WINDOW/1000} seconds`);
-    console.log(`   🛡️ Helmet: Enabled`);
+    console.log(`   ⏱️ Admin Rate Limit: ${ADMIN_RATE_LIMIT_MAX} requests per ${ADMIN_RATE_LIMIT_WINDOW/1000} seconds`);
+    console.log(`   🛡️ Helmet: Enabled (CSP fixed for ImageKit)`);
     console.log('='.repeat(70));
     
-    // Check project structure
     console.log('\n📁 Project Structure Check:');
-    console.log(`   📂 Root: ${__dirname}`);
     console.log(`   📂 Pages: ${fs.existsSync(path.join(__dirname, 'pages')) ? '✅ Found' : '❌ Missing'}`);
     console.log(`   📂 CSS: ${fs.existsSync(path.join(__dirname, 'css')) ? '✅ Found' : '❌ Missing'}`);
     console.log(`   📂 JS: ${fs.existsSync(path.join(__dirname, 'js')) ? '✅ Found' : '❌ Missing'}`);
     console.log(`   📂 Images: ${fs.existsSync(path.join(__dirname, 'images')) ? '✅ Found' : '❌ Missing'}`);
     
-    // Count files in each folder
     if (fs.existsSync(path.join(__dirname, 'pages'))) {
         const htmlFiles = fs.readdirSync(path.join(__dirname, 'pages')).filter(f => f.endsWith('.html'));
         console.log(`   📄 Pages HTML files: ${htmlFiles.length} (${htmlFiles.join(', ')})`);
@@ -543,13 +602,11 @@ const shutdown = () => {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
     console.error('💥 Uncaught Exception:', err);
     shutdown();
 });
 
-// Handle unhandled rejections
 process.on('unhandledRejection', (reason, promise) => {
     console.error('💥 Unhandled Rejection:', reason);
     shutdown();

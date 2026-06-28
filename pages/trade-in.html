@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Trade-In | MOTO KENYA</title>
     <meta name="description" content="Get a free valuation for your current vehicle and trade it in for a quality pre-owned car at MOTO KENYA.">
+    <meta name="google" content="notranslate">
+    <meta name="google-translate-custom" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="language" content="English">
+    <meta name="robots" content="noarchive">
     
     <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -29,8 +34,90 @@
     <!-- ========== SHARED STYLES ========== -->
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- ========== DARK MODE STYLES ========== -->
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
     <style>
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* ============================================================
+           FIX: Navigation - Matches index.html exactly
+           ============================================================ */
+        
+        /* Active nav link with gradient background - matches index.html */
+        nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Remove the underline for active links (since we use background) */
+        nav a.active::after {
+            display: none !important;
+        }
+        
+        /* Dark mode active nav link - matches index.html */
+        [data-theme="dark"] nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+        }
+        
+        /* Regular nav links in dark mode - visible */
+        [data-theme="dark"] nav a {
+            color: #e0e0e0 !important;
+        }
+        
+        [data-theme="dark"] nav a:hover {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] nav a::after {
+            background: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] header {
+            background: rgba(10, 10, 15, 0.92) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        [data-theme="dark"] .logo {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] .logo span {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        
+        /* ===== FIX: Hero Section for Dark Mode ===== */
+        .page-hero {
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: var(--spacing-3xl) 5%;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        [data-theme="dark"] .page-hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="dark"] .page-hero h1 {
+            color: #f0f0f0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .page-hero p {
+            color: #a0a0b0;
+        }
+
+        /* ============================================================
+           TRADE-IN PAGE STYLES
+           ============================================================ */
         
         .trade-in-grid {
             display: grid;
@@ -49,6 +136,7 @@
         .trade-in-form h2 {
             font-family: var(--font-display);
             margin-bottom: 1.5rem;
+            color: var(--text-color);
         }
         .trade-in-form .form-group {
             margin-bottom: 1.2rem;
@@ -57,6 +145,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 0.3rem;
+            color: var(--text-color);
         }
         .trade-in-form .form-group input,
         .trade-in-form .form-group select {
@@ -68,11 +157,13 @@
             color: var(--text-color);
             font-size: 1rem;
             font-family: var(--font-primary);
+            transition: border-color var(--transition-base), box-shadow var(--transition-base);
         }
         .trade-in-form .form-group input:focus,
         .trade-in-form .form-group select:focus {
             border-color: var(--brand-teal);
             outline: none;
+            box-shadow: 0 0 0 4px rgba(0,180,216,0.1);
         }
         .trade-in-form button {
             width: 100%;
@@ -85,6 +176,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all var(--transition-base);
+            font-family: var(--font-primary);
         }
         .trade-in-form button:hover {
             transform: translateY(-2px);
@@ -114,6 +206,7 @@
         }
         .trade-info .info-card h4 {
             font-weight: 700;
+            color: var(--text-color);
         }
         .trade-info .info-card p {
             color: var(--text-muted);
@@ -139,9 +232,87 @@
             box-shadow: var(--shadow-md);
         }
         .benefit-item .icon { font-size: 2.5rem; }
-        .benefit-item h4 { font-weight: 700; }
-        .benefit-item p { color: var(--text-muted); font-size: 0.9rem; }
+        .benefit-item h4 { 
+            font-weight: 700; 
+            color: var(--text-color);
+        }
+        .benefit-item p { 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+        }
 
+        /* ============================================================
+           DARK MODE OVERRIDES
+           ============================================================ */
+        [data-theme="dark"] {
+            --bg-color: #0a0a0f;
+            --card-bg: #16161f;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --border: #2a2a3a;
+            --border-color: #2a2a3a;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .trade-in-form {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        
+        [data-theme="dark"] .trade-in-form h2 {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .trade-in-form .form-group label {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .trade-in-form .form-group input,
+        [data-theme="dark"] .trade-in-form .form-group select {
+            background: var(--bg-color);
+            border-color: var(--border);
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .trade-in-form .form-group input:focus,
+        [data-theme="dark"] .trade-in-form .form-group select:focus {
+            border-color: var(--brand-teal);
+            box-shadow: 0 0 0 4px rgba(0,180,216,0.1);
+        }
+        
+        [data-theme="dark"] .trade-info .info-card {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        
+        [data-theme="dark"] .trade-info .info-card h4 {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .trade-info .info-card p {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .benefit-item {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        
+        [data-theme="dark"] .benefit-item h4 {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .benefit-item p {
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .trade-in-grid { grid-template-columns: 1fr; }
             .benefits-grid { grid-template-columns: 1fr; }
@@ -150,174 +321,243 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo">MOTO<span>KENYA</span></div>
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="blog.html">Blog</a>
-            <a href="testimonials.html">Reviews</a>
-            <a href="contact.html">Contact</a>
-            <a href="finance.html">Finance</a>
-            <a href="trade-in.html" class="active">Trade-In</a>
-            <a href="faq.html">FAQ</a>
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
-        </nav>
-    </header>
+    <!-- ============================================================
+         PREVENT TRANSLATION
+         ============================================================ -->
+    <div class="notranslate" translate="no">
 
-    <!-- PAGE HERO -->
-    <div class="page-hero">
-        <h1>Trade-In Your Vehicle</h1>
-        <p>Get a free, no-obligation valuation for your current car</p>
-    </div>
+        <!-- TOAST -->
+        <div id="toast" class="toast"></div>
 
-    <!-- CONTENT -->
-    <div class="container">
-        <div class="trade-in-grid">
-            <div class="trade-in-form">
-                <h2>Get Your Free Valuation</h2>
-                <form id="tradeInForm">
-                    <div class="form-group">
-                        <label for="tradeMake">Make</label>
-                        <input type="text" id="tradeMake" placeholder="e.g. Toyota" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeModel">Model</label>
-                        <input type="text" id="tradeModel" placeholder="e.g. Prado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeYear">Year</label>
-                        <input type="number" id="tradeYear" placeholder="e.g. 2018" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeMileage">Mileage (km)</label>
-                        <input type="number" id="tradeMileage" placeholder="e.g. 50000" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeCondition">Condition</label>
-                        <select id="tradeCondition" required>
-                            <option value="">Select condition</option>
-                            <option value="excellent">Excellent - Like new</option>
-                            <option value="verygood">Very Good - Well maintained</option>
-                            <option value="good">Good - Some wear and tear</option>
-                            <option value="fair">Fair - Needs some work</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeTransmission">Transmission</label>
-                        <select id="tradeTransmission">
-                            <option value="">Select</option>
-                            <option value="automatic">Automatic</option>
-                            <option value="manual">Manual</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tradeFuel">Fuel Type</label>
-                        <select id="tradeFuel">
-                            <option value="">Select</option>
-                            <option value="petrol">Petrol</option>
-                            <option value="diesel">Diesel</option>
-                        </select>
-                    </div>
-                    <button type="submit">Get Estimate</button>
-                </form>
-            </div>
-
-            <div class="trade-info">
-                <div class="info-card">
-                    <div class="icon">💎</div>
-                    <h4>Free Valuation</h4>
-                    <p>Get a fair market value estimate for your vehicle at no cost.</p>
-                </div>
-                <div class="info-card">
-                    <div class="icon">🤝</div>
-                    <h4>Transparent Process</h4>
-                    <p>We'll walk you through the valuation and offer a competitive price.</p>
-                </div>
-                <div class="info-card">
-                    <div class="icon">💰</div>
-                    <h4>Instant Cash Offer</h4>
-                    <p>Receive an offer on the spot when you visit our showroom.</p>
-                </div>
-                <div class="info-card">
-                    <div class="icon">🚗</div>
-                    <h4>Trade-In & Upgrade</h4>
-                    <p>Use your trade-in value as a down payment on your next vehicle.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="benefits-grid">
-            <div class="benefit-item">
-                <div class="icon">✅</div>
-                <h4>No Obligation</h4>
-                <p>You're not obligated to sell. Get a free quote today.</p>
-            </div>
-            <div class="benefit-item">
-                <div class="icon">📋</div>
-                <h4>Quick Process</h4>
-                <p>Get your valuation in minutes, not days.</p>
-            </div>
-            <div class="benefit-item">
-                <div class="icon">🏆</div>
-                <h4>Best Price</h4>
-                <p>We offer competitive prices based on current market trends.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h4>MOTO KENYA</h4>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="testimonials.html">Testimonials</a>
-            </div>
-            <div>
-                <h4>Vehicles</h4>
-                <a href="../index.html">Browse Inventory</a>
-                <a href="finance.html">Financing</a>
-                <a href="trade-in.html">Trade-In</a>
-            </div>
-            <div>
-                <h4>Resources</h4>
+        <!-- HEADER -->
+        <header>
+            <div class="logo">MOTO<span>KENYA</span></div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
                 <a href="blog.html">Blog</a>
+                <a href="testimonials.html">Reviews</a>
+                <a href="contact.html">Contact</a>
+                <a href="finance.html">Finance</a>
+                <a href="trade-in.html" class="active">Trade-In</a>
                 <a href="faq.html">FAQ</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms & Conditions</a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+            </nav>
+        </header>
+
+        <!-- PAGE HERO -->
+        <div class="page-hero">
+            <h1>Trade-In Your Vehicle</h1>
+            <p>Get a free, no-obligation valuation for your current car</p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="container">
+            <div class="trade-in-grid">
+                <div class="trade-in-form">
+                    <h2>Get Your Free Valuation</h2>
+                    <form id="tradeInForm">
+                        <div class="form-group">
+                            <label for="tradeMake">Make</label>
+                            <input type="text" id="tradeMake" placeholder="e.g. Toyota" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeModel">Model</label>
+                            <input type="text" id="tradeModel" placeholder="e.g. Prado" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeYear">Year</label>
+                            <input type="number" id="tradeYear" placeholder="e.g. 2018" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeMileage">Mileage (km)</label>
+                            <input type="number" id="tradeMileage" placeholder="e.g. 50000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeCondition">Condition</label>
+                            <select id="tradeCondition" required>
+                                <option value="">Select condition</option>
+                                <option value="excellent">Excellent - Like new</option>
+                                <option value="verygood">Very Good - Well maintained</option>
+                                <option value="good">Good - Some wear and tear</option>
+                                <option value="fair">Fair - Needs some work</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeTransmission">Transmission</label>
+                            <select id="tradeTransmission">
+                                <option value="">Select</option>
+                                <option value="automatic">Automatic</option>
+                                <option value="manual">Manual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tradeFuel">Fuel Type</label>
+                            <select id="tradeFuel">
+                                <option value="">Select</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                            </select>
+                        </div>
+                        <button type="submit">Get Estimate</button>
+                    </form>
+                </div>
+
+                <div class="trade-info">
+                    <div class="info-card">
+                        <div class="icon">💎</div>
+                        <h4>Free Valuation</h4>
+                        <p>Get a fair market value estimate for your vehicle at no cost.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon">🤝</div>
+                        <h4>Transparent Process</h4>
+                        <p>We'll walk you through the valuation and offer a competitive price.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon">💰</div>
+                        <h4>Instant Cash Offer</h4>
+                        <p>Receive an offer on the spot when you visit our showroom.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon">🚗</div>
+                        <h4>Trade-In &amp; Upgrade</h4>
+                        <p>Use your trade-in value as a down payment on your next vehicle.</p>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="tel:+254712345678">📞 +254 712 345 678</a>
-                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
-                <a href="#">📍 Nairobi, Kenya</a>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="icon">✅</div>
+                    <h4>No Obligation</h4>
+                    <p>You're not obligated to sell. Get a free quote today.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">📋</div>
+                    <h4>Quick Process</h4>
+                    <p>Get your valuation in minutes, not days.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="icon">🏆</div>
+                    <h4>Best Price</h4>
+                    <p>We offer competitive prices based on current market trends.</p>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
-    </footer>
 
-    <!-- ========== SHARED JAVASCRIPT ========== -->
-    <script src="../js/main.js"></script>
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-grid">
+                <div>
+                    <h4>MOTO KENYA</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="testimonials.html">Testimonials</a>
+                </div>
+                <div>
+                    <h4>Vehicles</h4>
+                    <a href="../index.html">Browse Inventory</a>
+                    <a href="finance.html">Financing</a>
+                    <a href="trade-in.html">Trade-In</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="blog.html">Blog</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms &amp; Conditions</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                    <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                    <a href="#">📍 Nairobi, Kenya</a>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+        </footer>
 
+    </div>
+    <!-- END notranslate -->
+
+    <!-- ============================================================
+         DARK MODE TOGGLE - STANDALONE (no main.js)
+         ============================================================ -->
     <script>
-        document.getElementById('tradeInForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const make = document.getElementById('tradeMake').value.trim();
-            const model = document.getElementById('tradeModel').value.trim();
-            const year = document.getElementById('tradeYear').value.trim();
-            const mileage = document.getElementById('tradeMileage').value.trim();
-            const condition = document.getElementById('tradeCondition').value;
-            const transmission = document.getElementById('tradeTransmission').value;
-            const fuel = document.getElementById('tradeFuel').value;
+        (function() {
+            // Get the toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) {
+                console.warn('⚠️ Theme toggle button not found');
+                return;
+            }
+            
+            // Get saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply theme on load
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+            }
+            
+            // Remove all existing event listeners by cloning
+            const newToggle = themeToggle.cloneNode(true);
+            themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+            
+            // Add fresh click handler
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const current = document.documentElement.getAttribute('data-theme');
+                
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    this.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    this.textContent = '☀️';
+                }
+                
+                console.log('🌓 Theme toggled to:', document.documentElement.getAttribute('data-theme') || 'light');
+            });
+            
+            console.log('🌓 Dark mode toggle initialized - Current:', savedTheme);
+        })();
+    </script>
 
-            const msg = `Trade-In Request%0AMake: ${make}%0AModel: ${model}%0AYear: ${year}%0AMileage: ${mileage} km%0ACondition: ${condition}%0ATransmission: ${transmission}%0AFuel: ${fuel}`;
-            window.open(`https://wa.me/254712345678?text=${msg}`, '_blank');
-            alert('✅ Your trade-in request has been sent! We\'ll get back to you shortly.');
-            this.reset();
+    <!-- ============================================================
+         TRADE-IN FORM HANDLER
+         ============================================================ -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tradeForm = document.getElementById('tradeInForm');
+            if (tradeForm) {
+                tradeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const make = document.getElementById('tradeMake').value.trim();
+                    const model = document.getElementById('tradeModel').value.trim();
+                    const year = document.getElementById('tradeYear').value.trim();
+                    const mileage = document.getElementById('tradeMileage').value.trim();
+                    const condition = document.getElementById('tradeCondition').value;
+                    const transmission = document.getElementById('tradeTransmission').value;
+                    const fuel = document.getElementById('tradeFuel').value;
+
+                    const msg = `Trade-In Request%0AMake: ${make}%0AModel: ${model}%0AYear: ${year}%0AMileage: ${mileage} km%0ACondition: ${condition}%0ATransmission: ${transmission}%0AFuel: ${fuel}`;
+                    window.open(`https://wa.me/254712345678?text=${msg}`, '_blank');
+                    alert('✅ Your trade-in request has been sent! We\'ll get back to you shortly.');
+                    this.reset();
+                });
+            }
         });
     </script>
+
 </body>
 </html>

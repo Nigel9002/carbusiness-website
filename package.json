@@ -1,23 +1,64 @@
 {
   "name": "carbusiness-website",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "MOTO KENYA - Premium Vehicle Management System",
   "main": "imagekit-auth-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node imagekit-auth-server.js",
+    "dev": "nodemon imagekit-auth-server.js",
+    "serve": "firebase emulators:start",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "deploy:all": "firebase deploy --only hosting,functions,firestore",
+    "logs": "firebase functions:log",
+    "test": "node scripts/sanity-check.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "security": "npm audit",
+    "security:fix": "npm audit fix",
+    "clean": "rm -rf node_modules package-lock.json && npm install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "car-dealership",
+    "vehicle-management",
+    "moto-kenya",
+    "firebase",
+    "imagekit",
+    "pwa",
+    "kenya",
+    "automotive"
+  ],
+  "author": "MOTO KENYA",
+  "license": "MIT",
   "type": "commonjs",
+  "engines": {
+    "node": "20"
+  },
   "dependencies": {
-    "cors": "^2.8.6",
+    "@imagekit/nodejs": "^7.8.1",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.5.2",
-    "firebase-admin": "^14.0.0",
-    "helmet": "^8.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
     "imagekit": "^6.0.0"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nige19002/carbusiness-website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nige19002/carbusiness-website/issues"
+  },
+  "homepage": "https://nige19002.github.io/carbusiness-website/"
 }

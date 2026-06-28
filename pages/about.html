@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>About Us | MOTO KENYA</title>
     <meta name="description" content="Learn about MOTO KENYA - Kenya's trusted dealership for quality pre-owned vehicles. Our story, mission, and commitment to customer satisfaction.">
+    <meta name="google" content="notranslate">
+    <meta name="google-translate-custom" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="language" content="English">
+    <meta name="robots" content="noarchive">
     
     <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -29,8 +34,86 @@
     <!-- ========== SHARED STYLES ========== -->
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- ========== DARK MODE STYLES ========== -->
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
     <style>
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* ============================================================
+           FIX: Navigation - Matches index.html exactly
+           ============================================================ */
+        
+        /* Active nav link with gradient background - matches index.html */
+        nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Remove the underline for active links (since we use background) */
+        nav a.active::after {
+            display: none !important;
+        }
+        
+        /* Dark mode active nav link - matches index.html */
+        [data-theme="dark"] nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+        }
+        
+        /* Regular nav links in dark mode - visible */
+        [data-theme="dark"] nav a {
+            color: #e0e0e0 !important;
+        }
+        
+        [data-theme="dark"] nav a:hover {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] nav a::after {
+            background: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] header {
+            background: rgba(10, 10, 15, 0.92) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        [data-theme="dark"] .logo {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] .logo span {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        
+        /* ===== FIX: Hero Section for Dark Mode ===== */
+        .page-hero {
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: var(--spacing-3xl) 5%;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        [data-theme="dark"] .page-hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="dark"] .page-hero h1 {
+            color: #f0f0f0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .page-hero p {
+            color: #a0a0b0;
+        }
         
         /* About Grid */
         .about-grid {
@@ -42,6 +125,7 @@
         }
         .about-grid.reverse { direction: rtl; }
         .about-grid.reverse > * { direction: ltr; }
+        
         .about-image {
             background: var(--gradient-secondary);
             border-radius: var(--border-radius);
@@ -51,7 +135,9 @@
             justify-content: center;
             font-size: 5rem;
             color: #fff;
+            transition: all var(--transition-base);
         }
+        
         .about-content h2 {
             font-family: var(--font-display);
             font-size: 2rem;
@@ -132,8 +218,14 @@
             margin: 0 auto 1rem;
             font-weight: 700;
         }
-        .team-card h4 { font-weight: 700; }
-        .team-card p { color: var(--text-muted); font-size: 0.9rem; }
+        .team-card h4 { 
+            font-weight: 700; 
+            color: var(--text-color);
+        }
+        .team-card p { 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+        }
 
         /* Values */
         .values-grid {
@@ -155,10 +247,90 @@
             box-shadow: var(--shadow-lg);
         }
         .value-card .icon { font-size: 3rem; margin-bottom: 0.5rem; }
-        .value-card h4 { font-weight: 700; }
-        .value-card p { color: var(--text-muted); font-size: 0.9rem; }
+        .value-card h4 { 
+            font-weight: 700; 
+            color: var(--text-color);
+        }
+        .value-card p { 
+            color: var(--text-muted); 
+            font-size: 0.9rem; 
+        }
 
-        /* Responsive */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ============================================================
+           DARK MODE OVERRIDES - MATCHES INDEX.HTML
+           ============================================================ */
+        [data-theme="dark"] {
+            --bg-color: #0a0a0f;
+            --card-bg: #16161f;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --border: #2a2a3a;
+            --border-color: #2a2a3a;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .stat-item {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .stat-item .number {
+            -webkit-text-fill-color: #60a5fa;
+        }
+        [data-theme="dark"] .stat-item .label {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .team-card {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .team-card h4 {
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .team-card p {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .value-card {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .value-card h4 {
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .value-card p {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .about-image {
+            opacity: 0.9;
+        }
+        
+        [data-theme="dark"] .about-content h2 {
+            -webkit-text-fill-color: #60a5fa;
+        }
+        [data-theme="dark"] .about-content p {
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .about-grid { grid-template-columns: 1fr; }
             .about-grid.reverse { direction: ltr; }
@@ -171,152 +343,216 @@
 </head>
 <body>
 
-    <!-- TOAST -->
-    <div id="toast" class="toast"></div>
+    <!-- ============================================================
+         PREVENT TRANSLATION
+         ============================================================ -->
+    <div class="notranslate" translate="no">
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo">MOTO<span>KENYA</span></div>
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="about.html" class="active">About</a>
-            <a href="blog.html">Blog</a>
-            <a href="testimonials.html">Reviews</a>
-            <a href="contact.html">Contact</a>
-            <a href="finance.html">Finance</a>
-            <a href="trade-in.html">Trade-In</a>
-            <a href="faq.html">FAQ</a>
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
-        </nav>
-    </header>
+        <!-- TOAST -->
+        <div id="toast" class="toast"></div>
 
-    <!-- PAGE HERO -->
-    <div class="page-hero">
-        <h1>About MOTO KENYA</h1>
-        <p>Your Trusted Partner in Quality Pre-Owned Vehicles</p>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="container">
-        <div class="about-grid">
-            <div class="about-content">
-                <h2>Our Story</h2>
-                <p>Founded in 2018, MOTO KENYA has grown to become one of Kenya's most trusted dealerships for quality pre-owned vehicles. With a passion for cars and a commitment to excellence, we've helped thousands of customers find their dream vehicles.</p>
-                <p>Our journey began with a simple mission: to provide Kenyans with access to reliable, high-quality vehicles at fair prices. Today, we're proud to be a leading name in the automotive industry, known for our transparency, integrity, and customer-first approach.</p>
-            </div>
-            <div class="about-image">🚗</div>
-        </div>
-
-        <div class="about-grid reverse">
-            <div class="about-content">
-                <h2>Our Mission</h2>
-                <p>To deliver exceptional value to our customers by providing thoroughly inspected, quality pre-owned vehicles backed by transparent service and unwavering integrity.</p>
-                <p>We believe that everyone deserves to drive a reliable car. That's why we go above and beyond to ensure every vehicle in our inventory meets the highest standards of quality and safety.</p>
-            </div>
-            <div class="about-image">⭐</div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="number">500+</div>
-                <div class="label">Happy Customers</div>
-            </div>
-            <div class="stat-item">
-                <div class="number">7+</div>
-                <div class="label">Years Experience</div>
-            </div>
-            <div class="stat-item">
-                <div class="number">100%</div>
-                <div class="label">Vehicles Inspected</div>
-            </div>
-            <div class="stat-item">
-                <div class="number">4.9⭐</div>
-                <div class="label">Customer Rating</div>
-            </div>
-        </div>
-
-        <h2 style="font-family: var(--font-display); font-size: 2rem; text-align: center; margin-bottom: 2rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Our Core Values</h2>
-        <div class="values-grid">
-            <div class="value-card">
-                <div class="icon">🔍</div>
-                <h4>Transparency</h4>
-                <p>Full disclosure on every vehicle's history and condition</p>
-            </div>
-            <div class="value-card">
-                <div class="icon">🤝</div>
-                <h4>Integrity</h4>
-                <p>Honest dealings and fair pricing for all customers</p>
-            </div>
-            <div class="value-card">
-                <div class="icon">⭐</div>
-                <h4>Quality</h4>
-                <p>Only the best vehicles make it to our showroom</p>
-            </div>
-            <div class="value-card">
-                <div class="icon">💚</div>
-                <h4>Customer First</h4>
-                <p>Your satisfaction is our top priority</p>
-            </div>
-        </div>
-
-        <h2 style="font-family: var(--font-display); font-size: 2rem; text-align: center; margin-bottom: 2rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Meet Our Team</h2>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="avatar">MK</div>
-                <h4>Michael Kariuki</h4>
-                <p>Founder & CEO</p>
-            </div>
-            <div class="team-card">
-                <div class="avatar">JW</div>
-                <h4>Jane Wanjiru</h4>
-                <p>Sales Director</p>
-            </div>
-            <div class="team-card">
-                <div class="avatar">PO</div>
-                <h4>Peter Ochieng</h4>
-                <p>Lead Mechanic</p>
-            </div>
-            <div class="team-card">
-                <div class="avatar">SM</div>
-                <h4>Sarah Muthoni</h4>
-                <p>Customer Relations</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h4>MOTO KENYA</h4>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="testimonials.html">Testimonials</a>
-            </div>
-            <div>
-                <h4>Vehicles</h4>
-                <a href="../index.html">Browse Inventory</a>
-                <a href="finance.html">Financing</a>
-                <a href="trade-in.html">Trade-In</a>
-            </div>
-            <div>
-                <h4>Resources</h4>
+        <!-- HEADER -->
+        <header>
+            <div class="logo">MOTO<span>KENYA</span></div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="about.html" class="active">About</a>
                 <a href="blog.html">Blog</a>
+                <a href="testimonials.html">Reviews</a>
+                <a href="contact.html">Contact</a>
+                <a href="finance.html">Finance</a>
+                <a href="trade-in.html">Trade-In</a>
                 <a href="faq.html">FAQ</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms & Conditions</a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+            </nav>
+        </header>
+
+        <!-- PAGE HERO -->
+        <div class="page-hero" id="pageHero">
+            <h1>About MOTO KENYA</h1>
+            <p>Your Trusted Partner in Quality Pre-Owned Vehicles</p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2>Our Story</h2>
+                    <p>Founded in 2018, MOTO KENYA has grown to become one of Kenya's most trusted dealerships for quality pre-owned vehicles. With a passion for cars and a commitment to excellence, we've helped thousands of customers find their dream vehicles.</p>
+                    <p>Our journey began with a simple mission: to provide Kenyans with access to reliable, high-quality vehicles at fair prices. Today, we're proud to be a leading name in the automotive industry, known for our transparency, integrity, and customer-first approach.</p>
+                </div>
+                <div class="about-image">🚗</div>
             </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="tel:+254712345678">📞 +254 712 345 678</a>
-                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
-                <a href="#">📍 Nairobi, Kenya</a>
+
+            <div class="about-grid reverse">
+                <div class="about-content">
+                    <h2>Our Mission</h2>
+                    <p>To deliver exceptional value to our customers by providing thoroughly inspected, quality pre-owned vehicles backed by transparent service and unwavering integrity.</p>
+                    <p>We believe that everyone deserves to drive a reliable car. That's why we go above and beyond to ensure every vehicle in our inventory meets the highest standards of quality and safety.</p>
+                </div>
+                <div class="about-image">⭐</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="number">500+</div>
+                    <div class="label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">7+</div>
+                    <div class="label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">100%</div>
+                    <div class="label">Vehicles Inspected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">4.9★</div>
+                    <div class="label">Customer Rating</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Our Core Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="icon">🔍</div>
+                    <h4>Transparency</h4>
+                    <p>Full disclosure on every vehicle's history and condition</p>
+                </div>
+                <div class="value-card">
+                    <div class="icon">🤝</div>
+                    <h4>Integrity</h4>
+                    <p>Honest dealings and fair pricing for all customers</p>
+                </div>
+                <div class="value-card">
+                    <div class="icon">⭐</div>
+                    <h4>Quality</h4>
+                    <p>Only the best vehicles make it to our showroom</p>
+                </div>
+                <div class="value-card">
+                    <div class="icon">💚</div>
+                    <h4>Customer First</h4>
+                    <p>Your satisfaction is our top priority</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Meet Our Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar">MK</div>
+                    <h4>Michael Kariuki</h4>
+                    <p>Founder &amp; CEO</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">JW</div>
+                    <h4>Jane Wanjiru</h4>
+                    <p>Sales Director</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">PO</div>
+                    <h4>Peter Ochieng</h4>
+                    <p>Lead Mechanic</p>
+                </div>
+                <div class="team-card">
+                    <div class="avatar">SM</div>
+                    <h4>Sarah Muthoni</h4>
+                    <p>Customer Relations</p>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
-    </footer>
 
-    <!-- ========== SHARED JAVASCRIPT ========== -->
-    <script src="../js/main.js"></script>
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-grid">
+                <div>
+                    <h4>MOTO KENYA</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="testimonials.html">Testimonials</a>
+                </div>
+                <div>
+                    <h4>Vehicles</h4>
+                    <a href="../index.html">Browse Inventory</a>
+                    <a href="finance.html">Financing</a>
+                    <a href="trade-in.html">Trade-In</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="blog.html">Blog</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms &amp; Conditions</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                    <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                    <a href="#">📍 Nairobi, Kenya</a>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+        </footer>
+
+    </div>
+    <!-- END notranslate -->
+
+    <!-- ============================================================
+         IMPORTANT: DO NOT load main.js on this page
+         It conflicts with the dark mode toggle.
+         Instead, we only load the dark mode script below.
+         ============================================================ -->
+    
+    <!-- ============================================================
+         DARK MODE TOGGLE - STANDALONE (no main.js)
+         ============================================================ -->
+    <script>
+        (function() {
+            // Get the toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) {
+                console.warn('⚠️ Theme toggle button not found');
+                return;
+            }
+            
+            // Get saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply theme on load
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+            }
+            
+            // Remove all existing event listeners by cloning
+            const newToggle = themeToggle.cloneNode(true);
+            themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+            
+            // Add fresh click handler
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const current = document.documentElement.getAttribute('data-theme');
+                
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    this.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    this.textContent = '☀️';
+                }
+                
+                console.log('🌓 Theme toggled to:', document.documentElement.getAttribute('data-theme') || 'light');
+            });
+            
+            console.log('🌓 Dark mode toggle initialized - Current:', savedTheme);
+        })();
+    </script>
+
 </body>
 </html>

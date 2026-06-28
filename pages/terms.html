@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Terms & Conditions | MOTO KENYA</title>
+    <title>Terms &amp; Conditions | MOTO KENYA</title>
+    <meta name="description" content="Read the terms and conditions for using MOTO KENYA's website and services. Learn about vehicle purchases, financing, and legal agreements.">
+    <meta name="google" content="notranslate">
+    <meta name="google-translate-custom" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="language" content="English">
+    <meta name="robots" content="noarchive">
     
     <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -28,8 +34,90 @@
     <!-- ========== SHARED STYLES ========== -->
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- ========== DARK MODE STYLES ========== -->
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
     <style>
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* ============================================================
+           FIX: Navigation - Matches index.html exactly
+           ============================================================ */
+        
+        /* Active nav link with gradient background - matches index.html */
+        nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Remove the underline for active links (since we use background) */
+        nav a.active::after {
+            display: none !important;
+        }
+        
+        /* Dark mode active nav link - matches index.html */
+        [data-theme="dark"] nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+        }
+        
+        /* Regular nav links in dark mode - visible */
+        [data-theme="dark"] nav a {
+            color: #e0e0e0 !important;
+        }
+        
+        [data-theme="dark"] nav a:hover {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] nav a::after {
+            background: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] header {
+            background: rgba(10, 10, 15, 0.92) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        [data-theme="dark"] .logo {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] .logo span {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        
+        /* ===== FIX: Hero Section for Dark Mode ===== */
+        .page-hero {
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: var(--spacing-3xl) 5%;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        [data-theme="dark"] .page-hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="dark"] .page-hero h1 {
+            color: #f0f0f0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .page-hero p {
+            color: #a0a0b0;
+        }
+
+        /* ============================================================
+           TERMS & CONDITIONS STYLES
+           ============================================================ */
         
         .terms-content {
             background: var(--card-bg);
@@ -42,6 +130,7 @@
             font-family: var(--font-display);
             font-size: 1.5rem;
             margin: 1.5rem 0 0.5rem;
+            color: var(--text-color);
         }
         .terms-content h2:first-child { margin-top: 0; }
         .terms-content p {
@@ -54,7 +143,55 @@
             margin-bottom: 1rem;
         }
         .terms-content ul li { margin-bottom: 0.3rem; }
+        .terms-content a {
+            color: var(--brand-blue);
+            text-decoration: none;
+        }
+        .terms-content a:hover {
+            text-decoration: underline;
+        }
 
+        /* ============================================================
+           DARK MODE OVERRIDES
+           ============================================================ */
+        [data-theme="dark"] {
+            --bg-color: #0a0a0f;
+            --card-bg: #16161f;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --border: #2a2a3a;
+            --border-color: #2a2a3a;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .terms-content {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        
+        [data-theme="dark"] .terms-content h2 {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .terms-content p {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .terms-content ul {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .terms-content a {
+            color: var(--brand-teal);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .terms-content { padding: 1.5rem; }
         }
@@ -62,113 +199,174 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo">MOTO<span>KENYA</span></div>
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="blog.html">Blog</a>
-            <a href="testimonials.html">Reviews</a>
-            <a href="contact.html">Contact</a>
-            <a href="finance.html">Finance</a>
-            <a href="trade-in.html">Trade-In</a>
-            <a href="faq.html">FAQ</a>
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
-        </nav>
-    </header>
+    <!-- ============================================================
+         PREVENT TRANSLATION
+         ============================================================ -->
+    <div class="notranslate" translate="no">
 
-    <!-- PAGE HERO -->
-    <div class="page-hero">
-        <h1>Terms & Conditions</h1>
-    </div>
+        <!-- TOAST -->
+        <div id="toast" class="toast"></div>
 
-    <!-- CONTENT -->
-    <div class="container">
-        <div class="terms-content">
-            <h2>1. Acceptance of Terms</h2>
-            <p>By using the MOTO KENYA website and services, you agree to these Terms & Conditions. If you do not agree, please do not use our website.</p>
-
-            <h2>2. Vehicle Information</h2>
-            <p>We strive to provide accurate vehicle information, but we do not guarantee the accuracy of all details. Vehicles are subject to availability and prior sale.</p>
-            <ul>
-                <li>All vehicle listings are for informational purposes</li>
-                <li>Prices and specifications may change without notice</li>
-                <li>We recommend verifying all details before purchase</li>
-            </ul>
-
-            <h2>3. Purchasing Process</h2>
-            <p>When you purchase a vehicle through MOTO KENYA:</p>
-            <ul>
-                <li>You must provide accurate personal and financial information</li>
-                <li>All transactions are subject to our approval</li>
-                <li>We reserve the right to decline any order</li>
-                <li>Deposits may be required to reserve vehicles</li>
-            </ul>
-
-            <h2>4. Financing</h2>
-            <p>Financing options are subject to credit approval and may vary based on individual circumstances. Terms and conditions apply.</p>
-            <ul>
-                <li>Interest rates are subject to change</li>
-                <li>Down payment requirements may apply</li>
-                <li>Additional fees may apply for financing</li>
-            </ul>
-
-            <h2>5. Returns and Refunds</h2>
-            <p>All vehicle sales are final. Please ensure you are satisfied with the vehicle before completing the purchase.</p>
-
-            <h2>6. Privacy</h2>
-            <p>Your privacy is important to us. Please review our <a href="privacy.html" style="color: var(--brand-blue);">Privacy Policy</a> for information on how we handle your data.</p>
-
-            <h2>7. Intellectual Property</h2>
-            <p>All content on this website, including text, images, and logos, is the property of MOTO KENYA and may not be used without permission.</p>
-
-            <h2>8. Limitation of Liability</h2>
-            <p>MOTO KENYA is not liable for any damages arising from the use of our website or services.</p>
-
-            <h2>9. Changes to Terms</h2>
-            <p>We reserve the right to modify these Terms & Conditions at any time. Changes will be effective immediately upon posting.</p>
-
-            <h2>10. Contact</h2>
-            <p>If you have any questions about these Terms & Conditions, please contact us at <a href="mailto:info@motokenya.com" style="color: var(--brand-blue);">info@motokenya.com</a> or call +254 712 345 678.</p>
-
-            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);"><em>Last Updated: December 2024</em></p>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h4>MOTO KENYA</h4>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="testimonials.html">Testimonials</a>
-            </div>
-            <div>
-                <h4>Vehicles</h4>
-                <a href="../index.html">Browse Inventory</a>
-                <a href="finance.html">Financing</a>
-                <a href="trade-in.html">Trade-In</a>
-            </div>
-            <div>
-                <h4>Resources</h4>
+        <!-- HEADER -->
+        <header>
+            <div class="logo">MOTO<span>KENYA</span></div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
                 <a href="blog.html">Blog</a>
+                <a href="testimonials.html">Reviews</a>
+                <a href="contact.html">Contact</a>
+                <a href="finance.html">Finance</a>
+                <a href="trade-in.html">Trade-In</a>
                 <a href="faq.html">FAQ</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms & Conditions</a>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="tel:+254712345678">📞 +254 712 345 678</a>
-                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
-                <a href="#">📍 Nairobi, Kenya</a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+            </nav>
+        </header>
+
+        <!-- PAGE HERO -->
+        <div class="page-hero">
+            <h1>Terms &amp; Conditions</h1>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="container">
+            <div class="terms-content">
+                <h2>1. Acceptance of Terms</h2>
+                <p>By using the MOTO KENYA website and services, you agree to these Terms &amp; Conditions. If you do not agree, please do not use our website.</p>
+
+                <h2>2. Vehicle Information</h2>
+                <p>We strive to provide accurate vehicle information, but we do not guarantee the accuracy of all details. Vehicles are subject to availability and prior sale.</p>
+                <ul>
+                    <li>All vehicle listings are for informational purposes</li>
+                    <li>Prices and specifications may change without notice</li>
+                    <li>We recommend verifying all details before purchase</li>
+                </ul>
+
+                <h2>3. Purchasing Process</h2>
+                <p>When you purchase a vehicle through MOTO KENYA:</p>
+                <ul>
+                    <li>You must provide accurate personal and financial information</li>
+                    <li>All transactions are subject to our approval</li>
+                    <li>We reserve the right to decline any order</li>
+                    <li>Deposits may be required to reserve vehicles</li>
+                </ul>
+
+                <h2>4. Financing</h2>
+                <p>Financing options are subject to credit approval and may vary based on individual circumstances. Terms and conditions apply.</p>
+                <ul>
+                    <li>Interest rates are subject to change</li>
+                    <li>Down payment requirements may apply</li>
+                    <li>Additional fees may apply for financing</li>
+                </ul>
+
+                <h2>5. Returns and Refunds</h2>
+                <p>All vehicle sales are final. Please ensure you are satisfied with the vehicle before completing the purchase.</p>
+
+                <h2>6. Privacy</h2>
+                <p>Your privacy is important to us. Please review our <a href="privacy.html">Privacy Policy</a> for information on how we handle your data.</p>
+
+                <h2>7. Intellectual Property</h2>
+                <p>All content on this website, including text, images, and logos, is the property of MOTO KENYA and may not be used without permission.</p>
+
+                <h2>8. Limitation of Liability</h2>
+                <p>MOTO KENYA is not liable for any damages arising from the use of our website or services.</p>
+
+                <h2>9. Changes to Terms</h2>
+                <p>We reserve the right to modify these Terms &amp; Conditions at any time. Changes will be effective immediately upon posting.</p>
+
+                <h2>10. Contact</h2>
+                <p>If you have any questions about these Terms &amp; Conditions, please contact us at <a href="mailto:info@motokenya.com">info@motokenya.com</a> or call +254 712 345 678.</p>
+
+                <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);"><em>Last Updated: December 2024</em></p>
             </div>
         </div>
-        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
-    </footer>
 
-    <!-- ========== SHARED JAVASCRIPT ========== -->
-    <script src="../js/main.js"></script>
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-grid">
+                <div>
+                    <h4>MOTO KENYA</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="testimonials.html">Testimonials</a>
+                </div>
+                <div>
+                    <h4>Vehicles</h4>
+                    <a href="../index.html">Browse Inventory</a>
+                    <a href="finance.html">Financing</a>
+                    <a href="trade-in.html">Trade-In</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="blog.html">Blog</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms &amp; Conditions</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                    <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                    <a href="#">📍 Nairobi, Kenya</a>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+        </footer>
+
+    </div>
+    <!-- END notranslate -->
+
+    <!-- ============================================================
+         DARK MODE TOGGLE - STANDALONE (no main.js)
+         ============================================================ -->
+    <script>
+        (function() {
+            // Get the toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) {
+                console.warn('⚠️ Theme toggle button not found');
+                return;
+            }
+            
+            // Get saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply theme on load
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+            }
+            
+            // Remove all existing event listeners by cloning
+            const newToggle = themeToggle.cloneNode(true);
+            themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+            
+            // Add fresh click handler
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const current = document.documentElement.getAttribute('data-theme');
+                
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    this.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    this.textContent = '☀️';
+                }
+                
+                console.log('🌓 Theme toggled to:', document.documentElement.getAttribute('data-theme') || 'light');
+            });
+            
+            console.log('🌓 Dark mode toggle initialized - Current:', savedTheme);
+        })();
+    </script>
+
 </body>
 </html>

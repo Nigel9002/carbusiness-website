@@ -13,7 +13,8 @@ import {
     increment,
     getDocs,
     where,
-    limit
+    limit,
+    getDoc
 } from "firebase/firestore";
 
 // ========================================
@@ -47,7 +48,12 @@ export function loadVehicles(callback) {
             liveInventory.push({ id: doc.id, ...doc.data() });
         });
         console.log(`📦 Found ${liveInventory.length} vehicles`);
-        console.log('📦 First vehicle sample:', liveInventory[0] || 'No vehicles');
+        
+        if (liveInventory.length > 0) {
+            console.log('📦 First vehicle sample:', liveInventory[0]);
+        } else {
+            console.log('📦 No vehicles found');
+        }
         
         if (callback) callback(liveInventory);
     }, (error) => {
@@ -62,7 +68,6 @@ export async function getVehicles(filters = {}) {
     try {
         console.log('🔍 Fetching vehicles with filters:', filters);
         
-        let q = collection(db, "vehicles");
         let constraints = [orderBy("createdAt", "desc")];
         
         // Apply filters
@@ -96,22 +101,29 @@ export async function getVehicles(filters = {}) {
 }
 
 // ========================================
-// GET VEHICLE BY ID
+// GET VEHICLE BY ID - FIXED
 // ========================================
 export async function getVehicleById(vehicleId) {
     try {
-        const vehicleRef = doc(db, "vehicles", vehicleId);
-        const snapshot = await getDocs(query(collection(db, "vehicles"), where("id", "==", vehicleId)));
-        // Alternative: use doc().get()
-        const docSnap = await getDocs(query(collection(db, "vehicles"), where("__name__", "==", vehicleId)));
-        // Actually, let's use the simpler approach:
-        const { getDoc } = await import("firebase/firestore");
-        const docRef = doc(db, "vehicles", vehicleId);
-        const docSnap2 = await getDoc(docRef);
-        if (docSnap2.exists()) {
-            return { id: docSnap2.id, ...docSnap2.data() };
+        if (!vehicleId) {
+            console.error('❌ No vehicle ID provided');
+            return null;
         }
-        return null;
+        
+        console.log(`🔍 Fetching vehicle by ID: ${vehicleId}`);
+        
+        // Simple and efficient: use doc() + getDoc()
+        const docRef = doc(db, "vehicles", vehicleId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const vehicle = { id: docSnap.id, ...docSnap.data() };
+            console.log(`✅ Vehicle found: ${vehicle.make} ${vehicle.model}`);
+            return vehicle;
+        } else {
+            console.log(`❌ No vehicle found with ID: ${vehicleId}`);
+            return null;
+        }
     } catch (error) {
         console.error('❌ Error fetching vehicle:', error);
         return null;
@@ -123,6 +135,11 @@ export async function getVehicleById(vehicleId) {
 // ========================================
 export async function incrementViewCount(carId) {
     try {
+        if (!carId) {
+            console.warn('⚠️ No car ID provided for view increment');
+            return;
+        }
+        
         console.log(`👁️ Incrementing view count for: ${carId}`);
         const carRef = doc(db, "vehicles", carId);
         await updateDoc(carRef, { views: increment(1) });
@@ -171,7 +188,7 @@ export function renderVehicleCards(vehicles, containerId = 'vehicleGrid') {
         let badgesHtml = '';
         if (vehicle.badges && Array.isArray(vehicle.badges)) {
             badgesHtml = vehicle.badges.map(badge => 
-                `<span class="vehicle-badge">${badge}</span>`
+                `<span class="vehicle-badge">${sanitize(badge)}</span>`
             ).join('');
         }
 
@@ -187,8 +204,8 @@ export function renderVehicleCards(vehicles, containerId = 'vehicleGrid') {
         // Vehicle details
         const details = [
             vehicle.year ? `📅 ${vehicle.year}` : null,
-            vehicle.transmission ? `⚙️ ${vehicle.transmission}` : null,
-            vehicle.fuelType ? `⛽ ${vehicle.fuelType}` : null,
+            vehicle.transmission ? `⚙️ ${sanitize(vehicle.transmission)}` : null,
+            vehicle.fuelType ? `⛽ ${sanitize(vehicle.fuelType)}` : null,
             vehicle.mileage ? `📊 ${vehicle.mileage.toLocaleString()} km` : null
         ].filter(Boolean);
 
@@ -196,22 +213,22 @@ export function renderVehicleCards(vehicles, containerId = 'vehicleGrid') {
             <div class="vehicle-card" data-id="${vehicle.id}" data-status="${statusClass}">
                 <div class="vehicle-image">
                     <img src="${imageUrl}" 
-                         alt="${vehicle.make || ''} ${vehicle.model || ''}" 
+                         alt="${sanitize(vehicle.make || '')} ${sanitize(vehicle.model || '')}" 
                          loading="lazy"
                          onerror="this.src='https://via.placeholder.com/400x225?text=Image+Error'">
                     ${vehicle.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
                     ${vehicle.status === 'sold' ? '<span class="sold-badge">SOLD</span>' : ''}
                 </div>
                 <div class="vehicle-info">
-                    <h3>${vehicle.make || 'Unknown'} ${vehicle.model || 'Unknown'}</h3>
+                    <h3>${sanitize(vehicle.make || 'Unknown')} ${sanitize(vehicle.model || 'Unknown')}</h3>
                     <p class="vehicle-price">${formattedPrice}</p>
-                    ${vehicle.description ? `<p class="vehicle-desc">${vehicle.description.substring(0, 100)}${vehicle.description.length > 100 ? '...' : ''}</p>` : ''}
+                    ${vehicle.description ? `<p class="vehicle-desc">${sanitize(vehicle.description.substring(0, 100))}${vehicle.description.length > 100 ? '...' : ''}</p>` : ''}
                     <div class="vehicle-badges">${badgesHtml}</div>
                     <div class="vehicle-details">
                         ${details.join(' | ')}
                     </div>
                     <div class="vehicle-status status-${statusClass}">${statusText}</div>
-                    <a href="pages/vehicle-detail.html?id=${vehicle.id}" class="btn btn-primary btn-sm">View Details</a>
+                    <a href="/vehicle-detail?id=${vehicle.id}" class="btn btn-primary btn-sm">View Details</a>
                 </div>
             </div>
         `;
@@ -299,6 +316,7 @@ window.__vehicles = {
     liveInventory,
     loadVehicles,
     getVehicles,
+    getVehicleById,
     renderVehicleCards,
     renderVehicleTable,
     incrementViewCount

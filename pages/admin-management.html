@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>MOTO KENYA · Admin Management</title>
+    <meta name="google" content="notranslate">
+    <meta name="google-translate-custom" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="language" content="English">
+    <meta name="robots" content="noarchive">
     
     <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -28,8 +33,90 @@
     <!-- ========== SHARED STYLES ========== -->
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- ========== DARK MODE STYLES ========== -->
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
     <style>
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* ============================================================
+           FIX: Navigation - Matches index.html exactly
+           ============================================================ */
+        
+        /* Active nav link with gradient background - matches index.html */
+        nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Remove the underline for active links (since we use background) */
+        nav a.active::after {
+            display: none !important;
+        }
+        
+        /* Dark mode active nav link - matches index.html */
+        [data-theme="dark"] nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+        }
+        
+        /* Regular nav links in dark mode - visible */
+        [data-theme="dark"] nav a {
+            color: #e0e0e0 !important;
+        }
+        
+        [data-theme="dark"] nav a:hover {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] nav a::after {
+            background: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] header {
+            background: rgba(10, 10, 15, 0.92) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        [data-theme="dark"] .logo {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] .logo span {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        
+        /* ===== FIX: Hero Section for Dark Mode ===== */
+        .page-hero {
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: var(--spacing-3xl) 5%;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        [data-theme="dark"] .page-hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="dark"] .page-hero h1 {
+            color: #f0f0f0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .page-hero p {
+            color: #a0a0b0;
+        }
+
+        /* ============================================================
+           ADMIN MANAGEMENT STYLES
+           ============================================================ */
         
         .admin-list { margin-top: 1rem; }
         .admin-item {
@@ -43,7 +130,10 @@
             transition: background 0.2s;
         }
         .admin-item:hover { background: var(--input-bg); }
-        .admin-item .admin-email { font-weight: 500; }
+        .admin-item .admin-email { 
+            font-weight: 500; 
+            color: var(--text-color);
+        }
         .admin-item .admin-role {
             font-size: 0.75rem;
             padding: 0.2rem 0.8rem;
@@ -57,6 +147,7 @@
             border: 1px solid var(--border-color);
             background: var(--input-bg);
             color: var(--text-color);
+            font-family: var(--font-primary);
         }
 
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -67,8 +158,75 @@
             margin-top: 0.3rem;
             overflow: hidden;
         }
-        .password-strength .bar { height: 100%; width: 0%; transition: width 0.3s; border-radius: 4px; }
+        .password-strength .bar { 
+            height: 100%; 
+            width: 0%; 
+            transition: width 0.3s; 
+            border-radius: 4px; 
+        }
 
+        .btn-back {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            transition: all var(--transition-fast);
+            font-size: 0.85rem;
+        }
+        .btn-back:hover {
+            background: var(--border);
+            color: var(--text-color);
+        }
+
+        .helper-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* ============================================================
+           DARK MODE OVERRIDES
+           ============================================================ */
+        [data-theme="dark"] {
+            --bg-color: #0a0a0f;
+            --card-bg: #16161f;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --border: #2a2a3a;
+            --border-color: #2a2a3a;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .admin-item {
+            border-bottom-color: var(--border-color);
+        }
+        [data-theme="dark"] .admin-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+        [data-theme="dark"] .admin-item .admin-email {
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .admin-item .admin-actions select {
+            background: var(--bg-color);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .btn-back:hover {
+            background: var(--border);
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .helper-text {
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .form-row { grid-template-columns: 1fr; }
             .admin-item { flex-direction: column; align-items: flex-start; }
@@ -165,8 +323,40 @@
         </div>
     </div>
 
-    <!-- ========== SHARED JAVASCRIPT ========== -->
-    <script src="../js/main.js"></script>
+    <!-- ============================================================
+         DARK MODE TOGGLE - STANDALONE (no main.js)
+         ============================================================ -->
+    <script>
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) return;
+            
+            const savedTheme = localStorage.getItem('admin-theme') || 'light';
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+            
+            // Remove existing listeners by cloning
+            const newToggle = themeToggle.cloneNode(true);
+            themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+            
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const current = document.documentElement.getAttribute('data-theme');
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('admin-theme', 'light');
+                    this.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('admin-theme', 'dark');
+                    this.textContent = '☀️';
+                }
+            });
+        })();
+    </script>
 
     <!-- ========== FIREBASE LOGIC ========== -->
     <script type="importmap">
@@ -244,26 +434,6 @@
             loadingOverlay.classList.remove('active');
         }
         hideLoading();
-
-        // ===== DARK MODE =====
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('admin-theme') || 'light';
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeToggle.textContent = '☀️';
-        }
-        themeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            if (current === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('admin-theme', 'light');
-                themeToggle.textContent = '🌙';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('admin-theme', 'dark');
-                themeToggle.textContent = '☀️';
-            }
-        });
 
         // ===== PASSWORD STRENGTH =====
         document.getElementById('newAdminPassword').addEventListener('input', function() {

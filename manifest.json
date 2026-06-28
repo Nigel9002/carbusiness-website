@@ -98,6 +98,32 @@
           "type": "image/png"
         }
       ]
+    },
+    {
+      "name": "Wishlist",
+      "short_name": "Wishlist",
+      "description": "View your saved vehicles",
+      "url": "/wishlist",
+      "icons": [
+        {
+          "src": "images/icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Compare",
+      "short_name": "Compare",
+      "description": "Compare vehicles side by side",
+      "url": "/compare",
+      "icons": [
+        {
+          "src": "images/icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

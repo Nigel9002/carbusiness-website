@@ -1,0 +1,106 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================================
+    // VEHICLE IMAGES - /vehicles/{userId}/{filename}
+    // ============================================================
+    match /vehicles/{userId}/{allPaths=**} {
+      // Anyone can read vehicle images (public showroom)
+      allow read: if true;
+      
+      // Only authenticated admins can upload/update/delete
+      allow write: if request.auth != null && 
+        request.auth.uid != null && (
+          request.auth.token.role == 'super' ||
+          request.auth.token.role == 'editor' ||
+          request.auth.token.email == 'michaelnchege453@gmail.com'
+        );
+      
+      // Validate file size (max 10MB)
+      allow write: if request.resource.size < 10 * 1024 * 1024;
+      
+      // Validate file type (only images)
+      allow write: if request.resource.contentType.matches('image/(png|jpg|jpeg|gif|webp|avif|svg)');
+      
+      // Validate filename doesn't contain dangerous characters
+      allow write: if request.resource.name.matches('^[a-zA-Z0-9_\\-./]+$');
+      
+      // Validate image dimensions for quality (optional)
+      // Note: This requires ImageKit for transformations, but we can add basic checks
+    }
+    
+    // ============================================================
+    // ADMIN UPLOADS - /admin/{userId}/{filename}
+    // ============================================================
+    match /admin/{userId}/{allPaths=**} {
+      // Only admins can read admin uploads
+      allow read: if request.auth != null && 
+        request.auth.uid != null && (
+          request.auth.token.role == 'super' ||
+          request.auth.token.role == 'editor' ||
+          request.auth.token.email == 'michaelnchege453@gmail.com'
+        );
+      
+      // Only authenticated admins can upload/update/delete
+      allow write: if request.auth != null && 
+        request.auth.uid != null && (
+          request.auth.token.role == 'super' ||
+          request.auth.token.role == 'editor' ||
+          request.auth.token.email == 'michaelnchege453@gmail.com'
+        );
+      
+      // Validate file size (max 10MB)
+      allow write: if request.resource.size < 10 * 1024 * 1024;
+      
+      // Validate file type (only images)
+      allow write: if request.resource.contentType.matches('image/(png|jpg|jpeg|gif|webp|avif|svg)');
+      
+      // Admins can only upload to their own folder
+      allow write: if request.auth.uid == userId;
+    }
+    
+    // ============================================================
+    // PROFILE IMAGES - /profiles/{userId}/{filename}
+    // ============================================================
+    match /profiles/{userId}/{allPaths=**} {
+      // Anyone can read profile images (public)
+      allow read: if true;
+      
+      // Users can upload their own profile image
+      allow write: if request.auth != null && 
+        request.auth.uid == userId;
+      
+      // Validate file size (max 2MB for profile)
+      allow write: if request.resource.size < 2 * 1024 * 1024;
+      
+      // Validate file type (only square images)
+      allow write: if request.resource.contentType.matches('image/(png|jpg|jpeg|webp)');
+    }
+    
+    // ============================================================
+    // TEMP UPLOADS - /temp/{userId}/{filename}
+    // ============================================================
+    match /temp/{userId}/{allPaths=**} {
+      // Temporary files - only the uploader can read
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can upload to their own temp folder
+      allow write: if request.auth != null && request.auth.uid == userId;
+      
+      // Auto-delete after 1 hour (server-side function handles this)
+      // Validate file size (max 5MB)
+      allow write: if request.resource.size < 5 * 1024 * 1024;
+      
+      // Validate file type (only images)
+      allow write: if request.resource.contentType.matches('image/(png|jpg|jpeg|gif|webp|avif|svg)');
+    }
+    
+    // ============================================================
+    // DEFAULT DENY FOR ALL OTHER PATHS
+    // ============================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

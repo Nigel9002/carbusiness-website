@@ -1,20 +1,269 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAdmin() {
-      return request.auth != null
-        && (
-          request.auth.token.admin == true
-          || request.auth.token.email == "michaelnchege453@gmail.com"
-        );
-    }
-
-    match /vehicles/{vehicleId} {
+    
+    // ============================================================
+    // VEHICLES COLLECTION - Full CRUD for super/editor
+    // ============================================================
+    match /vehicles/{vehicle} {
+      // Anyone can read vehicles (public showroom)
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      
+      // Write access with proper role checking
+      allow write: if request.auth != null && 
+        request.auth.uid != null &&
+        (request.auth.token.role == 'super' || 
+         request.auth.token.role == 'editor' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Create with validation
+      allow create: if request.auth != null && 
+        request.auth.uid != null &&
+        (request.auth.token.role == 'super' || 
+         request.auth.token.role == 'editor' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com') &&
+        request.resource.data.keys().hasAll(['make', 'model', 'price', 'year']) &&
+        request.resource.data.make is string &&
+        request.resource.data.make.size() > 0 &&
+        request.resource.data.model is string &&
+        request.resource.data.model.size() > 0 &&
+        request.resource.data.price is number &&
+        request.resource.data.price > 0 &&
+        request.resource.data.year is number &&
+        request.resource.data.year >= 1900 &&
+        request.resource.data.year <= 2030 &&
+        request.resource.data.images is list &&
+        request.resource.data.images.size() > 0;
+      
+      // Update with field validation
+      allow update: if request.auth != null && 
+        request.auth.uid != null &&
+        (request.auth.token.role == 'super' || 
+         request.auth.token.role == 'editor' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com') &&
+        request.resource.data.diff(resource.data).affectedKeys.hasOnly([
+          'make', 'model', 'year', 'price', 'description', 
+          'badges', 'engine', 'transmission', 'fuelType', 
+          'color', 'mileage', 'status', 'featured', 'images',
+          'updatedAt', 'views', 'oldPrice'
+        ]);
+      
+      // Delete access
+      allow delete: if request.auth != null && 
+        request.auth.uid != null &&
+        (request.auth.token.role == 'super' || 
+         request.auth.token.role == 'editor' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
     }
-
+    
+    // ============================================================
+    // USERS COLLECTION (User Data)
+    // ============================================================
+    match /users/{userId} {
+      // Users can read their own data
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can update their own data (except role)
+      allow update: if request.auth != null && 
+        request.auth.uid == userId && 
+        !request.resource.data.diff(resource.data).affectedKeys.hasAny(['role']);
+      
+      // Only super admin can create or delete users
+      allow create, delete: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Super admin can read all users
+      allow read: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Super admin can update any user (including role)
+      allow update: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Prevent users from changing their own role
+      allow update: if request.auth != null && 
+        request.auth.uid == userId && 
+        !request.resource.data.diff(resource.data).affectedKeys.hasAny(['role']);
+      
+      // Validate user data on creation
+      allow create: if request.auth != null && 
+        request.auth.token.role == 'super' &&
+        request.resource.data.keys().hasAll(['email', 'role']) &&
+        request.resource.data.email is string &&
+        request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') &&
+        request.resource.data.role in ['super', 'editor', 'viewer'];
+    }
+    
+    // ============================================================
+    // ADMINS COLLECTION (Admin Role Management)
+    // ============================================================
+    match /admins/{adminId} {
+      // Only super admin can manage admins
+      allow read, write, delete: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Editor can view admin list but not modify
+      allow read: if request.auth != null && (
+        request.auth.token.role == 'super' ||
+        request.auth.token.role == 'editor' ||
+        request.auth.token.email == 'michaelnchege453@gmail.com'
+      );
+      
+      // Prevent deleting own admin document
+      allow delete: if request.auth != null && 
+        request.auth.uid != adminId &&
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+    }
+    
+    // ============================================================
+    // VIEWS COLLECTION (Vehicle View Counter)
+    // ============================================================
+    match /views/{viewId} {
+      // Anyone can increment view counts (public)
+      allow update: if true;
+      allow read: if true;
+      
+      // Only allow incrementing views
+      allow update: if request.resource.data.diff(resource.data).affectedKeys.hasOnly(['views']);
+      
+      // Validate view count is number
+      allow update: if request.resource.data.views is number;
+    }
+    
+    // ============================================================
+    // CONTACTS COLLECTION (Contact Form Messages)
+    // ============================================================
+    match /contacts/{contactId} {
+      // Anyone can submit a contact form
+      allow create: if true;
+      
+      // Only admins can read/delete contacts
+      allow read, delete: if request.auth != null && request.auth.uid != null && (
+        request.auth.token.role == 'super' ||
+        request.auth.token.role == 'editor' ||
+        request.auth.token.role == 'viewer' ||
+        request.auth.token.email == 'michaelnchege453@gmail.com'
+      );
+      
+      // Validate contact form data
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message']) &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.email is string &&
+        request.resource.data.message is string &&
+        request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') &&
+        request.resource.data.message.size() > 10 &&
+        request.resource.data.message.size() < 5000;
+      
+      // Prevent updates to contacts (only create and delete)
+      allow update: if false;
+    }
+    
+    // ============================================================
+    // SETTINGS COLLECTION (App Settings)
+    // ============================================================
+    match /settings/{settingId} {
+      // Anyone can read settings
+      allow read: if true;
+      
+      // Only super admin can update settings
+      allow write: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Validate settings structure
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'super' &&
+        request.resource.data.keys().hasAny(['siteName', 'logoUrl', 'contactEmail', 'maintenanceMode', 'theme']);
+    }
+    
+    // ============================================================
+    // ACTIVITY LOGS COLLECTION (Audit Trail)
+    // ============================================================
+    match /activityLogs/{logId} {
+      // Only admins can read logs
+      allow read: if request.auth != null && request.auth.uid != null && (
+        request.auth.token.role == 'super' ||
+        request.auth.token.role == 'editor' ||
+        request.auth.token.email == 'michaelnchege453@gmail.com'
+      );
+      
+      // Only server functions can write logs (disabled for client)
+      allow write: if false;
+      allow delete: if false;
+    }
+    
+    // ============================================================
+    // SESSIONS COLLECTION (Active Sessions)
+    // ============================================================
+    match /sessions/{sessionId} {
+      // Users can read their own session
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      
+      // Users can write their own session
+      allow write: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      // Super admin can read all sessions
+      allow read: if request.auth != null && 
+        (request.auth.token.role == 'super' ||
+         request.auth.token.email == 'michaelnchege453@gmail.com');
+      
+      // Auto-delete expired sessions (server-side)
+      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // ============================================================
+    // WISHLIST COLLECTION (User Wishlists)
+    // ============================================================
+    match /wishlists/{wishlistId} {
+      // Users can read their own wishlist
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      
+      // Users can create/update their own wishlist
+      allow write: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      // Validate wishlist data
+      allow create: if request.auth != null &&
+        request.resource.data.keys().hasAll(['userId', 'vehicleIds']) &&
+        request.resource.data.userId is string &&
+        request.resource.data.vehicleIds is list;
+      
+      allow update: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.diff(resource.data).affectedKeys.hasOnly(['vehicleIds', 'updatedAt']);
+    }
+    
+    // ============================================================
+    // COMPARE COLLECTION (Vehicle Comparisons)
+    // ============================================================
+    match /compares/{compareId} {
+      // Users can read their own compare list
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      
+      // Users can create/update their own compare list
+      allow write: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      
+      // Validate compare data
+      allow create: if request.auth != null &&
+        request.resource.data.keys().hasAll(['userId', 'vehicleIds']) &&
+        request.resource.data.userId is string &&
+        request.resource.data.vehicleIds is list &&
+        request.resource.data.vehicleIds.size() <= 4;
+      
+      allow update: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.diff(resource.data).affectedKeys.hasOnly(['vehicleIds', 'updatedAt']) &&
+        request.resource.data.vehicleIds.size() <= 4;
+    }
+    
+    // ============================================================
+    // DEFAULT DENY FOR ALL OTHER COLLECTIONS
+    // ============================================================
     match /{document=**} {
       allow read, write: if false;
     }

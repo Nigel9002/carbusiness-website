@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>FAQ | MOTO KENYA</title>
     <meta name="description" content="Frequently asked questions about buying pre-owned vehicles at MOTO KENYA. Get answers about inspections, financing, warranties, and more.">
+    <meta name="google" content="notranslate">
+    <meta name="google-translate-custom" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="language" content="English">
+    <meta name="robots" content="noarchive">
     
     <!-- ========== SECURITY HEADERS ========== -->
     <meta http-equiv="Content-Security-Policy" content="
@@ -29,8 +34,90 @@
     <!-- ========== SHARED STYLES ========== -->
     <link rel="stylesheet" href="../css/style.css">
     
+    <!-- ========== DARK MODE STYLES ========== -->
+    <link rel="stylesheet" href="../css/dark-mode.css">
+    
     <style>
-        /* ===== PAGE-SPECIFIC STYLES ===== */
+        /* ============================================================
+           FIX: Navigation - Matches index.html exactly
+           ============================================================ */
+        
+        /* Active nav link with gradient background - matches index.html */
+        nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+        
+        /* Remove the underline for active links (since we use background) */
+        nav a.active::after {
+            display: none !important;
+        }
+        
+        /* Dark mode active nav link - matches index.html */
+        [data-theme="dark"] nav a.active {
+            background: var(--gradient-primary) !important;
+            color: #fff !important;
+        }
+        
+        /* Regular nav links in dark mode - visible */
+        [data-theme="dark"] nav a {
+            color: #e0e0e0 !important;
+        }
+        
+        [data-theme="dark"] nav a:hover {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] nav a::after {
+            background: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] header {
+            background: rgba(10, 10, 15, 0.92) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+        }
+        
+        [data-theme="dark"] .logo {
+            color: #60a5fa !important;
+        }
+        
+        [data-theme="dark"] .logo span {
+            color: #60a5fa !important;
+            -webkit-text-fill-color: #60a5fa !important;
+        }
+        
+        /* ===== FIX: Hero Section for Dark Mode ===== */
+        .page-hero {
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: var(--spacing-3xl) 5%;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        [data-theme="dark"] .page-hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        [data-theme="dark"] .page-hero h1 {
+            color: #f0f0f0;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .page-hero p {
+            color: #a0a0b0;
+        }
+
+        /* ============================================================
+           FAQ PAGE STYLES
+           ============================================================ */
         
         .faq-list {
             max-width: 800px;
@@ -107,6 +194,52 @@
             border-color: transparent;
         }
 
+        /* ============================================================
+           DARK MODE OVERRIDES
+           ============================================================ */
+        [data-theme="dark"] {
+            --bg-color: #0a0a0f;
+            --card-bg: #16161f;
+            --text-color: #f0f0f0;
+            --text-muted: #a0a0b0;
+            --border: #2a2a3a;
+            --border-color: #2a2a3a;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .faq-item {
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+        
+        [data-theme="dark"] .faq-question {
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .faq-answer {
+            color: var(--text-muted);
+        }
+        
+        [data-theme="dark"] .faq-category {
+            background: var(--card-bg);
+            border-color: var(--border);
+            color: var(--text-color);
+        }
+        
+        [data-theme="dark"] .faq-category:hover,
+        [data-theme="dark"] .faq-category.active {
+            background: var(--gradient-primary);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .faq-question { font-size: 0.95rem; padding: 1rem; }
         }
@@ -118,182 +251,248 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo">MOTO<span>KENYA</span></div>
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="blog.html">Blog</a>
-            <a href="testimonials.html">Reviews</a>
-            <a href="contact.html">Contact</a>
-            <a href="finance.html">Finance</a>
-            <a href="trade-in.html">Trade-In</a>
-            <a href="faq.html" class="active">FAQ</a>
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
-        </nav>
-    </header>
+    <!-- ============================================================
+         PREVENT TRANSLATION
+         ============================================================ -->
+    <div class="notranslate" translate="no">
 
-    <!-- PAGE HERO -->
-    <div class="page-hero">
-        <h1>Frequently Asked Questions</h1>
-        <p>Find answers to common questions about buying pre-owned vehicles</p>
-    </div>
+        <!-- TOAST -->
+        <div id="toast" class="toast"></div>
 
-    <!-- FAQ CONTENT -->
-    <div class="container">
-        <div class="faq-categories">
-            <button class="faq-category active" data-category="all">All</button>
-            <button class="faq-category" data-category="buying">Buying</button>
-            <button class="faq-category" data-category="finance">Financing</button>
-            <button class="faq-category" data-category="inspection">Inspection</button>
-            <button class="faq-category" data-category="warranty">Warranty</button>
-        </div>
-
-        <div class="faq-list">
-            <div class="faq-item" data-category="buying">
-                <div class="faq-question">
-                    How do I schedule a test drive?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">You can schedule a test drive by clicking the "Test Drive" button on any vehicle page, or by contacting us directly via phone or WhatsApp. We'll arrange a convenient time for you to come in and experience the vehicle firsthand.</div>
-            </div>
-
-            <div class="faq-item" data-category="buying">
-                <div class="faq-question">
-                    What documents do I need to purchase a vehicle?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">You'll need a valid Kenyan ID or Passport, a KRA PIN certificate, and proof of income (for financing). For cash purchases, only ID and KRA PIN are required. We'll guide you through the entire process.</div>
-            </div>
-
-            <div class="faq-item" data-category="inspection">
-                <div class="faq-question">
-                    Are all vehicles inspected before sale?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">Yes! Every vehicle in our inventory undergoes a comprehensive 150+ point inspection by our certified mechanics. We check everything from the engine and transmission to the suspension and electrical systems. You'll receive a full inspection report with every purchase.</div>
-            </div>
-
-            <div class="faq-item" data-category="finance">
-                <div class="faq-question">
-                    Do you offer financing options?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">Yes, we partner with leading financial institutions to offer competitive financing options. You can use our online financing calculator to estimate your monthly payments, or speak with our finance team for personalized assistance.</div>
-            </div>
-
-            <div class="faq-item" data-category="warranty">
-                <div class="faq-question">
-                    What warranty options are available?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">We offer several warranty options ranging from 3-month to 12-month coverage. Our warranties cover engine, transmission, and major electrical components. You can choose the plan that best fits your needs and budget.</div>
-            </div>
-
-            <div class="faq-item" data-category="buying">
-                <div class="faq-question">
-                    Can I trade in my current vehicle?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">Absolutely! We offer competitive trade-in values for your current vehicle. Simply visit our Trade-In page or contact us for a free valuation. The trade-in value can be used as a down payment for your new vehicle.</div>
-            </div>
-
-            <div class="faq-item" data-category="inspection">
-                <div class="faq-question">
-                    Do you provide vehicle history reports?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">Yes, every vehicle comes with a comprehensive history report including service records, accident history, and ownership details. We believe in full transparency so you can make an informed decision.</div>
-            </div>
-
-            <div class="faq-item" data-category="finance">
-                <div class="faq-question">
-                    What is the minimum down payment required?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">The minimum down payment typically ranges from 10-20% of the vehicle price, depending on the financing institution and your credit profile. Our finance team will help you find the best options for your situation.</div>
-            </div>
-
-            <div class="faq-item" data-category="warranty">
-                <div class="faq-question">
-                    Are warranty claims easy to process?
-                    <span class="icon">▼</span>
-                </div>
-                <div class="faq-answer">Yes, we have a streamlined warranty claims process. Simply contact our service department, and we'll arrange for an inspection and repairs at our partnered garages. We're committed to making the process as hassle-free as possible.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h4>MOTO KENYA</h4>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-                <a href="testimonials.html">Testimonials</a>
-            </div>
-            <div>
-                <h4>Vehicles</h4>
-                <a href="../index.html">Browse Inventory</a>
-                <a href="finance.html">Financing</a>
-                <a href="trade-in.html">Trade-In</a>
-            </div>
-            <div>
-                <h4>Resources</h4>
+        <!-- HEADER -->
+        <header>
+            <div class="logo">MOTO<span>KENYA</span></div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
                 <a href="blog.html">Blog</a>
-                <a href="faq.html">FAQ</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms & Conditions</a>
+                <a href="testimonials.html">Reviews</a>
+                <a href="contact.html">Contact</a>
+                <a href="finance.html">Finance</a>
+                <a href="trade-in.html">Trade-In</a>
+                <a href="faq.html" class="active">FAQ</a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">🌙</button>
+            </nav>
+        </header>
+
+        <!-- PAGE HERO -->
+        <div class="page-hero">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about buying pre-owned vehicles</p>
+        </div>
+
+        <!-- FAQ CONTENT -->
+        <div class="container">
+            <div class="faq-categories">
+                <button class="faq-category active" data-category="all">All</button>
+                <button class="faq-category" data-category="buying">Buying</button>
+                <button class="faq-category" data-category="finance">Financing</button>
+                <button class="faq-category" data-category="inspection">Inspection</button>
+                <button class="faq-category" data-category="warranty">Warranty</button>
             </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="tel:+254712345678">📞 +254 712 345 678</a>
-                <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
-                <a href="#">📍 Nairobi, Kenya</a>
+
+            <div class="faq-list">
+                <div class="faq-item" data-category="buying">
+                    <div class="faq-question">
+                        How do I schedule a test drive?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">You can schedule a test drive by clicking the "Test Drive" button on any vehicle page, or by contacting us directly via phone or WhatsApp. We'll arrange a convenient time for you to come in and experience the vehicle firsthand.</div>
+                </div>
+
+                <div class="faq-item" data-category="buying">
+                    <div class="faq-question">
+                        What documents do I need to purchase a vehicle?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">You'll need a valid Kenyan ID or Passport, a KRA PIN certificate, and proof of income (for financing). For cash purchases, only ID and KRA PIN are required. We'll guide you through the entire process.</div>
+                </div>
+
+                <div class="faq-item" data-category="inspection">
+                    <div class="faq-question">
+                        Are all vehicles inspected before sale?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">Yes! Every vehicle in our inventory undergoes a comprehensive 150+ point inspection by our certified mechanics. We check everything from the engine and transmission to the suspension and electrical systems. You'll receive a full inspection report with every purchase.</div>
+                </div>
+
+                <div class="faq-item" data-category="finance">
+                    <div class="faq-question">
+                        Do you offer financing options?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">Yes, we partner with leading financial institutions to offer competitive financing options. You can use our online financing calculator to estimate your monthly payments, or speak with our finance team for personalized assistance.</div>
+                </div>
+
+                <div class="faq-item" data-category="warranty">
+                    <div class="faq-question">
+                        What warranty options are available?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">We offer several warranty options ranging from 3-month to 12-month coverage. Our warranties cover engine, transmission, and major electrical components. You can choose the plan that best fits your needs and budget.</div>
+                </div>
+
+                <div class="faq-item" data-category="buying">
+                    <div class="faq-question">
+                        Can I trade in my current vehicle?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">Absolutely! We offer competitive trade-in values for your current vehicle. Simply visit our Trade-In page or contact us for a free valuation. The trade-in value can be used as a down payment for your new vehicle.</div>
+                </div>
+
+                <div class="faq-item" data-category="inspection">
+                    <div class="faq-question">
+                        Do you provide vehicle history reports?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">Yes, every vehicle comes with a comprehensive history report including service records, accident history, and ownership details. We believe in full transparency so you can make an informed decision.</div>
+                </div>
+
+                <div class="faq-item" data-category="finance">
+                    <div class="faq-question">
+                        What is the minimum down payment required?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">The minimum down payment typically ranges from 10-20% of the vehicle price, depending on the financing institution and your credit profile. Our finance team will help you find the best options for your situation.</div>
+                </div>
+
+                <div class="faq-item" data-category="warranty">
+                    <div class="faq-question">
+                        Are warranty claims easy to process?
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">Yes, we have a streamlined warranty claims process. Simply contact our service department, and we'll arrange for an inspection and repairs at our partnered garages. We're committed to making the process as hassle-free as possible.</div>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
-    </footer>
 
-    <!-- ========== SHARED JAVASCRIPT ========== -->
-    <script src="../js/main.js"></script>
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-grid">
+                <div>
+                    <h4>MOTO KENYA</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="testimonials.html">Testimonials</a>
+                </div>
+                <div>
+                    <h4>Vehicles</h4>
+                    <a href="../index.html">Browse Inventory</a>
+                    <a href="finance.html">Financing</a>
+                    <a href="trade-in.html">Trade-In</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="blog.html">Blog</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms &amp; Conditions</a>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <a href="tel:+254712345678">📞 +254 712 345 678</a>
+                    <a href="mailto:info@motokenya.com">📧 info@motokenya.com</a>
+                    <a href="#">📍 Nairobi, Kenya</a>
+                </div>
+            </div>
+            <div class="footer-bottom">© 2024 MOTO KENYA. All rights reserved.</div>
+        </footer>
 
+    </div>
+    <!-- END notranslate -->
+
+    <!-- ============================================================
+         DARK MODE TOGGLE - STANDALONE (no main.js)
+         ============================================================ -->
     <script>
-        // FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const isOpen = answer.classList.contains('open');
+        (function() {
+            // Get the toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (!themeToggle) {
+                console.warn('⚠️ Theme toggle button not found');
+                return;
+            }
+            
+            // Get saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply theme on load
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+            }
+            
+            // Remove all existing event listeners by cloning
+            const newToggle = themeToggle.cloneNode(true);
+            themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+            
+            // Add fresh click handler
+            newToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // Close all answers
-                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-                document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                const current = document.documentElement.getAttribute('data-theme');
                 
-                if (!isOpen) {
-                    answer.classList.add('open');
-                    this.classList.add('active');
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    this.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    this.textContent = '☀️';
                 }
-            });
-        });
-
-        // FAQ Categories
-        document.querySelectorAll('.faq-category').forEach(category => {
-            category.addEventListener('click', function() {
-                document.querySelectorAll('.faq-category').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
                 
-                const categoryName = this.dataset.category;
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    if (categoryName === 'all' || item.dataset.category === categoryName) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
+                console.log('🌓 Theme toggled to:', document.documentElement.getAttribute('data-theme') || 'light');
+            });
+            
+            console.log('🌓 Dark mode toggle initialized - Current:', savedTheme);
+        })();
+    </script>
+
+    <!-- ============================================================
+         FAQ FUNCTIONALITY
+         ============================================================ -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ Accordion
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const isOpen = answer.classList.contains('open');
+                    
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+                    document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                    
+                    if (!isOpen) {
+                        answer.classList.add('open');
+                        this.classList.add('active');
                     }
+                });
+            });
+
+            // FAQ Categories
+            document.querySelectorAll('.faq-category').forEach(category => {
+                category.addEventListener('click', function() {
+                    document.querySelectorAll('.faq-category').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const categoryName = this.dataset.category;
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        if (categoryName === 'all' || item.dataset.category === categoryName) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
                 });
             });
         });
     </script>
+
 </body>
 </html>

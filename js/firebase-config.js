@@ -13,7 +13,6 @@ const firebaseConfig = {
     apiKey: "AIzaSyD-ohnQ51vcDmLRckrsxtol8a1_iJ7nb5E",
     authDomain: "caradds-227e9.firebaseapp.com",
     projectId: "caradds-227e9",
-    // storageBucket: "caradds-227e9.appspot.com", // REMOVED - Not using Firebase Storage
     messagingSenderId: "551966179001",
     appId: "1:551966179001:web:1ea551d87511e4967c6568",
     measurementId: "G-RCHG0M7PV7"
@@ -33,10 +32,8 @@ try {
     console.log('📁 Project:', firebaseConfig.projectId);
     console.log('👤 Auth:', auth ? '✅ Ready' : '❌ Error');
     console.log('📊 Firestore:', db ? '✅ Ready' : '❌ Error');
-    console.log('📦 Firebase Storage: ⏭️ Skipped (using ImageKit)');
 } catch (error) {
     console.error('❌ Firebase initialization error:', error);
-    // Re-throw so the app knows initialization failed
     throw new Error(`Firebase initialization failed: ${error.message}`);
 }
 
@@ -94,8 +91,8 @@ export const isAdmin = async () => {
 export const isSuperAdmin = async () => {
     const user = await getCurrentUser();
     if (!user) return false;
-    // Check by email for super admin
-    return user.email === 'michaelnchege453@gmail.com';
+    const role = await getUserRole();
+    return role === 'super' || user.email === 'michaelnchege453@gmail.com';
 };
 
 // ========================================
@@ -132,7 +129,6 @@ export const logFirebaseState = () => {
     console.log('📊 Firebase State:');
     console.log(`   🔐 Auth: ${auth ? '✅ Initialized' : '❌ Not initialized'}`);
     console.log(`   📁 Firestore: ${db ? '✅ Initialized' : '❌ Not initialized'}`);
-    console.log(`   📦 Storage: ⏭️ Not using Firebase Storage (using ImageKit)`);
     console.log(`   📁 Project: ${firebaseConfig.projectId}`);
 };
 

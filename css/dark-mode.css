@@ -1,656 +1,1083 @@
-/* ========================================
-   CSS/dark-mode.css - Dark Mode Styles
-   ======================================== */
+/* ================================================================
+   CSS/admin.css - Admin Panel Styles
+   ================================================================ */
 
-/* ========================================
-   1. Dark Mode Variables
-   ======================================== */
-[data-theme="dark"] {
-    /* Backgrounds */
-    --bg-color: #0a0a0f;
-    --card-bg: #16161f;
-    --header-bg: rgba(22, 22, 31, 0.92);
-    --search-bg: rgba(26, 26, 36, 0.92);
-    --input-bg: #1a1a28;
-    
-    /* Text */
-    --text-color: #f0f0f0;
-    --text-muted: #a0a0b0;
-    
-    /* Borders */
-    --border: #2a2a3a;
-    --border-color: #2a2a3a;
-    
-    /* Shadows */
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.6);
-    --shadow-hover: 0 16px 48px rgba(0, 180, 216, 0.15);
-    
-    /* Gradients */
-    --gradient-card: linear-gradient(145deg, #1a1a28 0%, #16161f 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(26, 26, 36, 0.9) 0%, rgba(26, 26, 36, 0.5) 100%);
-    
-    /* Brand Colors (Dark) */
-    --brand-blue: #3b82f6;
-    --brand-blue-light: #1a2a4a;
-    --brand-blue-dark: #1d4ed8;
-    --brand-teal: #22d3ee;
-    --brand-teal-dark: #06b6d4;
-    --brand-orange: #fb923c;
-    --brand-orange-dark: #f97316;
-    --brand-purple: #a78bfa;
-    --brand-purple-dark: #8b5cf6;
-    --brand-mint: #34d399;
-    --brand-mint-dark: #10b981;
-    --brand-gold: #fbbf24;
-    --brand-gold-dark: #f59e0b;
-    
-    /* Utility Colors */
-    --success: #34d399;
-    --success-dark: #10b981;
-    --warning: #fbbf24;
-    --warning-dark: #f59e0b;
-    --danger: #f87171;
-    --danger-dark: #ef4444;
-    --info: #60a5fa;
-    --info-dark: #3b82f6;
-    --gray: #94a3b8;
-    
-    /* Primary Colors */
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --primary-light: #1a2a4a;
+/* ================================================================
+   1. Admin Variables
+   ================================================================ */
+:root {
+    /* Core Colors */
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #dbeafe;
     --secondary: #1e293b;
     --secondary-dark: #0f172a;
+    --bg-color: #f1f5f9;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --input-bg: #f8fafc;
+    --gray: #64748b;
+    
+    /* Status Colors */
+    --success: #10b981;
+    --success-bg: #d1fae5;
+    --warning: #f59e0b;
+    --warning-bg: #fef3c7;
+    --danger: #ef4444;
+    --danger-bg: #fee2e2;
+    --info: #3b82f6;
+    --info-bg: #dbeafe;
+    
+    /* Shadows */
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-md: 0 8px 16px rgba(0,0,0,0.1);
+    --shadow-lg: 0 12px 24px rgba(0,0,0,0.15);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.2);
+    
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
 }
 
-/* ========================================
-   2. Dark Mode - Body
-   ======================================== */
-[data-theme="dark"] body {
-    background: var(--bg-color);
-    color: var(--text-color);
-}
-
-/* ========================================
-   3. Dark Mode - Cards
-   ======================================== */
-[data-theme="dark"] .card {
-    background: var(--card-bg);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .card:hover {
-    box-shadow: var(--shadow-lg);
-}
-
-[data-theme="dark"] .card-glass {
-    background: var(--gradient-glass);
-    border-color: rgba(255,255,255,0.05);
-}
-
-/* ========================================
-   4. Dark Mode - Forms
-   ======================================== */
-[data-theme="dark"] .form-group input,
-[data-theme="dark"] .form-group select,
-[data-theme="dark"] .form-group textarea {
-    background: #1a1a28;
-    border-color: var(--border);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .form-group input:focus,
-[data-theme="dark"] .form-group select:focus,
-[data-theme="dark"] .form-group textarea:focus {
-    background: #222233;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-[data-theme="dark"] .form-group label {
-    color: var(--text-muted);
-}
-
-[data-theme="dark"] .checkbox-group label {
-    color: var(--text-color);
-}
-
-/* ========================================
-   5. Dark Mode - Tables
-   ======================================== */
-[data-theme="dark"] table {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] th {
-    background: #1a1a28;
-    color: var(--text-muted);
-}
-
-[data-theme="dark"] td {
-    border-bottom-color: var(--border);
-}
-
-[data-theme="dark"] tr:hover td {
-    background: rgba(59, 130, 246, 0.05);
-}
-
-/* ========================================
-   6. Dark Mode - Header & Navigation
-   ======================================== */
-[data-theme="dark"] header {
-    background: var(--header-bg);
-    border-bottom-color: var(--border);
-}
-
-[data-theme="dark"] .logo {
-    color: var(--text-color);
-}
-[data-theme="dark"] .logo span {
-    color: var(--brand-blue);
-}
-
-[data-theme="dark"] nav a {
-    color: var(--text-muted);
-}
-
-[data-theme="dark"] nav a:hover,
-[data-theme="dark"] nav a.active {
-    color: var(--brand-blue);
-}
-
-[data-theme="dark"] nav a::after {
-    background: var(--brand-blue);
-}
-
-/* ========================================
-   7. Dark Mode - Admin
-   ======================================== */
-[data-theme="dark"] .admin-container .main-content {
-    background: var(--bg-color);
+/* ================================================================
+   2. Dark Mode Overrides
+   ================================================================ */
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #1e293b;
+    --primary-light: #1e3a5f;
+    --success-bg: #064e3b;
+    --warning-bg: #713f12;
+    --danger-bg: #7f1d1d;
+    --info-bg: #1e3a5f;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+    --shadow-md: 0 8px 16px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 24px rgba(0,0,0,0.5);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 [data-theme="dark"] .stat-card {
     background: var(--card-bg);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .stat-card .stat-icon.blue {
-    background: rgba(59, 130, 246, 0.15);
-    color: var(--brand-blue);
-}
-[data-theme="dark"] .stat-card .stat-icon.green {
-    background: rgba(52, 211, 153, 0.15);
-    color: var(--success);
-}
-[data-theme="dark"] .stat-card .stat-icon.yellow {
-    background: rgba(251, 191, 36, 0.15);
-    color: var(--warning);
-}
-[data-theme="dark"] .stat-card .stat-icon.red {
-    background: rgba(248, 113, 113, 0.15);
-    color: var(--danger);
-}
-
-[data-theme="dark"] .stat-card .stat-change.positive {
-    color: var(--success);
-    background: rgba(52, 211, 153, 0.15);
-}
-[data-theme="dark"] .stat-card .stat-change.negative {
-    color: var(--danger);
-    background: rgba(248, 113, 113, 0.15);
-}
-
-[data-theme="dark"] .stat-card h3 {
-    color: var(--text-muted);
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] .table-container {
     background: var(--card-bg);
-    border-color: var(--border);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] .admin-header .header-actions .search-box {
     background: var(--card-bg);
-    border-color: var(--border);
+    border-color: var(--border-color);
 }
 
 [data-theme="dark"] .admin-header .header-actions .search-box input {
     color: var(--text-color);
 }
 
-[data-theme="dark"] .admin-header .header-actions .search-box .search-icon {
-    color: var(--text-muted);
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group textarea {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
-/* ========================================
-   8. Dark Mode - Alerts
-   ======================================== */
-[data-theme="dark"] .alert-success {
-    background: rgba(52, 211, 153, 0.15);
-    color: #34d399;
-    border-left-color: var(--success);
-}
-
-[data-theme="dark"] .alert-error {
-    background: rgba(248, 113, 113, 0.15);
-    color: #f87171;
-    border-left-color: var(--danger);
-}
-
-[data-theme="dark"] .alert-warning {
-    background: rgba(251, 191, 36, 0.15);
-    color: #fbbf24;
-    border-left-color: var(--warning);
-}
-
-[data-theme="dark"] .alert-info {
-    background: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
-    border-left-color: var(--info);
-}
-
-/* ========================================
-   9. Dark Mode - Badges
-   ======================================== */
-[data-theme="dark"] .badge-success {
-    background: rgba(52, 211, 153, 0.2);
-    color: #34d399;
-}
-
-[data-theme="dark"] .badge-warning {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-}
-
-[data-theme="dark"] .badge-danger {
-    background: rgba(248, 113, 113, 0.2);
-    color: #f87171;
-}
-
-[data-theme="dark"] .badge-info {
-    background: rgba(96, 165, 250, 0.2);
-    color: #60a5fa;
-}
-
-[data-theme="dark"] .badge-primary {
-    background: #1a2a4a;
-    color: #60a5fa;
-}
-
-[data-theme="dark"] .badge-admin {
-    background: #1a2a4a;
-    color: #60a5fa;
-}
-[data-theme="dark"] .badge-editor {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-}
-[data-theme="dark"] .badge-viewer {
-    background: rgba(100, 116, 139, 0.2);
-    color: #94a3b8;
-}
-
-/* ========================================
-   10. Dark Mode - Buttons
-   ======================================== */
-[data-theme="dark"] .btn-primary {
-    background: var(--primary);
-    color: #fff;
-}
-[data-theme="dark"] .btn-primary:hover {
-    background: var(--primary-hover);
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group select:focus,
+[data-theme="dark"] .form-group textarea:focus {
+    background: var(--card-bg);
 }
 
 [data-theme="dark"] .btn-secondary {
-    background: var(--card-bg);
+    background: var(--input-bg);
     color: var(--text-color);
-    border-color: var(--border);
-}
-[data-theme="dark"] .btn-secondary:hover {
-    background: var(--border);
+    border-color: var(--border-color);
 }
 
-[data-theme="dark"] .btn-outline {
-    border-color: var(--primary);
-    color: var(--primary);
+[data-theme="dark"] .btn-secondary:hover {
+    background: var(--border-color);
 }
-[data-theme="dark"] .btn-outline:hover {
+
+[data-theme="dark"] th {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] td {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] tr:hover td {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+/* ================================================================
+   3. Admin Container
+   ================================================================ */
+.admin-container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.admin-container .main-content {
+    padding: var(--spacing-xl);
+    background: var(--bg-color);
+    transition: background var(--transition-base);
+}
+
+/* ================================================================
+   4. Admin Header
+   ================================================================ */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.admin-header .page-title h1 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.admin-header .page-title .subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.admin-header .header-actions .search-box {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.4rem 0.8rem;
+    transition: all var(--transition-fast);
+}
+
+.admin-header .header-actions .search-box:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.admin-header .header-actions .search-box input {
+    border: none;
+    background: transparent;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    outline: none;
+    min-width: 150px;
+    width: 100%;
+}
+
+.admin-header .header-actions .search-box .search-icon {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: default;
+}
+
+/* ================================================================
+   5. Dashboard Cards
+   ================================================================ */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    transition: all var(--transition-base);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card .stat-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+    display: inline-block;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+}
+
+.stat-card .stat-icon.blue { 
+    background: var(--primary-light); 
+    color: var(--primary); 
+}
+.stat-card .stat-icon.green { 
+    background: var(--success-bg); 
+    color: var(--success); 
+}
+.stat-card .stat-icon.yellow { 
+    background: var(--warning-bg); 
+    color: var(--warning); 
+}
+.stat-card .stat-icon.red { 
+    background: var(--danger-bg); 
+    color: var(--danger); 
+}
+
+.stat-card h3 {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin: 0;
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.stat-card .stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+}
+
+.stat-card .stat-change.positive {
+    color: var(--success);
+    background: var(--success-bg);
+}
+
+.stat-card .stat-change.negative {
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+/* ================================================================
+   6. Tables
+   ================================================================ */
+.table-container {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.table-header h3 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.table-header .table-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    color: var(--text-color);
+}
+
+tr:hover td {
+    background: rgba(37, 99, 235, 0.02);
+}
+
+/* Table Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-badge.pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status-badge.inactive {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+/* ================================================================
+   7. Admin Buttons
+   ================================================================ */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    line-height: 1.5;
+    font-family: inherit;
+    min-height: 44px;
+}
+
+.btn-primary {
     background: var(--primary);
     color: #fff;
 }
 
-[data-theme="dark"] .btn-danger {
-    background: var(--danger);
-    color: #fff;
-}
-[data-theme="dark"] .btn-danger:hover {
-    background: var(--danger-dark);
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
 }
 
-[data-theme="dark"] .btn-success {
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.btn-success {
     background: var(--success);
     color: #fff;
 }
-[data-theme="dark"] .btn-success:hover {
-    background: var(--success-dark);
+
+.btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
 }
 
-[data-theme="dark"] .btn-warning {
-    background: var(--warning);
-    color: #000;
-}
-[data-theme="dark"] .btn-warning:hover {
-    background: var(--warning-dark);
-}
-
-[data-theme="dark"] .btn-link {
-    color: var(--brand-blue);
-}
-[data-theme="dark"] .btn-link:hover {
-    color: var(--brand-teal);
-}
-
-/* ========================================
-   11. Dark Mode - Footer
-   ======================================== */
-[data-theme="dark"] footer {
-    background: var(--card-bg);
-    border-top-color: var(--border);
-}
-
-[data-theme="dark"] .footer-grid h4 {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .footer-grid a {
-    color: var(--text-muted);
-}
-[data-theme="dark"] .footer-grid a:hover {
-    color: var(--brand-blue);
-}
-
-[data-theme="dark"] .footer-bottom {
-    border-top-color: var(--border);
-    color: var(--text-muted);
-}
-
-/* ========================================
-   12. Dark Mode - Toast
-   ======================================== */
-[data-theme="dark"] .toast {
-    background: #1a1a28;
-    color: var(--text-color);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .toast.success {
-    border-left-color: var(--success);
-}
-[data-theme="dark"] .toast.error {
-    border-left-color: var(--danger);
-}
-[data-theme="dark"] .toast.warning {
-    border-left-color: var(--warning);
-    color: #000;
-}
-
-/* ========================================
-   13. Dark Mode - Modals
-   ======================================== */
-[data-theme="dark"] .modal-content {
-    background: var(--card-bg);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .modal-header {
-    border-bottom-color: var(--border);
-}
-
-[data-theme="dark"] .modal-close {
-    color: var(--text-muted);
-}
-[data-theme="dark"] .modal-close:hover {
-    color: var(--danger);
-}
-
-/* ========================================
-   14. Dark Mode - Login
-   ======================================== */
-[data-theme="dark"] .login-box {
-    background: var(--card-bg);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .login-box h1 {
-    color: var(--text-color);
-}
-[data-theme="dark"] .login-box h1 span {
-    color: var(--brand-blue);
-}
-
-[data-theme="dark"] .login-box p {
-    color: var(--text-muted);
-}
-
-[data-theme="dark"] .login-box input {
-    background: #1a1a28;
-    border-color: var(--border);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .login-box input:focus {
-    background: #222233;
-    border-color: var(--primary);
-}
-
-[data-theme="dark"] .login-box .login-actions .btn-link {
-    color: var(--brand-blue);
-}
-[data-theme="dark"] .login-box .login-actions .btn-link:hover {
-    color: var(--brand-teal);
-}
-
-/* ========================================
-   15. Dark Mode - Scrollbar
-   ======================================== */
-[data-theme="dark"] ::-webkit-scrollbar-track {
-    background: var(--bg-color);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-    background: #2a2a3a;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a4a;
-}
-
-/* ========================================
-   16. Dark Mode - Selection
-   ======================================== */
-[data-theme="dark"] ::selection {
-    background: var(--primary);
+.btn-danger {
+    background: var(--danger);
     color: #fff;
 }
 
-/* ========================================
-   17. Dark Mode - Utility
-   ======================================== */
-[data-theme="dark"] .text-muted {
-    color: var(--text-muted);
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
 }
 
-[data-theme="dark"] .bg-light {
-    background: #1a1a28;
+.btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
-[data-theme="dark"] .border {
-    border-color: var(--border);
+.btn-warning {
+    background: var(--warning);
+    color: #fff;
 }
 
-[data-theme="dark"] .text-success {
-    color: var(--success);
+.btn-warning:hover {
+    background: #d97706;
+    transform: translateY(-2px);
 }
-[data-theme="dark"] .text-danger {
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+}
+
+.btn-lg {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: unset;
+}
+
+/* ================================================================
+   8. Admin Forms
+   ================================================================ */
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.form-group label .required {
     color: var(--danger);
-}
-[data-theme="dark"] .text-warning {
-    color: var(--warning);
+    margin-left: var(--spacing-xs);
 }
 
-/* ========================================
-   18. Dark Mode - Loading Overlay
-   ======================================== */
-[data-theme="dark"] .loading-overlay {
-    background: linear-gradient(135deg, #0a0a0f 0%, #16161f 50%, #0a0a0f 100%);
-}
-
-[data-theme="dark"] .loading-overlay .welcome-text {
-    background: linear-gradient(45deg, #3b82f6, #fbbf24, #34d399, #f87171, #a78bfa);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 2s ease infinite;
-}
-
-[data-theme="dark"] .loading-overlay .sub-text {
-    color: rgba(255,255,255,0.5);
-}
-
-[data-theme="dark"] .loading-overlay .loader-text {
-    color: rgba(255,255,255,0.3);
-}
-
-/* ========================================
-   19. Dark Mode - Forgot Password
-   ======================================== */
-[data-theme="dark"] .forgot-password-modal .modal-content {
-    background: var(--card-bg);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .forgot-password-modal .modal-content h2 {
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--input-bg);
     color: var(--text-color);
+    transition: all var(--transition-fast);
+    min-height: 44px;
 }
 
-[data-theme="dark"] .forgot-password-modal .modal-content p {
-    color: var(--text-muted);
-}
-
-[data-theme="dark"] .forgot-password-modal .modal-content input {
-    background: #1a1a28;
-    border-color: var(--border);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .forgot-password-modal .modal-content input:focus {
-    background: #222233;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    background: var(--card-bg);
 }
 
-[data-theme="dark"] .forgot-password-modal .modal-close-btn {
-    color: var(--text-muted);
-}
-[data-theme="dark"] .forgot-password-modal .modal-close-btn:hover {
-    color: var(--danger);
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
-/* ========================================
-   20. Dark Mode - Session Timer
-   ======================================== */
-[data-theme="dark"] .session-timer {
-    background: #1a1a28;
-    border-color: var(--border);
+.form-group .form-hint {
+    font-size: 0.8rem;
     color: var(--text-muted);
+    margin-top: var(--spacing-xs);
 }
-[data-theme="dark"] .session-timer.warning {
-    color: var(--warning);
-    border-color: var(--warning);
-}
-[data-theme="dark"] .session-timer.danger {
+
+.form-group .form-error {
     color: var(--danger);
+    font-size: 0.8rem;
+    margin-top: var(--spacing-xs);
+    display: none;
+}
+
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
     border-color: var(--danger);
 }
 
-/* ========================================
-   21. Dark Mode - Scroll Top
-   ======================================== */
-[data-theme="dark"] .scroll-top {
+.form-group.has-error .form-error {
+    display: block;
+}
+
+/* Form Row (2 columns) */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    flex-shrink: 0;
+    min-height: unset;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* ================================================================
+   9. Admin Badges
+   ================================================================ */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.badge-warning {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.badge-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.badge-info {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.badge-primary {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.badge-admin {
     background: var(--primary);
     color: #fff;
 }
-[data-theme="dark"] .scroll-top:hover {
+
+.badge-editor {
+    background: var(--warning);
+    color: #000;
+}
+
+.badge-viewer {
+    background: var(--gray);
+    color: #fff;
+}
+
+/* ================================================================
+   10. Admin Alerts
+   ================================================================ */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-lg);
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: #166534;
+    border-left-color: var(--success);
+}
+
+.alert-error {
+    background: var(--danger-bg);
+    color: #991b1b;
+    border-left-color: var(--danger);
+}
+
+.alert-warning {
+    background: var(--warning-bg);
+    color: #92400e;
+    border-left-color: var(--warning);
+}
+
+.alert-info {
+    background: var(--info-bg);
+    color: #1e40af;
+    border-left-color: var(--info);
+}
+
+[data-theme="dark"] .alert-success {
+    color: #6ee7b7;
+}
+[data-theme="dark"] .alert-error {
+    color: #fca5a5;
+}
+[data-theme="dark"] .alert-warning {
+    color: #fcd34d;
+}
+[data-theme="dark"] .alert-info {
+    color: #93c5fd;
+}
+
+/* ================================================================
+   11. Admin Cards
+   ================================================================ */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ================================================================
+   12. Image Preview
+   ================================================================ */
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.preview-item {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid var(--border-color);
+}
+
+.preview-item .remove-img {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--danger);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    line-height: 1;
+}
+
+.preview-item .remove-img:hover {
+    transform: scale(1.2);
+}
+
+/* ================================================================
+   13. Admin Table Image
+   ================================================================ */
+.td-img {
+    width: 60px;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 4px;
+    background: var(--input-bg);
+}
+
+/* ================================================================
+   14. Toast Notifications
+   ================================================================ */
+.toast-container {
+    position: fixed;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 90%;
+}
+
+.toast {
+    background: var(--card-bg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border-left: 4px solid var(--primary);
+    min-width: 280px;
+    max-width: 450px;
+    animation: slideInRight 0.3s ease;
+    color: var(--text-color);
+}
+
+.toast.success {
+    border-left-color: var(--success);
+}
+.toast.error {
+    border-left-color: var(--danger);
+}
+.toast.warning {
+    border-left-color: var(--warning);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ================================================================
+   15. Session Timer
+   ================================================================ */
+.session-timer {
+    font-size: 0.75rem;
+    color: var(--gray);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+}
+
+.session-timer.warning {
+    color: var(--warning);
+    border-color: var(--warning);
+}
+
+.session-timer.danger {
+    color: var(--danger);
+    border-color: var(--danger);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ================================================================
+   16. Responsive Admin
+   ================================================================ */
+@media (max-width: 1024px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .admin-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-container .main-content {
+        padding: var(--spacing-md);
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-md);
+    }
+    
+    .admin-header .header-actions {
+        flex-wrap: wrap;
+    }
+    
+    .admin-header .header-actions .search-box {
+        flex: 1;
+    }
+    
+    .admin-header .header-actions .search-box input {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .stat-card {
+        padding: var(--spacing-md);
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .table-container {
+        padding: var(--spacing-md);
+    }
+    
+    .card {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-container {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+    
+    .card {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+    
+    .admin-header .page-title h1 {
+        font-size: 1.2rem;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+/* ================================================================
+   17. Utility Classes
+   ================================================================ */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.text-muted { color: var(--text-muted); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+
+.gap-1 { gap: var(--spacing-sm); }
+.gap-2 { gap: var(--spacing-md); }
+.gap-3 { gap: var(--spacing-lg); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.hidden { display: none !important; }
+
+/* ================================================================
+   18. Print Styles
+   ================================================================ */
+@media print {
+    .sidebar,
+    .admin-header .header-actions,
+    .table-actions-cell,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+    
+    .admin-container {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .main-content {
+        padding: 20px !important;
+    }
+    
+    .stat-card,
+    .table-container,
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+    }
+    
+    .dashboard-cards {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* ================================================================
+   19. Scrollbar Styling
+   ================================================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
     background: var(--primary-hover);
 }
 
-/* ========================================
-   22. Dark Mode - Header Actions
-   ======================================== */
-[data-theme="dark"] .header-actions .user-info {
-    color: var(--text-muted);
+/* ================================================================
+   20. Loading States
+   ================================================================ */
+.loading-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
-[data-theme="dark"] .btn-admin-mgmt {
-    background: var(--success);
-    color: #fff;
-}
-[data-theme="dark"] .btn-admin-mgmt:hover {
-    background: var(--success-dark);
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-[data-theme="dark"] .btn-logout {
-    color: var(--danger);
-}
-[data-theme="dark"] .btn-logout:hover {
-    background: var(--danger);
-    color: #fff;
+.skeleton {
+    background: var(--input-bg);
+    border-radius: var(--radius-sm);
+    animation: pulse 1.5s ease-in-out infinite;
 }
 
-[data-theme="dark"] .theme-toggle {
-    color: var(--text-color);
-}
-[data-theme="dark"] .theme-toggle:hover {
-    background: var(--border);
-}
-
-/* ========================================
-   23. Dark Mode - Permission Notice
-   ======================================== */
-[data-theme="dark"] #permissionNotice {
-    background: rgba(251, 191, 36, 0.15) !important;
-    color: #fbbf24 !important;
-    border: 1px solid rgba(251, 191, 36, 0.2);
-}
-
-/* ========================================
-   24. Dark Mode - Image Preview
-   ======================================== */
-[data-theme="dark"] .preview-item img {
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .preview-item .remove-img {
-    background: var(--danger);
-    color: #fff;
-}
-
-/* ========================================
-   25. Dark Mode - Status Badge
-   ======================================== */
-[data-theme="dark"] .status-badge.active {
-    background: rgba(52, 211, 153, 0.2);
-    color: #34d399;
-}
-[data-theme="dark"] .status-badge.pending {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-}
-[data-theme="dark"] .status-badge.inactive {
-    background: rgba(248, 113, 113, 0.2);
-    color: #f87171;
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }

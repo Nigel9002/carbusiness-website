@@ -16,14 +16,68 @@ const os = require('os');
 // ===== CONFIGURATION =====
 // ============================================================
 const REQUIRED_ENV_VARS = [
+    'IMAGEKIT_PUBLIC_KEY',
     'IMAGEKIT_PRIVATE_KEY',
-    'FIREBASE_PROJECT_ID'
+    'IMAGEKIT_URL_ENDPOINT',
+    'FIREBASE_PROJECT_ID',
+    'SUPER_ADMIN_EMAILS'
 ];
 
 const OPTIONAL_ENV_VARS = [
-    'IMAGEKIT_PUBLIC_KEY',
-    'IMAGEKIT_URL_ENDPOINT',
-    'NODE_ENV'
+    'PORT',
+    'NODE_ENV',
+    'ALLOWED_ORIGINS',
+    'WHATSAPP_NUMBER',
+    'RATE_LIMIT_MAX_REQUESTS',
+    'RATE_LIMIT_WINDOW_MS',
+    'JWT_SECRET',
+    'CSRF_SECRET'
+];
+
+const REQUIRED_FILES = [
+    'index.html',
+    'admin.html',
+    'manifest.json',
+    'sw.js',
+    'firestore.rules',
+    'storage.rules',
+    'firebase.json'
+];
+
+const REQUIRED_DIRECTORIES = [
+    'pages',
+    'css',
+    'js',
+    'images'
+];
+
+const REQUIRED_JS_FILES = [
+    'js/main.js',
+    'js/firebase-config.js',
+    'js/vehicles.js',
+    'js/admin.js',
+    'js/wishlist.js',
+    'js/compare.js'
+];
+
+const REQUIRED_CSS_FILES = [
+    'css/style.css',
+    'css/admin.css',
+    'css/dark-mode.css'
+];
+
+const REQUIRED_PAGES = [
+    'pages/about.html',
+    'pages/blog.html',
+    'pages/contact.html',
+    'pages/faq.html',
+    'pages/finance.html',
+    'pages/privacy.html',
+    'pages/terms.html',
+    'pages/testimonials.html',
+    'pages/trade-in.html',
+    'pages/admin-management.html',
+    'pages/vehicle-detail.html'
 ];
 
 // ============================================================
@@ -54,10 +108,24 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
+function checkAllFilesExist(fileList, basePath = process.cwd()) {
+    const missing = [];
+    fileList.forEach(file => {
+        const fullPath = path.join(basePath, file);
+        if (!checkFileExists(fullPath)) {
+            missing.push(file);
+        }
+    });
+    return missing;
+}
+
 // ============================================================
 // ===== MAIN SANITY CHECK =====
 // ============================================================
 console.log('\n🔍 Running MOTO KENYA Sanity Check...\n');
+
+let hasErrors = false;
+let hasWarnings = false;
 
 // ============================================================
 // 1. CHECK ENVIRONMENT VARIABLES
@@ -71,7 +139,7 @@ REQUIRED_ENV_VARS.forEach(varName => {
     const value = (process.env[varName] || '').trim();
     if (!value) {
         missingVars.push(varName);
-    } else if (value.includes('*') && varName !== 'IMAGEKIT_PRIVATE_KEY') {
+    } else if (value.includes('*') || value.includes('your_')) {
         maskedVars.push(varName);
     }
 });
@@ -79,13 +147,19 @@ REQUIRED_ENV_VARS.forEach(varName => {
 if (missingVars.length > 0) {
     console.error('❌ Missing required environment variables:');
     missingVars.forEach(v => console.error(`   - ${v}`));
-    console.error('\n💡 Set these variables in your .env file or environment:');
-    console.error('   IMAGEKIT_PRIVATE_KEY=your_private_key');
-    console.error('   FIREBASE_PROJECT_ID=caradds-227e9');
-    exitWithError('Environment variables missing.');
+    console.error('\n💡 Set these variables in your .env file');
+    hasErrors = true;
 }
 
-console.log('✅ All required environment variables are set.');
+if (maskedVars.length > 0) {
+    console.warn('⚠️  Environment variables may contain placeholder values:');
+    maskedVars.forEach(v => console.warn(`   - ${v}`));
+    hasWarnings = true;
+}
+
+if (!hasErrors) {
+    console.log('✅ All required environment variables are set.');
+}
 
 // ============================================================
 // 2. CHECK IMAGEKIT PRIVATE KEY
@@ -94,33 +168,35 @@ console.log('🔑 Checking ImageKit private key...');
 
 const privateKey = (process.env.IMAGEKIT_PRIVATE_KEY || '').trim();
 if (!privateKey) {
-    exitWithError('Missing IMAGEKIT_PRIVATE_KEY environment variable.');
-}
-
-if (privateKey.includes('*')) {
-    console.warn('⚠️  IMAGEKIT_PRIVATE_KEY contains asterisks (*).');
-    console.warn('   It may be masked or incomplete. Using for test...');
-}
-
-if (!privateKey.startsWith('private_')) {
-    console.warn('⚠️  IMAGEKIT_PRIVATE_KEY does not start with "private_".');
-    console.warn('   This may indicate an invalid key format.');
-}
-
-// Test generating a signature
-try {
-    const testToken = (crypto.randomUUID && crypto.randomUUID()) || crypto.randomBytes(16).toString('hex');
-    const testExpire = Math.floor(Date.now() / 1000) + 60;
-    const testSignature = crypto.createHmac('sha1', privateKey).update(testToken + testExpire).digest('hex');
-    
-    if (testSignature && testSignature.length === 40) {
-        console.log('✅ ImageKit private key is valid (signature generated).');
-    } else {
-        console.warn('⚠️  ImageKit private key generated an unusual signature.');
+    console.error('❌ Missing IMAGEKIT_PRIVATE_KEY environment variable.');
+    hasErrors = true;
+} else {
+    if (privateKey.includes('*') || privateKey.includes('your_private_key')) {
+        console.warn('⚠️  IMAGEKIT_PRIVATE_KEY contains placeholder or masked value.');
+        hasWarnings = true;
     }
-} catch (err) {
-    console.error('❌ ImageKit private key test failed:', err.message);
-    exitWithError('Invalid ImageKit private key.');
+
+    if (!privateKey.startsWith('private_')) {
+        console.warn('⚠️  IMAGEKIT_PRIVATE_KEY does not start with "private_".');
+        hasWarnings = true;
+    }
+
+    // Test generating a signature
+    try {
+        const testToken = (crypto.randomUUID && crypto.randomUUID()) || crypto.randomBytes(16).toString('hex');
+        const testExpire = Math.floor(Date.now() / 1000) + 60;
+        const testSignature = crypto.createHmac('sha1', privateKey).update(testToken + testExpire).digest('hex');
+        
+        if (testSignature && testSignature.length === 40) {
+            console.log('✅ ImageKit private key is valid (signature generated).');
+        } else {
+            console.warn('⚠️  ImageKit private key generated an unusual signature.');
+            hasWarnings = true;
+        }
+    } catch (err) {
+        console.error('❌ ImageKit private key test failed:', err.message);
+        hasErrors = true;
+    }
 }
 
 // ============================================================
@@ -128,46 +204,59 @@ try {
 // ============================================================
 console.log('📁 Checking project structure...');
 
-const requiredFiles = [
-    'index.html',
-    'admin.html',
-    'manifest.json',
-    'sw.js',
-    'firestore.rules'
-];
-
-const missingFiles = [];
-requiredFiles.forEach(file => {
-    if (!checkFileExists(path.join(process.cwd(), file))) {
-        missingFiles.push(file);
-    }
-});
-
+// Check required files
+const missingFiles = checkAllFilesExist(REQUIRED_FILES);
 if (missingFiles.length > 0) {
     console.warn('⚠️  Missing required files:');
     missingFiles.forEach(f => console.warn(`   - ${f}`));
-    console.warn('   Some features may not work correctly.');
+    hasWarnings = true;
+} else {
+    console.log('✅ All required files exist.');
 }
 
-// Check pages directory
-if (!checkFileExists(path.join(process.cwd(), 'pages'))) {
-    console.warn('⚠️  "pages" directory not found. Make sure all HTML pages are in the pages folder.');
+// Check directories
+const missingDirs = [];
+REQUIRED_DIRECTORIES.forEach(dir => {
+    if (!checkFileExists(path.join(process.cwd(), dir))) {
+        missingDirs.push(dir);
+    }
+});
+if (missingDirs.length > 0) {
+    console.warn('⚠️  Missing required directories:');
+    missingDirs.forEach(d => console.warn(`   - ${d}`));
+    hasWarnings = true;
 } else {
-    console.log('✅ "pages" directory exists.');
+    console.log('✅ All required directories exist.');
 }
 
-// Check css directory
-if (!checkFileExists(path.join(process.cwd(), 'css'))) {
-    console.warn('⚠️  "css" directory not found. Make sure css/style.css exists.');
+// Check JS files
+const missingJsFiles = checkAllFilesExist(REQUIRED_JS_FILES);
+if (missingJsFiles.length > 0) {
+    console.warn('⚠️  Missing JS files:');
+    missingJsFiles.forEach(f => console.warn(`   - ${f}`));
+    hasWarnings = true;
 } else {
-    console.log('✅ "css" directory exists.');
+    console.log('✅ All JS files exist.');
 }
 
-// Check js directory
-if (!checkFileExists(path.join(process.cwd(), 'js'))) {
-    console.warn('⚠️  "js" directory not found. Make sure js/main.js exists.');
+// Check CSS files
+const missingCssFiles = checkAllFilesExist(REQUIRED_CSS_FILES);
+if (missingCssFiles.length > 0) {
+    console.warn('⚠️  Missing CSS files:');
+    missingCssFiles.forEach(f => console.warn(`   - ${f}`));
+    hasWarnings = true;
 } else {
-    console.log('✅ "js" directory exists.');
+    console.log('✅ All CSS files exist.');
+}
+
+// Check pages
+const missingPages = checkAllFilesExist(REQUIRED_PAGES);
+if (missingPages.length > 0) {
+    console.warn('⚠️  Missing pages:');
+    missingPages.forEach(p => console.warn(`   - ${p}`));
+    hasWarnings = true;
+} else {
+    console.log('✅ All pages exist.');
 }
 
 // ============================================================
@@ -182,8 +271,22 @@ try {
         
         if (manifest.icons && manifest.icons.length > 0) {
             console.log(`✅ manifest.json found with ${manifest.icons.length} icons.`);
+            
+            // Check if icons exist
+            let missingIcons = 0;
+            manifest.icons.forEach(icon => {
+                const iconPath = path.join(process.cwd(), icon.src);
+                if (!checkFileExists(iconPath)) {
+                    missingIcons++;
+                }
+            });
+            if (missingIcons > 0) {
+                console.warn(`⚠️  ${missingIcons} icon files are missing.`);
+                hasWarnings = true;
+            }
         } else {
             console.warn('⚠️  manifest.json has no icons defined.');
+            hasWarnings = true;
         }
         
         if (manifest.shortcuts && manifest.shortcuts.length > 0) {
@@ -191,9 +294,11 @@ try {
         }
     } else {
         console.warn('⚠️  manifest.json not found.');
+        hasWarnings = true;
     }
 } catch (err) {
     console.warn('⚠️  Error reading manifest.json:', err.message);
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -204,11 +309,14 @@ console.log('📦 Checking Node.js version...');
 const nodeVersion = process.version;
 const majorVersion = parseInt(nodeVersion.slice(1).split('.')[0]);
 
-if (majorVersion >= 18) {
-    console.log(`✅ Node.js version ${nodeVersion} (required: >=18)`);
+if (majorVersion >= 20) {
+    console.log(`✅ Node.js version ${nodeVersion} (required: >=20)`);
+} else if (majorVersion >= 18) {
+    console.warn(`⚠️  Node.js version ${nodeVersion} (recommended: >=20)`);
+    hasWarnings = true;
 } else {
-    console.warn(`⚠️  Node.js version ${nodeVersion} is older than recommended (>=18).`);
-    console.warn('   Please upgrade to Node.js 18 or higher.');
+    console.warn(`⚠️  Node.js version ${nodeVersion} is older than recommended (>=20).`);
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -226,11 +334,19 @@ if (checkFileExists(firebaseJsonPath)) {
         if (firebaseJson.functions) {
             console.log('✅ Functions configuration found.');
         }
+        if (firebaseJson.hosting) {
+            console.log('✅ Hosting configuration found.');
+        }
+        if (firebaseJson.storage) {
+            console.log('✅ Storage configuration found.');
+        }
     } catch (err) {
         console.warn('⚠️  Error reading firebase.json:', err.message);
+        hasWarnings = true;
     }
 } else {
-    console.warn('⚠️  firebase.json not found. Firebase CLI may not be configured.');
+    console.warn('⚠️  firebase.json not found.');
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -248,18 +364,41 @@ if (checkFileExists(packageJsonPath)) {
         console.log(`✅ Found ${deps.length} dependencies and ${devDeps.length} devDependencies.`);
         
         // Check for critical dependencies
-        const criticalDeps = ['firebase-admin', 'firebase-functions'];
+        const criticalDeps = ['express', 'dotenv', 'cors', 'helmet'];
         const missingCritical = criticalDeps.filter(dep => !deps.includes(dep));
         
         if (missingCritical.length > 0) {
-            console.warn('⚠️  Critical dependencies missing:');
+            console.warn('⚠️  Critical dependencies missing from root package.json:');
             missingCritical.forEach(d => console.warn(`   - ${d}`));
+            hasWarnings = true;
+        }
+        
+        // Check functions dependencies
+        const funcPackagePath = path.join(process.cwd(), 'functions', 'package.json');
+        if (checkFileExists(funcPackagePath)) {
+            const funcPkg = JSON.parse(fs.readFileSync(funcPackagePath, 'utf8'));
+            const funcDeps = Object.keys(funcPkg.dependencies || {});
+            const firebaseDeps = ['firebase-admin', 'firebase-functions'];
+            const missingFirebase = firebaseDeps.filter(dep => !funcDeps.includes(dep));
+            
+            if (missingFirebase.length > 0) {
+                console.warn('⚠️  Missing Firebase dependencies in functions/package.json:');
+                missingFirebase.forEach(d => console.warn(`   - ${d}`));
+                hasWarnings = true;
+            } else {
+                console.log('✅ Firebase dependencies found in functions.');
+            }
+        } else {
+            console.warn('⚠️  functions/package.json not found.');
+            hasWarnings = true;
         }
     } catch (err) {
         console.warn('⚠️  Error reading package.json:', err.message);
+        hasWarnings = true;
     }
 } else {
     console.warn('⚠️  package.json not found.');
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -268,13 +407,13 @@ if (checkFileExists(packageJsonPath)) {
 console.log('🛠️  Checking Firebase CLI...');
 
 try {
-    // Check if firebase is installed globally
     const { execSync } = require('child_process');
     const firebaseVersion = execSync('firebase --version', { encoding: 'utf8' }).trim();
     console.log(`✅ Firebase CLI version ${firebaseVersion}`);
 } catch (err) {
     console.warn('⚠️  Firebase CLI not found or not in PATH.');
     console.warn('   Install it with: npm install -g firebase-tools');
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -301,17 +440,23 @@ try {
 // ============================================================
 console.log('🎯 Generating test auth token...');
 
-try {
-    const token = (crypto.randomUUID && crypto.randomUUID()) || crypto.randomBytes(16).toString('hex');
-    const expire = Math.floor(Date.now() / 1000) + 10 * 60;
-    const signature = crypto.createHmac('sha1', privateKey).update(token + expire).digest('hex');
-    
-    console.log('✅ Test auth token generated successfully.');
-    console.log('   Token:', token.substring(0, 8) + '...');
-    console.log('   Expire:', new Date(expire * 1000).toLocaleString());
-    console.log('   Signature:', signature.substring(0, 8) + '...');
-} catch (err) {
-    console.warn('⚠️  Could not generate test auth token:', err.message);
+if (privateKey && !privateKey.includes('your_private_key') && !privateKey.includes('*')) {
+    try {
+        const token = (crypto.randomUUID && crypto.randomUUID()) || crypto.randomBytes(16).toString('hex');
+        const expire = Math.floor(Date.now() / 1000) + 10 * 60;
+        const signature = crypto.createHmac('sha1', privateKey).update(token + expire).digest('hex');
+        
+        console.log('✅ Test auth token generated successfully.');
+        console.log('   Token:', token.substring(0, 8) + '...');
+        console.log('   Expire:', new Date(expire * 1000).toLocaleString());
+        console.log('   Signature:', signature.substring(0, 8) + '...');
+    } catch (err) {
+        console.warn('⚠️  Could not generate test auth token:', err.message);
+        hasWarnings = true;
+    }
+} else {
+    console.warn('⚠️  Skipping auth token test (invalid private key)');
+    hasWarnings = true;
 }
 
 // ============================================================
@@ -327,15 +472,40 @@ console.log(`   Memory: ${Math.round(os.totalmem() / 1024 / 1024 / 1024)} GB`);
 // 12. SUMMARY
 // ============================================================
 console.log('\n📊 Sanity Check Summary:');
-console.log('   ✅ Environment variables: PASSED');
-console.log('   ✅ ImageKit private key: PASSED');
-console.log('   📁 Project structure: CHECKED');
-console.log('   🎨 PWA assets: CHECKED');
-console.log('   📦 Node.js version: CHECKED');
-console.log('   🔥 Firebase config: CHECKED');
-console.log('   📚 Dependencies: CHECKED');
 
-console.log('\n✨ Sanity check completed successfully!');
-console.log('🚀 You can now deploy your application.\n');
+if (hasErrors) {
+    console.log('   ❌ ERRORS FOUND: Please fix the issues above.');
+} else {
+    console.log('   ✅ No errors found.');
+}
 
-exitWithSuccess('All checks passed!');
+if (hasWarnings) {
+    console.log('   ⚠️  WARNINGS FOUND: Review the warnings above.');
+} else {
+    console.log('   ✅ No warnings found.');
+}
+
+console.log('\n' + '='.repeat(50));
+console.log('📋 Check Results:');
+console.log('   ✅ Environment variables: ' + (hasErrors ? '❌ FAILED' : '✅ PASSED'));
+console.log('   ✅ ImageKit private key: ' + (hasErrors ? '❌ FAILED' : '✅ PASSED'));
+console.log('   📁 Project structure: ' + (hasWarnings ? '⚠️ CHECKED' : '✅ PASSED'));
+console.log('   🎨 PWA assets: ' + (hasWarnings ? '⚠️ CHECKED' : '✅ PASSED'));
+console.log('   📦 Node.js version: ' + (hasWarnings ? '⚠️ CHECKED' : '✅ PASSED'));
+console.log('   🔥 Firebase config: ' + (hasWarnings ? '⚠️ CHECKED' : '✅ PASSED'));
+console.log('   📚 Dependencies: ' + (hasWarnings ? '⚠️ CHECKED' : '✅ PASSED'));
+console.log('='.repeat(50));
+
+if (hasErrors) {
+    console.log('\n❌ Sanity check FAILED! Please fix the errors and try again.');
+    process.exit(1);
+} else if (hasWarnings) {
+    console.log('\n⚠️  Sanity check completed with warnings.');
+    console.log('   The application should work, but review the warnings above.');
+    console.log('🚀 You can proceed with deployment.');
+} else {
+    console.log('\n✨ Sanity check completed successfully!');
+    console.log('🚀 You can now deploy your application.');
+}
+
+console.log('');
